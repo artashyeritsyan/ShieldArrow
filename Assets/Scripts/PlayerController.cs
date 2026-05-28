@@ -3,11 +3,22 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+enum PlayerId
+{
+    singlePlayer,
+    firstPlayer,
+    secondPlayer
+}
+
 public class Player : MonoBehaviour
 {
+    [Header("Player")]
+
+
     [Header("Stats")]
     [SerializeField] float maxHp = 100f;
     [SerializeField] float speed = 100f;
+    float currentHp;
 
     //[Header("Dash")]
     //[SerializeField] float dashForce = 200f;
@@ -19,23 +30,30 @@ public class Player : MonoBehaviour
 
     [Header("Rotation")]
     [SerializeField] float rotationSpeed = 15f;
+    private bool canRotate = false;
 
+    [Header("Animation")]
     public Animator animator;
 
     Rigidbody rb;
     Vector3 moveDirection;
-    float currentHp;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         currentHp = maxHp;
+        canRotate = false;
     }
 
     void Update()
     {
         HandleMovement();
-        HandleRotation();
+
+        // Implement it to listen the event inRoom(bool). and if in it is true than set canRotate = true
+        if (canRotate)
+        {
+            HandleRotation();
+        }
         HandleAttack();
     }
 
@@ -66,12 +84,12 @@ public class Player : MonoBehaviour
         //if (Mouse.current.leftButton.isPressed)
     }
 
-
     public void OnMove(InputValue input)
     {
         Vector2 move = input.Get<Vector2>();
         moveDirection = new Vector3(move.x, 0f, move.y);
     }
+
 
 
 }
