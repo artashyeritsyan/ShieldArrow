@@ -13,12 +13,17 @@ enum PlayerId
 public class Player : MonoBehaviour
 {
     [Header("Player")]
+    [SerializeField] float maxAngle = 60f;
 
 
     [Header("Stats")]
     [SerializeField] float maxHp = 100f;
     [SerializeField] float speed = 100f;
     float currentHp;
+
+    [Header("Skill")] 
+
+    // Some skill data
 
     //[Header("Dash")]
     //[SerializeField] float dashForce = 200f;
@@ -43,6 +48,8 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         currentHp = maxHp;
         canRotate = false;
+        baseRotation = transform.rotation;
+
     }
 
     void Update()
@@ -53,6 +60,10 @@ public class Player : MonoBehaviour
         if (canRotate)
         {
             HandleRotation();
+        }
+        else
+        {
+            HandleMouseLookClamped();
         }
         HandleAttack();
     }
@@ -77,6 +88,46 @@ public class Player : MonoBehaviour
 
         Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
+    Quaternion baseRotation;
+
+
+
+    void HandleMouseLookClamped()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane groundPlane = new Plane(Vector3.up, transform.position);
+
+        if (groundPlane.Raycast(ray, out float rayDistance))
+        {
+            Vector3 hitPoint = ray.GetPoint(rayDistance);
+
+            Vector3 direction = hitPoint - transform.position;
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude < 0.001f) return;
+
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+
+            float angle = Quaternion.Angle(baseRotation, lookRotation);
+
+            if (angle > maxAngle)
+            {
+                float sign = Mathf.Sign(Vector3.SignedAngle(
+                    baseRotation * Vector3.forward,
+                    direction,
+                    Vector3.up));
+
+                lookRotation = baseRotation * Quaternion.Euler(0f, sign * maxAngle, 0f);
+            }
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                lookRotation,
+                rotationSpeed * Time.deltaTime
+            );
+        }
     }
 
     void HandleAttack()
