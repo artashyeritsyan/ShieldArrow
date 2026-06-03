@@ -10,12 +10,8 @@ enum PlayerId
     secondPlayer
 }
 
-public class Player : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    [Header("Player")]
-    [SerializeField] float maxAngle = 60f;
-
-
     [Header("Stats")]
     [SerializeField] float maxHp = 100f;
     [SerializeField] float speed = 100f;
@@ -35,6 +31,7 @@ public class Player : MonoBehaviour
 
     [Header("Rotation")]
     [SerializeField] float rotationSpeed = 15f;
+    [SerializeField] float maxAngle = 60f;
     private bool canRotate = false;
 
     [Header("Animation")]
@@ -91,8 +88,6 @@ public class Player : MonoBehaviour
     }
 
     Quaternion baseRotation;
-
-
 
     void HandleMouseLookClamped()
     {
