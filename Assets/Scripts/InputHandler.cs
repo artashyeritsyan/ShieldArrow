@@ -1,64 +1,78 @@
-//using UnityEngine;
+using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
-//using UnityEngine;
-//using UnityEngine.InputSystem;
 
-//public class InputHandler : MonoBehaviour
-//{
-//    public PlayerController player1;
-//    public PlayerController player2;
+public class InputHandler : MonoBehaviour
+{
+    [Header("Character Input Values")]
+    public Vector2 move;
+    public Vector2 look;
+    public bool jump;
+    public bool sprint;
 
-//    public bool isTwoPlayer = false;
+    [Header("Movement Settings")]
+    public bool analogMovement;
 
-//    private PlayerInputActions input;
+    [Header("Mouse Cursor Settings")]
+    public bool cursorLocked = true;
+    public bool cursorInputForLook = true;
 
-//    private void Awake()
-//    {
-//        input = new PlayerInputActions();
-//    }
+#if ENABLE_INPUT_SYSTEM
+    public void OnMove(InputValue value)
+    {
+        MoveInput(value.Get<Vector2>());
+    }
 
-//    private void OnEnable() => input.Enable();
-//    private void OnDisable() => input.Disable();
+    public void OnLook(InputValue value)
+    {
+        if (cursorInputForLook)
+        {
+            LookInput(value.Get<Vector2>());
+        }
+    }
 
-//    private void Update()
-//    {
-//        HandlePlayer1();
+    public void OnJump(InputValue value)
+    {
+        JumpInput(value.isPressed);
+    }
 
-//        if (isTwoPlayer)
-//            HandlePlayer2();
-//    }
+    public void OnSprint(InputValue value)
+    {
+        SprintInput(value.isPressed);
+    }
+#endif
 
-//    // ---------------- PLAYER 1 (Keyboard + Mouse OR fallback gamepad) ----------------
-//    void HandlePlayer1()
-//    {
-//        Vector2 move = input.Player.Move.ReadValue<Vector2>();
 
-//        if (move.magnitude < 0.1f)
-//            move = Vector2.zero;
+    public void MoveInput(Vector2 newMoveDirection)
+    {
+        move = newMoveDirection;
+    }
 
-//        player1.SetMoveInput(move);
+    public void LookInput(Vector2 newLookDirection)
+    {
+        look = newLookDirection;
+    }
 
-//        if (input.Player.Jump.WasPressedThisFrame())
-//            player1.Jump();
+    public void JumpInput(bool newJumpState)
+    {
+        jump = newJumpState;
+    }
 
-//        if (input.Player.Attack.WasPressedThisFrame())
-//            player1.Attack();
-//    }
+    public void SprintInput(bool newSprintState)
+    {
+        sprint = newSprintState;
+    }
 
-//    // ---------------- PLAYER 2 (Gamepad ONLY) ----------------
-//    void HandlePlayer2()
-//    {
-//        Vector2 move = input.Player.GamepadMove.ReadValue<Vector2>();
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        SetCursorState(cursorLocked);
+    }
 
-//        if (move.magnitude < 0.1f)
-//            move = Vector2.zero;
+    private void SetCursorState(bool newState) { 
+        
+        Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+    }
+}
 
-//        player2.SetMoveInput(move);
-
-//        if (input.Player.GamepadJump.WasPressedThisFrame())
-//            player2.Jump();
-
-//        if (input.Player.GamepadAttack.WasPressedThisFrame())
-//            player2.Attack();
-//    }
-//}
