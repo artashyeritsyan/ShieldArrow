@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 enum PlayerId
 {
@@ -31,8 +32,16 @@ public class PlayerController : MonoBehaviour
 
     [Header("Rotation")]
     [SerializeField] float rotationSpeed = 15f;
-    [SerializeField] float maxAngle = 60f;
+    //[SerializeField] float maxAngle = 60f;
     private bool canRotate = false;
+
+    [Header("Aim")]
+    [SerializeField] Transform aimTarget;
+    [SerializeField] float aimDistance = 5f;
+    [SerializeField] float maxAngle = 60f;
+    [SerializeField] float aimSpeed = 120f;
+
+    float currentAimAngle = 0f; // relative to forward
 
     [Header("Animation")]
     public Animator animator;
@@ -40,13 +49,15 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     Vector3 moveDirection;
 
+    private InputHandler input;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         currentHp = maxHp;
         canRotate = false;
         baseRotation = transform.rotation;
-
+        //input = new InputHandler();
     }
 
     void Update()
@@ -60,7 +71,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            HandleMouseLookClamped();
+            //HandleMouseLookClamped();
+            HandleAim();
         }
         HandleAttack();
     }
@@ -89,40 +101,77 @@ public class PlayerController : MonoBehaviour
 
     Quaternion baseRotation;
 
-    void HandleMouseLookClamped()
+    //void HandleMouseLookClamped()
+    //{
+    //    //Vector2 mousePos = Input.mousePosition;
+
+    //    Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
+
+    //    Vector2 direction2D = (mousePos - screenCenter);
+
+    //    if (direction2D.magnitude < 10f) return;
+
+    //    Vector3 direction = new Vector3(direction2D.x, 0f, direction2D.y).normalized;
+
+    //    Vector3 camForward = Camera.main.transform.forward;
+    //    Vector3 camRight = Camera.main.transform.right;
+
+    //    camForward.y = 0f;
+    //    camRight.y = 0f;
+
+    //    Vector3 worldDirection = (camRight * direction.x + camForward * direction.z).normalized;
+
+    //    if (worldDirection.sqrMagnitude < 0.001f) return;
+
+    //    Quaternion lookRotation = Quaternion.LookRotation(worldDirection);
+
+    //    float angle = Quaternion.Angle(baseRotation, lookRotation);
+
+    //    if (angle > maxAngle)
+    //    {
+    //        float sign = Mathf.Sign(Vector3.SignedAngle(
+    //            baseRotation * Vector3.forward,
+    //            worldDirection,
+    //            Vector3.up));
+
+    //        lookRotation = baseRotation * Quaternion.Euler(0f, sign * maxAngle, 0f);
+    //    }
+
+    //    transform.rotation = Quaternion.Slerp(
+    //        transform.rotation,
+    //        lookRotation,
+    //        rotationSpeed * Time.deltaTime
+    //    );
+    //}
+
+
+
+    void HandleAim()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, transform.position);
+        // Example input (replace later with your InputHandler if needed)
+        float inputX = input.look.x;
 
-        if (groundPlane.Raycast(ray, out float rayDistance))
-        {
-            Vector3 hitPoint = ray.GetPoint(rayDistance);
+        // Rotate aim based on input
+        currentAimAngle += inputX * aimSpeed * Time.deltaTime;
 
-            Vector3 direction = hitPoint - transform.position;
-            direction.y = 0f;
+        // Clamp angle
+        currentAimAngle = Mathf.Clamp(currentAimAngle, -maxAngle, maxAngle);
 
-            if (direction.sqrMagnitude < 0.001f) return;
+        // Convert angle to direction
+        Quaternion rotation = Quaternion.Euler(0f, currentAimAngle, 0f);
+        Vector3 direction = rotation * transform.forward;
 
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
+        // Position aim target
+        aimTarget.position = transform.position + direction * aimDistance;
 
-            float angle = Quaternion.Angle(baseRotation, lookRotation);
+        // Rotate player toward aim
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
 
-            if (angle > maxAngle)
-            {
-                float sign = Mathf.Sign(Vector3.SignedAngle(
-                    baseRotation * Vector3.forward,
-                    direction,
-                    Vector3.up));
-
-                lookRotation = baseRotation * Quaternion.Euler(0f, sign * maxAngle, 0f);
-            }
-
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                lookRotation,
-                rotationSpeed * Time.deltaTime
-            );
-        }
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            rotationSpeed * Time.deltaTime
+        );
     }
 
     void HandleAttack()
