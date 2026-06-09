@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     public bool canRotate = false;
 
     [Header("Aim")]
+    [SerializeField] GameObject aimUIPrefab;
     [SerializeField] Transform aimTarget;
     [SerializeField] float aimDistance = 5f;
     [SerializeField] float maxAngle = 60f;
@@ -51,6 +52,14 @@ public class PlayerController : MonoBehaviour
 
     private InputHandler input;
 
+    PlayerInput playerInput;
+
+    void Awake()
+    {
+        playerInput = GetComponent<PlayerInput>();
+        Debug.Log("Player index: " + playerInput.playerIndex);
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -58,6 +67,14 @@ public class PlayerController : MonoBehaviour
         canRotate = false;
         baseRotation = transform.rotation;
         input = GetComponent<InputHandler>();
+
+
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+
+        GameObject uiInstance = Instantiate(aimUIPrefab, canvas.transform);
+
+        AimUIFollow ui = uiInstance.GetComponent<AimUIFollow>();
+        ui.SetTarget(aimTarget);
     }
 
     void Update()

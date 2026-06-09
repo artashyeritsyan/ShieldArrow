@@ -33,7 +33,8 @@ public class InputHandler : MonoBehaviour
     {
         if (!cursorInputForLook) return;
 
-        look = value.Get<Vector2>();
+        Vector2 rawInput = value.Get<Vector2>();
+        look = rawInput * mouseSensitivity;
     }
 #endif
 

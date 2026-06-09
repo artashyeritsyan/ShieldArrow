@@ -1,13 +1,48 @@
 using UnityEngine;
 
-public class AimUIFollower : MonoBehaviour
+public class AimUIFollow : MonoBehaviour
 {
-    public Transform target;
-    public Camera cam;
+    private Transform target;
+    private Camera cam;
 
-    void Update()
+    [Header("Settings")]
+    [SerializeField] Vector3 offset = Vector3.up * 1.5f;
+    [SerializeField] bool hideIfBehindCamera = true;
+
+    void Awake()
     {
-        Vector3 screenPos = cam.WorldToScreenPoint(target.position);
+        cam = Camera.main;
+    }
+
+    // Called by PlayerController after spawn
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+    }
+
+    void LateUpdate()
+    {
+        if (target == null || cam == null)
+            return;
+
+        Vector3 worldPos = target.position + offset;
+        Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
+
+        // Handle behind camera
+        if (screenPos.z < 0)
+        {
+            if (hideIfBehindCamera)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+        }
+        else
+        {
+            if (!gameObject.activeSelf)
+                gameObject.SetActive(true);
+        }
+
         transform.position = screenPos;
     }
 }
