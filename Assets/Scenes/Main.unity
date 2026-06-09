@@ -259,9 +259,9 @@ MonoBehaviour:
   speed: 4000
   rotationSpeed: 15
   aimTarget: {fileID: 843974556}
-  aimDistance: 4
+  aimDistance: 5
   maxAngle: 60
-  aimSpeed: 120
+  aimSpeed: 5
   animator: {fileID: 976094112}
 --- !u!136 &45175402
 CapsuleCollider:

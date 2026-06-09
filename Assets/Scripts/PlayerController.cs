@@ -148,25 +148,26 @@ public class PlayerController : MonoBehaviour
 
     void HandleAim()
     {
-        // Example input (replace later with your InputHandler if needed)
-        float inputX = input.look.x;
+        // Get mouse movement (delta)
+        float mouseX = UnityEngine.Input.GetAxis("Mouse X");
 
-        // Rotate aim based on input
-        currentAimAngle += inputX * aimSpeed * Time.deltaTime;
+        // Accumulate aim angle
+        currentAimAngle += mouseX * aimSpeed;
 
         // Clamp angle
         currentAimAngle = Mathf.Clamp(currentAimAngle, -maxAngle, maxAngle);
 
-        // Convert angle to direction
+        // Create rotation from angle
         Quaternion rotation = Quaternion.Euler(0f, currentAimAngle, 0f);
-        Vector3 direction = rotation * transform.forward;
 
-        // Position aim target
-        aimTarget.position = transform.position + direction * aimDistance;
+        // Since aimTarget is child, just use forward
+        Vector3 direction = rotation * Vector3.forward;
 
-        // Rotate player toward aim
+        // Update aim target position (local forward)
+        aimTarget.localPosition = Vector3.forward * aimDistance;
+
+        // Smooth rotate player
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
             targetRotation,
