@@ -33,13 +33,13 @@ public class PlayerController : MonoBehaviour
     [Header("Rotation")]
     [SerializeField] float rotationSpeed = 15f;
     //[SerializeField] float maxAngle = 60f;
-    private bool canRotate = false;
+    public bool canRotate = false;
 
     [Header("Aim")]
     [SerializeField] Transform aimTarget;
     [SerializeField] float aimDistance = 5f;
     [SerializeField] float maxAngle = 60f;
-    [SerializeField] float aimSpeed = 120f;
+    [SerializeField] float aimSpeed = 4f;
 
     float currentAimAngle = 0f; // relative to forward
 
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
         currentHp = maxHp;
         canRotate = false;
         baseRotation = transform.rotation;
-        //input = new InputHandler();
+        input = GetComponent<InputHandler>();
     }
 
     void Update()
@@ -91,13 +91,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void HandleRotation()
-    {
-        if (moveDirection == Vector3.zero) return;
-
-        Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-    }
+    
 
     Quaternion baseRotation;
 
@@ -144,35 +138,42 @@ public class PlayerController : MonoBehaviour
     //    );
     //}
 
-
-
-    void HandleAim()
+    void RotateCharacter(Vector3 direction)
     {
-        // Get mouse movement (delta)
-        float mouseX = UnityEngine.Input.GetAxis("Mouse X");
+        if (direction == Vector3.zero) return;
 
-        // Accumulate aim angle
-        currentAimAngle += mouseX * aimSpeed;
-
-        // Clamp angle
-        currentAimAngle = Mathf.Clamp(currentAimAngle, -maxAngle, maxAngle);
-
-        // Create rotation from angle
-        Quaternion rotation = Quaternion.Euler(0f, currentAimAngle, 0f);
-
-        // Since aimTarget is child, just use forward
-        Vector3 direction = rotation * Vector3.forward;
-
-        // Update aim target position (local forward)
-        aimTarget.localPosition = Vector3.forward * aimDistance;
-
-        // Smooth rotate player
         Quaternion targetRotation = Quaternion.LookRotation(direction);
+
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
             targetRotation,
             rotationSpeed * Time.deltaTime
         );
+    }
+
+    void HandleAim()
+    {
+        float inputX = input.look.x;
+
+        currentAimAngle += inputX * aimSpeed;
+        currentAimAngle = Mathf.Clamp(currentAimAngle, -maxAngle, maxAngle);
+
+        Quaternion rotation = Quaternion.Euler(0f, currentAimAngle, 0f);
+        Vector3 direction = rotation * Vector3.forward;
+
+        aimTarget.localPosition = Vector3.forward * aimDistance;
+
+        RotateCharacter(direction);
+    }
+
+    void HandleRotation()
+    {
+        if (moveDirection == Vector3.zero) return;
+
+        // Reset aim angle so switching modes feels correct
+        currentAimAngle = 0f;
+
+        RotateCharacter(moveDirection.normalized);
     }
 
     void HandleAttack()

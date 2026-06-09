@@ -258,10 +258,11 @@ MonoBehaviour:
   maxHp: 100
   speed: 4000
   rotationSpeed: 15
+  canRotate: 0
   aimTarget: {fileID: 843974556}
   aimDistance: 5
   maxAngle: 60
-  aimSpeed: 5
+  aimSpeed: 3
   animator: {fileID: 976094112}
 --- !u!136 &45175402
 CapsuleCollider:
@@ -1027,6 +1028,82 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ad3ee188fdd354c40bb94e9132c25fdd, type: 3}
   m_PrefabInstance: {fileID: 274791243}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &288430499
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 288430501}
+  - component: {fileID: 288430500}
+  m_Layer: 0
+  m_Name: PlayerInputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &288430500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288430499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInputManager
+  m_NotificationBehavior: 0
+  m_MaxPlayerCount: -1
+  m_AllowJoining: 1
+  m_JoinBehavior: 0
+  m_PlayerJoinedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_PlayerLeftEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_JoinAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: 
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: f7469624-8926-465c-bd77-3fa86d73be2d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_PlayerPrefab: {fileID: 0}
+  m_SplitScreen: 0
+  m_MaintainAspectRatioInSplitScreen: 0
+  m_FixedNumberOfSplitScreens: -1
+  m_SplitScreenRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!4 &288430501
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288430499}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.43055, y: 0.40977, z: -12.16538}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &289023401
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1933,12 +2010,36 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e3e199bbbe33274a9808242056fd375, type: 3}
       insertIndex: -1
       addedObject: {fileID: 45175399}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e3e199bbbe33274a9808242056fd375, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 694988146}
   m_SourcePrefab: {fileID: 100100000, guid: 2e3e199bbbe33274a9808242056fd375, type: 3}
 --- !u!4 &694988145 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2e3e199bbbe33274a9808242056fd375, type: 3}
   m_PrefabInstance: {fileID: 694988144}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &694988146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45175398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8ff4e2e430a4b640a295d86bf4c0994, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputHandler
+  move: {x: 0, y: 0}
+  look: {x: 0, y: 0}
+  jump: 0
+  sprint: 0
+  analogMovement: 0
+  cursorLocked: 1
+  cursorInputForLook: 1
+  mouseSensitivity: 0.1
+  stickSensitivity: 1.5
 --- !u!1 &711425988
 GameObject:
   m_ObjectHideFlags: 0
@@ -2836,6 +2937,7 @@ MonoBehaviour:
   maxHp: 100
   speed: 4000
   rotationSpeed: 15
+  canRotate: 0
   aimTarget: {fileID: 0}
   aimDistance: 5
   maxAngle: 60
@@ -5545,3 +5647,4 @@ SceneRoots:
   - {fileID: 1519178411}
   - {fileID: 216136809}
   - {fileID: 257620102}
+  - {fileID: 288430501}

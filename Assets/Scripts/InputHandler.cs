@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 
-
 public class InputHandler : MonoBehaviour
 {
     [Header("Character Input Values")]
@@ -19,19 +18,24 @@ public class InputHandler : MonoBehaviour
     public bool cursorLocked = true;
     public bool cursorInputForLook = true;
 
+    [Header("Look Settings")]
+    public float mouseSensitivity = 0.1f;
+    public float stickSensitivity = 1.5f;
+
 #if ENABLE_INPUT_SYSTEM
     public void OnMove(InputValue value)
     {
         MoveInput(value.Get<Vector2>());
     }
 
+#if ENABLE_INPUT_SYSTEM
     public void OnLook(InputValue value)
     {
-        if (cursorInputForLook)
-        {
-            LookInput(value.Get<Vector2>());
-        }
+        if (!cursorInputForLook) return;
+
+        look = value.Get<Vector2>();
     }
+#endif
 
     public void OnJump(InputValue value)
     {
@@ -43,7 +47,6 @@ public class InputHandler : MonoBehaviour
         SprintInput(value.isPressed);
     }
 #endif
-
 
     public void MoveInput(Vector2 newMoveDirection)
     {
@@ -70,9 +73,8 @@ public class InputHandler : MonoBehaviour
         SetCursorState(cursorLocked);
     }
 
-    private void SetCursorState(bool newState) { 
-        
+    private void SetCursorState(bool newState)
+    {
         Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
     }
 }
-
