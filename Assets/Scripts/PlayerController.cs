@@ -22,27 +22,23 @@ public class PlayerController : MonoBehaviour
 
     // Some skill data
 
-    //[Header("Dash")]
-    //[SerializeField] float dashForce = 200f;
-    //[SerializeField] float dashRecoverTime = 1f;
-
     //[Header("Weapons")]
     //[SerializeField] GameObject[] weapons;
     //[SerializeField] float weaponSwitchDelay = 0.2f;
 
     [Header("Rotation")]
     [SerializeField] float rotationSpeed = 15f;
-    //[SerializeField] float maxAngle = 60f;
+    [SerializeField] float maxAngle = 60f;
     public bool canRotate = false;
 
     [Header("Aim")]
-    [SerializeField] GameObject aimUIPrefab;
     [SerializeField] Transform aimTarget;
+    [SerializeField] Color aimColor;
     [SerializeField] float aimDistance = 5f;
-    [SerializeField] float maxAngle = 60f;
     [SerializeField] float aimSpeed = 4f;
+    private AimsManager aimsManager;
 
-    float currentAimAngle = 0f; // relative to forward
+    float currentAimAngle = 0f;
 
     [Header("Animation")]
     public Animator animator;
@@ -52,29 +48,22 @@ public class PlayerController : MonoBehaviour
 
     private InputHandler input;
 
-    PlayerInput playerInput;
-
     void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();
+        PlayerInput playerInput = GetComponent<PlayerInput>();
         Debug.Log("Player index: " + playerInput.playerIndex);
     }
 
     void Start()
     {
+        
         rb = GetComponent<Rigidbody>();
         currentHp = maxHp;
         canRotate = false;
-        baseRotation = transform.rotation;
         input = GetComponent<InputHandler>();
 
-
-        Canvas canvas = FindFirstObjectByType<Canvas>();
-
-        GameObject uiInstance = Instantiate(aimUIPrefab, canvas.transform);
-
-        AimUIFollow ui = uiInstance.GetComponent<AimUIFollow>();
-        ui.SetTarget(aimTarget);
+        aimsManager = FindFirstObjectByType<AimsManager>();
+        aimsManager.AddPlayerAim(aimTarget, aimColor);
     }
 
     void Update()
@@ -96,7 +85,7 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
-        rb.AddForce(moveDirection * speed * Time.deltaTime);
+        rb.AddForce(speed * Time.deltaTime * moveDirection);
 
         if ((moveDirection == Vector3.zero))
         {
@@ -107,53 +96,6 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("Running", true);
         }
     }
-
-    
-
-    Quaternion baseRotation;
-
-    //void HandleMouseLookClamped()
-    //{
-    //    //Vector2 mousePos = Input.mousePosition;
-
-    //    Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
-
-    //    Vector2 direction2D = (mousePos - screenCenter);
-
-    //    if (direction2D.magnitude < 10f) return;
-
-    //    Vector3 direction = new Vector3(direction2D.x, 0f, direction2D.y).normalized;
-
-    //    Vector3 camForward = Camera.main.transform.forward;
-    //    Vector3 camRight = Camera.main.transform.right;
-
-    //    camForward.y = 0f;
-    //    camRight.y = 0f;
-
-    //    Vector3 worldDirection = (camRight * direction.x + camForward * direction.z).normalized;
-
-    //    if (worldDirection.sqrMagnitude < 0.001f) return;
-
-    //    Quaternion lookRotation = Quaternion.LookRotation(worldDirection);
-
-    //    float angle = Quaternion.Angle(baseRotation, lookRotation);
-
-    //    if (angle > maxAngle)
-    //    {
-    //        float sign = Mathf.Sign(Vector3.SignedAngle(
-    //            baseRotation * Vector3.forward,
-    //            worldDirection,
-    //            Vector3.up));
-
-    //        lookRotation = baseRotation * Quaternion.Euler(0f, sign * maxAngle, 0f);
-    //    }
-
-    //    transform.rotation = Quaternion.Slerp(
-    //        transform.rotation,
-    //        lookRotation,
-    //        rotationSpeed * Time.deltaTime
-    //    );
-    //}
 
     void RotateCharacter(Vector3 direction)
     {

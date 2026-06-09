@@ -194,13 +194,13 @@ MonoBehaviour:
   maxHp: 100
   speed: 4000
   rotationSpeed: 15
-  canRotate: 0
-  aimUIPrefab: {fileID: 8732985050072548205, guid: 41053872a24ed5b4d8ca2063db271aa9, type: 3}
-  aimTarget: {fileID: 894419519161048708}
-  aimDistance: 5
   maxAngle: 60
+  canRotate: 0
+  aimTarget: {fileID: 894419519161048708}
+  aimColor: {r: 0.28627452, g: 0.30588236, b: 1, a: 1}
+  aimDistance: 5
   aimSpeed: 3
-  animator: {fileID: 0}
+  animator: {fileID: 4812885400586429195}
 --- !u!114 &8799433064518598810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,7 +278,7 @@ MonoBehaviour:
   cursorLocked: 1
   cursorInputForLook: 1
   mouseSensitivity: 0.1
-  stickSensitivity: 1.5
+  stickSensitivity: 0.5
 --- !u!4 &7776142660636546536 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2e3e199bbbe33274a9808242056fd375, type: 3}

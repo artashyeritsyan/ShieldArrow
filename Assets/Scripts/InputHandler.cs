@@ -23,6 +23,27 @@ public class InputHandler : MonoBehaviour
     public float stickSensitivity = 1.5f;
 
 #if ENABLE_INPUT_SYSTEM
+    private PlayerInput playerInput;
+    private bool isGamepad;
+
+    private void Awake()
+    {
+        playerInput = GetComponent<PlayerInput>();
+    }
+
+    private void OnEnable()
+    {
+        playerInput.onControlsChanged += OnControlsChanged;
+    }
+    private void OnDisable()
+    {
+        playerInput.onControlsChanged -= OnControlsChanged;
+    }
+    private void OnControlsChanged(PlayerInput input)
+    {
+        isGamepad = input.currentControlScheme == "Gamepad";
+    }
+
     public void OnMove(InputValue value)
     {
         MoveInput(value.Get<Vector2>());
@@ -34,8 +55,13 @@ public class InputHandler : MonoBehaviour
         if (!cursorInputForLook) return;
 
         Vector2 rawInput = value.Get<Vector2>();
-        look = rawInput * mouseSensitivity;
+
+        if (isGamepad)
+            look = rawInput * stickSensitivity;
+        else
+            look = rawInput * mouseSensitivity;
     }
+
 #endif
 
     public void OnJump(InputValue value)

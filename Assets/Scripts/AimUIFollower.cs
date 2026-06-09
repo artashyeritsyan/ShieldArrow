@@ -6,7 +6,6 @@ public class AimUIFollow : MonoBehaviour
     private Camera cam;
 
     [Header("Settings")]
-    [SerializeField] Vector3 offset = Vector3.up * 1.5f;
     [SerializeField] bool hideIfBehindCamera = true;
 
     void Awake()
@@ -25,7 +24,7 @@ public class AimUIFollow : MonoBehaviour
         if (target == null || cam == null)
             return;
 
-        Vector3 worldPos = target.position + offset;
+        Vector3 worldPos = target.position;
         Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
 
         // Handle behind camera
