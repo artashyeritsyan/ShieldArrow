@@ -4,19 +4,18 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
-enum PlayerId
-{
-    singlePlayer,
-    firstPlayer,
-    secondPlayer
+
+enum PlayerClass { 
+    Archer, 
+    Knight 
 }
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Stats")]
-    [SerializeField] float maxHp = 100f;
-    [SerializeField] float speed = 100f;
-    float currentHp;
+    [SerializeField] private PlayerStatsProfile baseProfile;
+    [SerializeField] PlayerStats stats;
+    [SerializeField] float speedMultiplier = 2000f;
 
     [Header("Skill")] 
 
@@ -36,9 +35,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Color aimColor;
     [SerializeField] float aimDistance = 5f;
     [SerializeField] float aimSpeed = 4f;
-    private AimsManager aimsManager;
 
-    float currentAimAngle = 0f;
+    private AimsManager aimsManager;
+    private float currentAimAngle = 0f;
+
 
     [Header("Animation")]
     public Animator animator;
@@ -50,15 +50,16 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        stats = baseProfile.GetStats().Clone();
         PlayerInput playerInput = GetComponent<PlayerInput>();
         Debug.Log("Player index: " + playerInput.playerIndex);
+
+        Debug.Log(stats.core.speed);
     }
 
     void Start()
     {
-        
         rb = GetComponent<Rigidbody>();
-        currentHp = maxHp;
         canRotate = false;
         input = GetComponent<InputHandler>();
 
@@ -83,9 +84,23 @@ public class PlayerController : MonoBehaviour
         HandleAttack();
     }
 
+    // Predefine for further development
+    public void DealDamage(CoreStats target)
+    {
+        DamageData dmg = new DamageData
+        {
+            baseDamage = stats.core.damage,
+            canCrit = true,
+            critChance = 0.2f,
+            critMultiplier = 2f
+        };
+
+        DamageSystem.ProcessDamage(dmg, stats.core, target);
+    }
+
     void HandleMovement()
     {
-        rb.AddForce(speed * Time.deltaTime * moveDirection);
+        rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * moveDirection);
 
         if ((moveDirection == Vector3.zero))
         {
