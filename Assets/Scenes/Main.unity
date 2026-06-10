@@ -5404,6 +5404,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 694988151}
     - target: {fileID: 1911975804885618172, guid: 4b4e83e6e684b664a91192921c8bce42, type: 3}
+      propertyPath: canRotate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1911975804885618172, guid: 4b4e83e6e684b664a91192921c8bce42, type: 3}
       propertyPath: aimDistance
       value: 5
       objectReference: {fileID: 0}
