@@ -8,6 +8,7 @@ public class InputHandler : MonoBehaviour
     [Header("Character Input Values")]
     public Vector2 move;
     public Vector2 look;
+    public bool attack;
     public bool jump;
     public bool sprint;
 
@@ -64,6 +65,12 @@ public class InputHandler : MonoBehaviour
 
 #endif
 
+    public void OnAttack(InputValue value)
+    {
+        AttackInput(value.isPressed);
+        Debug.Log("IsPRessed" + value.isPressed);
+    }
+
     public void OnJump(InputValue value)
     {
         JumpInput(value.isPressed);
@@ -78,11 +85,17 @@ public class InputHandler : MonoBehaviour
     public void MoveInput(Vector2 newMoveDirection)
     {
         move = newMoveDirection;
+        //Debug.Log(move);
     }
 
     public void LookInput(Vector2 newLookDirection)
     {
         look = newLookDirection;
+    }
+
+    public void AttackInput(bool newAttackState)
+    {
+        attack = newAttackState;
     }
 
     public void JumpInput(bool newJumpState)

@@ -43,10 +43,10 @@ public class PlayerController : MonoBehaviour
     [Header("Animation")]
     public Animator animator;
 
-    Rigidbody rb;
-    Vector3 moveDirection;
 
+    Rigidbody rb;
     private InputHandler input;
+    private Vector3 moveDirection;
 
     void Awake()
     {
@@ -60,8 +60,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        canRotate = false;
         input = GetComponent<InputHandler>();
+        canRotate = false;
 
         aimsManager = FindFirstObjectByType<AimsManager>();
         aimsManager.AddPlayerAim(aimTarget, aimColor);
@@ -69,6 +69,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
+
         HandleMovement();
 
         // Implement it to listen the event inRoom(bool). and if in it is true than set canRotate = true
@@ -98,9 +100,20 @@ public class PlayerController : MonoBehaviour
         DamageSystem.ProcessDamage(dmg, stats.core, target);
     }
 
+    public virtual void Shoot() { }
+    public virtual void Dead() { }
+    
+
+    // Private functions
+
+
     void HandleMovement()
     {
+        moveDirection = new Vector3(input.move.x, 0, input.move.y);
+
         rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * moveDirection);
+        //Debug.Log(moveDirection);
+        //Debug.Log(rb.linearVelocity);
 
         if ((moveDirection == Vector3.zero))
         {
@@ -144,7 +157,6 @@ public class PlayerController : MonoBehaviour
     {
         if (moveDirection == Vector3.zero) return;
 
-        // Reset aim angle so switching modes feels correct
         currentAimAngle = 0f;
 
         RotateCharacter(moveDirection.normalized);
@@ -152,14 +164,9 @@ public class PlayerController : MonoBehaviour
 
     void HandleAttack()
     {
-        //if (Mouse.current.leftButton.isPressed)
-    }
+            Debug.Log("Attack = " + input.attack);
 
-    public void OnMove(InputValue input)
-    {
-        Vector2 move = input.Get<Vector2>();
-        moveDirection = new Vector3(move.x, 0f, move.y);
-    }
+    }   
 
 
 
