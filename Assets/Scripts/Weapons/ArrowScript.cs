@@ -1,11 +1,13 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Rendering;
 
 public class ArrowScript : MonoBehaviour
 {
     [Header("Parameters")]
     [SerializeField] float lifeTime = 5f;
     [SerializeField] float arrowSpeed = 4f;
+    // ricochet count means it will ricochet N times and will be destroyed on N+1 
     [SerializeField] int maxRicochetCount = 4;
     private float ricochetsLeft;
 
@@ -34,6 +36,23 @@ public class ArrowScript : MonoBehaviour
     {
         ricochetsLeft = maxRicochetCount;
     }
+    bool turned = false;
+    void Ricochet(Collision collision)
+    {
+        if (ricochetsLeft > 0)
+        {
+            Vector3 normal = collision.contacts[0].normal;
+            Vector3 newDir = Vector3.Reflect(transform.forward, normal);
+            transform.forward = newDir;
+
+            ricochetsLeft--;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    void ResetTurn() => turned = false;
 
     public void SetSpeed(float speed) { arrowSpeed = speed; }
     public float GetSpeed() { return arrowSpeed; }
@@ -41,27 +60,19 @@ public class ArrowScript : MonoBehaviour
     public void SetMaxRicochetCount (int count) { maxRicochetCount = count; }
     public int GetMaxRicochetCount() { return maxRicochetCount; }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Wall"))
+        if (other.CompareTag("Enemy"))
         {
-            Debug.Log("Trigger!");
-            transform.Rotate(0f, -90f, 0f);
+            // damage logic
+            Destroy(gameObject);
         }
     }
-
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    //if (collision.gameObject != gameObject)
-    //    //{
-    //    //    Debug.Log("Collide!");
-    //    //}
-    //    if (collision.gameObject.CompareTag("Wall"))
-    //    {
-
-    //        transform.rotation = Quaternion.Euler(transform.localRotation.x, transform.localRotation.y - 90f, transform.localRotation.z);
-    //        Debug.Log("Ricochet");
-    //    }
-    //        transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y - 90f, transform.rotation.z);
-    //}
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            Ricochet(collision);
+        }
+    }
 }

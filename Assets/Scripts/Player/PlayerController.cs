@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
-
-
 enum PlayerClass { 
     Archer, 
     Knight 
@@ -13,13 +11,12 @@ enum PlayerClass {
 
 public class PlayerController : MonoBehaviour
 {
-
     [Header("Stats")]
     [SerializeField] private PlayerStatsProfile baseProfile;
     [SerializeField] PlayerStats stats;
     [SerializeField] float speedMultiplier = 2000f;
 
-    [Header("Skill")] 
+    [Header("Skill")]
 
     // Some skill data
 
@@ -34,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Aim")]
     [SerializeField] Transform aimTarget;
+    [SerializeField] TrajectoryPreview trajectory;
     [SerializeField] Color aimColor;
     [SerializeField] float aimDistance = 5f;
     [SerializeField] float aimSpeed = 4f;
@@ -42,8 +40,8 @@ public class PlayerController : MonoBehaviour
     private float currentAimAngle = 0f;
 
     [Header("Weapon")]
-    public GameObject weapon;
-    public WeaponScript weaponScript;
+    private GameObject weapon;
+    private WeaponScript weaponScript;
     //public GameObject arrow;
 
     [Header("Animation")]
@@ -59,7 +57,6 @@ public class PlayerController : MonoBehaviour
         stats = baseProfile.GetStats().Clone();
         PlayerInput playerInput = GetComponent<PlayerInput>();
         Debug.Log("Player index: " + playerInput.playerIndex);
-
     }
 
     void Start()
