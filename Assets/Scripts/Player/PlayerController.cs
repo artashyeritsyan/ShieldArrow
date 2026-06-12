@@ -127,14 +127,14 @@ public class PlayerController : MonoBehaviour
 
         rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * moveDirection);
 
-        if ((moveDirection == Vector3.zero))
-        {
-            animator.SetBool("Running", false);
-        }
-        else
-        {
-            animator.SetBool("Running", true);
-        }
+        //if ((moveDirection == Vector3.zero))
+        //{
+        //    animator.SetBool("Running", false);
+        //}
+        //else
+        //{
+        //    animator.SetBool("Running", true);
+        //}
     }
 
     void RotateCharacter(Vector3 direction)
