@@ -68,7 +68,7 @@ public class InputHandler : MonoBehaviour
     public void OnAttack(InputValue value)
     {
         AttackInput(value.isPressed);
-        Debug.Log("IsPRessed" + value.isPressed);
+        //Debug.Log("IsPRessed" + value.isPressed);
     }
 
     public void OnJump(InputValue value)

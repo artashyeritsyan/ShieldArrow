@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
 
+
 enum PlayerClass { 
     Archer, 
     Knight 
@@ -12,6 +13,7 @@ enum PlayerClass {
 
 public class PlayerController : MonoBehaviour
 {
+
     [Header("Stats")]
     [SerializeField] private PlayerStatsProfile baseProfile;
     [SerializeField] PlayerStats stats;
@@ -39,6 +41,10 @@ public class PlayerController : MonoBehaviour
     private AimsManager aimsManager;
     private float currentAimAngle = 0f;
 
+    [Header("Weapon")]
+    public GameObject weapon;
+    public WeaponScript weaponScript;
+    //public GameObject arrow;
 
     [Header("Animation")]
     public Animator animator;
@@ -54,23 +60,15 @@ public class PlayerController : MonoBehaviour
         PlayerInput playerInput = GetComponent<PlayerInput>();
         Debug.Log("Player index: " + playerInput.playerIndex);
 
-        Debug.Log(stats.core.speed);
     }
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        input = GetComponent<InputHandler>();
-        canRotate = false;
-
-        aimsManager = FindFirstObjectByType<AimsManager>();
-        aimsManager.AddPlayerAim(aimTarget, aimColor);
+        InitialiseValues();
     }
 
     void Update()
     {
-
-
         HandleMovement();
 
         // Implement it to listen the event inRoom(bool). and if in it is true than set canRotate = true
@@ -84,6 +82,20 @@ public class PlayerController : MonoBehaviour
             HandleAim();
         }
         HandleAttack();
+    }
+
+    private void InitialiseValues()
+    {
+        rb = GetComponent<Rigidbody>();
+        input = GetComponent<InputHandler>();
+
+        aimsManager = FindFirstObjectByType<AimsManager>();
+        aimsManager.AddPlayerAim(aimTarget, aimColor);
+
+        // Init Weapon
+        InitialiseWeapon();
+
+        canRotate = false;
     }
 
     // Predefine for further development
@@ -100,20 +112,20 @@ public class PlayerController : MonoBehaviour
         DamageSystem.ProcessDamage(dmg, stats.core, target);
     }
 
-    public virtual void Shoot() { }
+    public virtual void Shoot() {
+        weaponScript.Shoot();
+    }
     public virtual void Dead() { }
     
 
-    // Private functions
-
+    // ------------------- Private functions ------------------
+    // --------------------------------------------------------
 
     void HandleMovement()
     {
         moveDirection = new Vector3(input.move.x, 0, input.move.y);
 
         rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * moveDirection);
-        //Debug.Log(moveDirection);
-        //Debug.Log(rb.linearVelocity);
 
         if ((moveDirection == Vector3.zero))
         {
@@ -164,9 +176,26 @@ public class PlayerController : MonoBehaviour
 
     void HandleAttack()
     {
-            Debug.Log("Attack = " + input.attack);
+        if (input.attack)
+        {
+            Shoot();
+        }
+    }
 
-    }   
+    private void InitialiseWeapon()
+    {
+        weaponScript = transform.GetComponentInChildren<WeaponScript>();
+        weapon = weaponScript.gameObject;
+    }
+
+
+    // Will be used for Ultra Attack
+
+    //IEnumerator AttackCooldown()
+    //{
+
+
+    //}
 
 
 

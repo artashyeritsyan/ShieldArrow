@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 [Serializable]
 public class PlayerStats
@@ -26,6 +27,7 @@ public class CoreStats
     public float maxHP;
     public float currentHP;
     public float damage;
+    public float attackSpeed;
 
     public float lifeSteal = 0;  // from 0 to 1  Initial value will be 0.2f
     public float poisonDamage = 0;
@@ -41,6 +43,7 @@ public class CoreStats
             maxHP = this.maxHP,
             currentHP = this.maxHP,
             damage = this.damage,
+            attackSpeed = this.attackSpeed,
 
             lifeSteal = this.lifeSteal,
             poisonDamage = this.poisonDamage,
@@ -71,7 +74,7 @@ public class CoreStats
 [Serializable]
 public class ArcherStats
 {
-    public float shootingSpeed;
+    //public float shootingSpeed;
     public float spread = 1;
     public float ricochetMultiplier = 1;
 
@@ -79,7 +82,7 @@ public class ArcherStats
     {
         return new ArcherStats
         {
-            shootingSpeed = this.shootingSpeed,
+            //shootingSpeed = this.shootingSpeed,
             spread = this.spread,
             ricochetMultiplier = this.ricochetMultiplier
         };
