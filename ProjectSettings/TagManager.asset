@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Weapon
   - Wall
+  - Shield
   layers:
   - Default
   - TransparentFX
@@ -15,9 +16,9 @@ TagManager:
   - UI
   - Player
   - Bullet
-  - 
-  - 
-  - 
+  - Wall
+  - Enemy
+  - Shield
   - 
   - 
   - 

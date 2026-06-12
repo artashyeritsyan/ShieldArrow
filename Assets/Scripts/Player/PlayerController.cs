@@ -110,7 +110,10 @@ public class PlayerController : MonoBehaviour
     }
 
     public virtual void Shoot() {
-        weaponScript.Shoot();
+        if (weaponScript != null)
+        {
+            weaponScript.Shoot();
+        }
     }
     public virtual void Dead() { }
     

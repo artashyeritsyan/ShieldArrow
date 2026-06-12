@@ -1284,6 +1284,10 @@ PrefabInstance:
       value: wall (4)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_TagString
       value: Wall
       objectReference: {fileID: 0}
@@ -2069,6 +2073,10 @@ PrefabInstance:
       value: wall (12)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_TagString
       value: Wall
       objectReference: {fileID: 0}
@@ -2619,6 +2627,10 @@ PrefabInstance:
       value: wall (6)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_TagString
       value: Wall
       objectReference: {fileID: 0}
@@ -3083,6 +3095,10 @@ PrefabInstance:
       value: wall (5)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_TagString
       value: Wall
       objectReference: {fileID: 0}
@@ -3145,6 +3161,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_Name
       value: wall (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_TagString
@@ -3271,6 +3291,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_Name
       value: wall (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_TagString
@@ -3434,8 +3458,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4, y: 4, z: 1.0000007}
-  m_Center: {x: 3.2676878e-14, y: 2, z: -0.00000032782555}
+  m_Size: {x: 4, y: 4, z: 0.74636376}
+  m_Center: {x: -2.4788114e-15, y: 2, z: -0.12681884}
 --- !u!1001 &1136293567
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3487,6 +3511,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_Name
       value: wall (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_TagString
@@ -3701,6 +3729,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_Name
       value: wall (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_TagString
@@ -4571,6 +4603,10 @@ PrefabInstance:
       value: wall_shelves
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2cf8fccf57845ec4b88b246baa9c714e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2cf8fccf57845ec4b88b246baa9c714e, type: 3}
       propertyPath: m_TagString
       value: Wall
       objectReference: {fileID: 0}
@@ -4708,8 +4744,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4, y: 4, z: 1.0000007}
-  m_Center: {x: 3.2676878e-14, y: 2, z: -0.00000032782555}
+  m_Size: {x: 4, y: 4, z: 0.7390653}
+  m_Center: {x: -2.4788114e-15, y: 2, z: -0.13046807}
 --- !u!1001 &1598960922
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4761,6 +4797,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_Name
       value: wall (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
       propertyPath: m_TagString

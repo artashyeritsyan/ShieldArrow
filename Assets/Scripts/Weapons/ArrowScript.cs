@@ -6,23 +6,54 @@ public class ArrowScript : MonoBehaviour
 {
     [Header("Parameters")]
     [SerializeField] float lifeTime = 5f;
-    [SerializeField] float arrowSpeed = 4f;
+    [SerializeField] float speed = 4f;
     // ricochet count means it will ricochet N times and will be destroyed on N+1 
     [SerializeField] int maxRicochetCount = 4;
     private float ricochetsLeft;
+    private Vector3 direction;
+    [SerializeField] LayerMask hitMask;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        direction = transform.forward;
         StartCoroutine(DestroyArrow());
-
         ricochetsLeft = maxRicochetCount;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.forward * Time.deltaTime * arrowSpeed);
+        float moveDist = speed * Time.deltaTime;
+
+        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, moveDist, hitMask))
+        {
+            // HIT something
+            OnHit(hit);
+        }
+        else
+        {
+            transform.position += direction * moveDist;
+        }
+    }
+
+
+    void OnHit(RaycastHit hit)
+    {
+        if (hit.collider.CompareTag("Wall") || hit.collider.CompareTag("Shield"))
+        {
+            direction = Vector3.Reflect(direction, hit.normal);
+            transform.forward = direction;
+            transform.position = hit.point + direction * 0.01f;
+        }
+        else if (hit.collider.CompareTag("Enemy"))
+        {
+            //DealDamage();
+            //ReturnToPool();
+        }
+        else {
+            return;
+        }
     }
 
     IEnumerator DestroyArrow()
@@ -54,25 +85,30 @@ public class ArrowScript : MonoBehaviour
     }
     void ResetTurn() => turned = false;
 
-    public void SetSpeed(float speed) { arrowSpeed = speed; }
-    public float GetSpeed() { return arrowSpeed; }
+    public void SetSpeed(float speed) { this.speed = speed; }
+    public float GetSpeed() { return speed; }
 
-    public void SetMaxRicochetCount (int count) { maxRicochetCount = count; }
+    public void SetMaxRicochetCount(int count) { maxRicochetCount = count; }
     public int GetMaxRicochetCount() { return maxRicochetCount; }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
-        {
-            // damage logic
-            Destroy(gameObject);
-        }
+        //if (other.CompareTag("Enemy"))
+        //{
+        //    // damage logic
+        //    Destroy(gameObject);
+        //}
     }
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            Ricochet(collision);
-        }
-    }
+    //void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Wall"))
+    //    {
+    //        Ricochet(collision);
+    //    }
+    //    if (collision.gameObject.CompareTag("Shield"))
+    //    {
+    //        Debug.Log("Shield");
+    //        Ricochet(collision);
+    //    }
+    //}
 }
