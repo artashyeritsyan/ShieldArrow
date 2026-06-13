@@ -27,6 +27,11 @@ public class PlayerController : MonoBehaviour
     //[SerializeField] GameObject[] weapons;
     //[SerializeField] float weaponSwitchDelay = 0.2f;
 
+    [Header("Movement")]
+    [SerializeField] float lerpTransitionSpeed = 10f;
+    private Vector3 moveDirection;
+    private Vector3 lerpedDirection;
+
     [Header("Rotation")]
     [SerializeField] float rotationSpeed = 15f;
     [SerializeField] float maxAngle = 60f;
@@ -49,19 +54,16 @@ public class PlayerController : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] Animator animator;
-    [SerializeField] float movementBlendSpeed = 10f;
     private float blendValue;
 
 
     Rigidbody rb;
     private InputHandler input;
-    private Vector3 moveDirection;
-    private Vector3 lerpedDirection;
+
 
     void Awake()
     {
         stats = baseProfile.GetStats().Clone();
-
     }
 
     void Start()
@@ -137,7 +139,7 @@ public class PlayerController : MonoBehaviour
     void HandleMovement()
     {
         moveDirection = new Vector3(input.move.x, 0, input.move.y);
-        lerpedDirection = Vector3.Lerp(lerpedDirection, moveDirection, Time.deltaTime * movementBlendSpeed);
+        lerpedDirection = Vector3.Lerp(lerpedDirection, moveDirection, Time.deltaTime * lerpTransitionSpeed);
 
         rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * lerpedDirection);
 
@@ -151,7 +153,7 @@ public class PlayerController : MonoBehaviour
         }
 
         float playerVector = Mathf.Sqrt(Mathf.Pow(moveDirection.x, 2) + Mathf.Pow(moveDirection.z, 2));
-        blendValue = Mathf.Lerp(blendValue, playerVector, Time.deltaTime * movementBlendSpeed);
+        blendValue = Mathf.Lerp(blendValue, playerVector, Time.deltaTime * lerpTransitionSpeed);
         animator.SetFloat("Blend", blendValue);
     }
 
