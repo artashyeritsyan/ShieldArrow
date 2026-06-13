@@ -46,13 +46,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrajectoryPreview
   firePoint: {fileID: 1546584115245139898}
   aimTarget: {fileID: 111702127214561881}
-  maxDistance: 3
-  maxBounces: 5
+  maxDistance: 4
+  maxBounces: 2
   hitMask:
     serializedVersion: 2
     m_Bits: 256
   dotPrefab: {fileID: 1862482351801581849, guid: f885ccf881cc1684eb5f8aeac2fd9cfb, type: 3}
-  maxDots: 100
+  maxDots: 50
   dotsPerUnit: 5
 --- !u!1 &2023284263076808329
 GameObject:
@@ -279,10 +279,11 @@ MonoBehaviour:
   canRotate: 0
   aimTarget: {fileID: 111702127214561881}
   trajectory: {fileID: 8423653584270636840}
-  aimColor: {r: 0.509434, g: 0, b: 0.059064794, a: 1}
+  aimColor: {r: 0.4113207, g: 0.10787464, b: 0.14322752, a: 1}
   aimDistance: 5
   aimSpeed: 3
   animator: {fileID: 1884691905671240189}
+  movementBlendSpeed: 10
 --- !u!54 &8338342028882916590
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -361,7 +362,7 @@ MonoBehaviour:
   cursorLocked: 1
   cursorInputForLook: 1
   mouseSensitivity: 0.1
-  stickSensitivity: 0.5
+  stickSensitivity: 0.3
 --- !u!1001 &2184541684784704486
 PrefabInstance:
   m_ObjectHideFlags: 0

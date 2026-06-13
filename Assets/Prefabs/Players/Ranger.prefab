@@ -492,6 +492,7 @@ MonoBehaviour:
   aimDistance: 5
   aimSpeed: 3
   animator: {fileID: 4812885400586429195}
+  movementBlendSpeed: 10
 --- !u!114 &8799433064518598810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,7 +571,7 @@ MonoBehaviour:
   cursorLocked: 1
   cursorInputForLook: 1
   mouseSensitivity: 0.1
-  stickSensitivity: 0.5
+  stickSensitivity: 0.3
 --- !u!4 &7776142660636546536 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2e3e199bbbe33274a9808242056fd375, type: 3}

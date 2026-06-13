@@ -49,11 +49,14 @@ public class PlayerController : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] Animator animator;
+    [SerializeField] float movementBlendSpeed = 10f;
+    private float blendValue;
 
 
     Rigidbody rb;
     private InputHandler input;
     private Vector3 moveDirection;
+    private Vector3 lerpedDirection;
 
     void Awake()
     {
@@ -134,17 +137,22 @@ public class PlayerController : MonoBehaviour
     void HandleMovement()
     {
         moveDirection = new Vector3(input.move.x, 0, input.move.y);
+        lerpedDirection = Vector3.Lerp(lerpedDirection, moveDirection, Time.deltaTime * movementBlendSpeed);
 
-        rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * moveDirection);
+        rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * lerpedDirection);
 
-        //if ((moveDirection == Vector3.zero))
-        //{
-        //    animator.SetBool("Running", false);
-        //}
-        //else
-        //{
-        //    animator.SetBool("Running", true);
-        //}
+        if ((moveDirection == Vector3.zero))
+        {
+            animator.SetBool("Running", false);
+        }
+        else
+        {
+            animator.SetBool("Running", true);
+        }
+
+        float playerVector = Mathf.Sqrt(Mathf.Pow(moveDirection.x, 2) + Mathf.Pow(moveDirection.z, 2));
+        blendValue = Mathf.Lerp(blendValue, playerVector, Time.deltaTime * movementBlendSpeed);
+        animator.SetFloat("Blend", blendValue);
     }
 
     void RotateCharacter(Vector3 direction)
