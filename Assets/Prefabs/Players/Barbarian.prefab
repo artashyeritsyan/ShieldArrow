@@ -82,8 +82,8 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 256
-  dotPrefab: {fileID: 1862482351801581849, guid: 9d89e20355385df449f5dc77aede5285, type: 3}
-  maxDots: 200
+  dotPrefab: {fileID: 1862482351801581849, guid: f885ccf881cc1684eb5f8aeac2fd9cfb, type: 3}
+  maxDots: 100
   dotsPerUnit: 5
 --- !u!1001 &6366461162951671140
 PrefabInstance:
@@ -247,6 +247,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e4d77db7c73734438a65369c57cc482, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6194583701951403583}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e4d77db7c73734438a65369c57cc482, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6378842363645171617}
   m_SourcePrefab: {fileID: 100100000, guid: 4e4d77db7c73734438a65369c57cc482, type: 3}
 --- !u!4 &6930566518386882196 stripped
 Transform:
@@ -315,6 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 110907876e6144f499cecae126f88869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+  playerClass: 2
   baseProfile: {fileID: 11400000, guid: 98a9956e26e254e439652c09d8044cbd, type: 2}
   stats:
     core:
@@ -341,10 +345,10 @@ MonoBehaviour:
   canRotate: 0
   aimTarget: {fileID: 1779078991343781980}
   trajectory: {fileID: 6249007125067108744}
-  aimColor: {r: 0.28627452, g: 0.30588236, b: 1, a: 1}
+  aimColor: {r: 0.10980392, g: 0.8039216, b: 0, a: 1}
   aimDistance: 5
   aimSpeed: 3
-  animator: {fileID: 0}
+  animator: {fileID: 8293333461215236067}
 --- !u!54 &9109097010885099644
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -398,7 +402,29 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: 
+  m_DefaultControlScheme: Keyboard&Mouse
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &6378842363645171617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7738733559713246254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8ff4e2e430a4b640a295d86bf4c0994, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputHandler
+  move: {x: 0, y: 0}
+  look: {x: 0, y: 0}
+  attack: 0
+  jump: 0
+  sprint: 0
+  analogMovement: 0
+  cursorLocked: 1
+  cursorInputForLook: 1
+  mouseSensitivity: 0.1
+  stickSensitivity: 0.5

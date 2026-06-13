@@ -959,6 +959,7 @@ GameObject:
   m_Component:
   - component: {fileID: 288430501}
   - component: {fileID: 288430500}
+  - component: {fileID: 288430502}
   m_Layer: 0
   m_Name: PlayerInputManager
   m_TagString: Untagged
@@ -979,7 +980,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInputManager
   m_NotificationBehavior: 0
-  m_MaxPlayerCount: -1
+  m_MaxPlayerCount: 2
   m_AllowJoining: 1
   m_JoinBehavior: 0
   m_PlayerJoinedEvent:
@@ -991,7 +992,7 @@ MonoBehaviour:
   m_JoinAction:
     m_UseReference: 0
     m_Action:
-      m_Name: 
+      m_Name: Join
       m_Type: 0
       m_ExpectedControlType: 
       m_Id: f7469624-8926-465c-bd77-3fa86d73be2d
@@ -1025,6 +1026,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &288430502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288430499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 720c1017d19df31499efc70429c77a9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputManagerController
+  playerMaxCount: 0
+  playerPrefabs:
+  - {fileID: 6963048947689508690, guid: 4b4e83e6e684b664a91192921c8bce42, type: 3}
+  - {fileID: 584107783534973320, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+  - {fileID: 7738733559713246254, guid: 55ab1b82d2c08474ea7b9a431541b2a2, type: 3}
 --- !u!1001 &289023401
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2713,7 +2731,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Barbarian
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7738733559713246254, guid: 55ab1b82d2c08474ea7b9a431541b2a2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6378842363645171617, guid: 55ab1b82d2c08474ea7b9a431541b2a2, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -5729,6 +5752,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b4e83e6e684b664a91192921c8bce42, type: 3}
+--- !u!1001 &4650981098230634674
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 238965948849376050, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.14968757
+      objectReference: {fileID: 0}
+    - target: {fileID: 238965948849376050, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.000000023796247
+      objectReference: {fileID: 0}
+    - target: {fileID: 238965948849376050, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.639
+      objectReference: {fileID: 0}
+    - target: {fileID: 238965948849376050, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 238965948849376050, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 238965948849376050, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 238965948849376050, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 238965948849376050, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 238965948849376050, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 238965948849376050, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 584107783534973320, guid: 4af20db7359845e409423d95b2779e24, type: 3}
+      propertyPath: m_Name
+      value: Knight
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4af20db7359845e409423d95b2779e24, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -5736,6 +5816,7 @@ SceneRoots:
   - {fileID: 1624843298}
   - {fileID: 1431970898}
   - {fileID: 711425990}
+  - {fileID: 288430501}
   - {fileID: 158525616}
   - {fileID: 194974065}
   - {fileID: 976094109}
@@ -5743,5 +5824,5 @@ SceneRoots:
   - {fileID: 1519178411}
   - {fileID: 216136809}
   - {fileID: 257620102}
-  - {fileID: 288430501}
   - {fileID: 1334775989}
+  - {fileID: 4650981098230634674}

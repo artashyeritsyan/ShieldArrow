@@ -4,14 +4,17 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
-enum PlayerClass { 
+public enum PlayerClass { 
     Archer, 
-    Knight 
+    Knight,
+    Barbarian,
+    Mage
 }
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Stats")]
+    [SerializeField] PlayerClass playerClass;
     [SerializeField] private PlayerStatsProfile baseProfile;
     [SerializeField] PlayerStats stats;
     [SerializeField] float speedMultiplier = 2000f;
@@ -45,7 +48,7 @@ public class PlayerController : MonoBehaviour
     //public GameObject arrow;
 
     [Header("Animation")]
-    public Animator animator;
+    [SerializeField] Animator animator;
 
 
     Rigidbody rb;
@@ -55,8 +58,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         stats = baseProfile.GetStats().Clone();
-        PlayerInput playerInput = GetComponent<PlayerInput>();
-        Debug.Log("Player index: " + playerInput.playerIndex);
+
     }
 
     void Start()
@@ -78,19 +80,25 @@ public class PlayerController : MonoBehaviour
             //HandleMouseLookClamped();
             HandleAim();
         }
-        HandleAttack();
+        if (playerClass == PlayerClass.Archer)
+            HandleAttack();
+
     }
 
     private void InitialiseValues()
     {
         rb = GetComponent<Rigidbody>();
         input = GetComponent<InputHandler>();
+        animator = GetComponent<Animator>();
 
         aimsManager = FindFirstObjectByType<AimsManager>();
         aimsManager.AddPlayerAim(aimTarget, aimColor);
 
         // Init Weapon
-        InitialiseWeapon();
+        if (playerClass == PlayerClass.Archer)
+        {
+            InitialiseWeapon();
+        }
 
         canRotate = false;
     }
@@ -108,6 +116,7 @@ public class PlayerController : MonoBehaviour
 
         DamageSystem.ProcessDamage(dmg, stats.core, target);
     }
+    public PlayerClass GetPlayerClass() { return playerClass; }
 
     public virtual void Shoot() {
         if (weaponScript != null)
@@ -116,6 +125,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     public virtual void Dead() { }
+
     
 
     // ------------------- Private functions ------------------
@@ -183,7 +193,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void InitialiseWeapon()
-    {
+    { 
         weaponScript = transform.GetComponentInChildren<WeaponScript>();
         weapon = weaponScript.gameObject;
     }
