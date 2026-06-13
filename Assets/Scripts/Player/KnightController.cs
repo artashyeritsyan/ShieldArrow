@@ -31,6 +31,7 @@ public class KnightController : PlayerController
         {
             animator.SetLayerWeight(1, 0);
             animator.SetTrigger("Attack");
+
             StartCoroutine(ResetAttackCooldown());
             StartCoroutine(WaitForAttackFinished());
         }

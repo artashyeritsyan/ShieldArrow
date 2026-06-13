@@ -5,7 +5,7 @@ public class ArcherController : PlayerController
     [Header("Weapon")]
     private WeaponScript weaponScript;
 
-    private void Start()
+    public override void AfterStart()
     {
         InitialiseWeapon();
     }

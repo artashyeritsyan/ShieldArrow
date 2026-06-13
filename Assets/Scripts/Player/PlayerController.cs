@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] TrajectoryPreview trajectory;
     [SerializeField] Color aimColor;
     [SerializeField] float aimDistance = 5f;
-    [SerializeField] float aimSpeed = 4f;
+    [SerializeField] float aimSpeed = 3f;
 
     private AimsManager aimsManager;
     private float currentAimAngle = 0f;
@@ -169,7 +169,6 @@ public class PlayerController : MonoBehaviour
 
         AdditiveAnimation();
     }
-
 
     void RotateCharacter(Vector3 direction)
     {

@@ -392,6 +392,9 @@ PrefabInstance:
       addedObject: {fileID: 1433414604787610426}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e3e199bbbe33274a9808242056fd375, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 8663357398952129995}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e3e199bbbe33274a9808242056fd375, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1911975804885618172}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e3e199bbbe33274a9808242056fd375, type: 3}
       insertIndex: -1
@@ -453,7 +456,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &1911975804885618172
+--- !u!114 &8663357398952129995
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -461,6 +464,51 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6963048947689508690}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24baf32baf8170f47b01740c8d4b8280, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArcherController
+  playerClass: 0
+  baseProfile: {fileID: 11400000, guid: 98a9956e26e254e439652c09d8044cbd, type: 2}
+  stats:
+    core:
+      speed: 0
+      maxHP: 0
+      currentHP: 0
+      damage: 0
+      attackSpeed: 0
+      lifeSteal: 0
+      poisonDamage: 0
+      fireDamage: 0
+      iceDamage: 0
+      lightningDamage: 0
+    archer:
+      spread: 1
+      ricochetMultiplier: 1
+    knight:
+      reflectDamageMultiplier: 1
+      shieldSize: 1
+      shieldAttackCooldown: 0
+  speedMultiplier: 2000
+  speedTransitionTime: 10
+  rotationSpeed: 15
+  maxAngle: 60
+  canRotate: 0
+  aimTarget: {fileID: 894419519161048708}
+  trajectory: {fileID: 4776292099807864093}
+  aimColor: {r: 0.1254902, g: 0.4156863, b: 0.54509807, a: 1}
+  aimDistance: 5
+  aimSpeed: 3
+  animator: {fileID: 4812885400586429195}
+  animTransitionTime: 5
+--- !u!114 &1911975804885618172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6963048947689508690}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 110907876e6144f499cecae126f88869, type: 3}
   m_Name: 
@@ -576,7 +624,7 @@ MonoBehaviour:
   cursorLocked: 1
   cursorInputForLook: 1
   mouseSensitivity: 0.1
-  stickSensitivity: 0.2
+  stickSensitivity: 0.3
 --- !u!4 &7776142660636546536 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2e3e199bbbe33274a9808242056fd375, type: 3}

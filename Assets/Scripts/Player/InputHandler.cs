@@ -20,8 +20,8 @@ public class InputHandler : MonoBehaviour
     public bool cursorInputForLook = true;
 
     [Header("Look Settings")]
-    public float mouseSensitivity = 0.1f;
-    public float stickSensitivity = 1.5f;
+    public float mouseSensitivity = 0.12f;
+    public float stickSensitivity = 0.2f;
 
 #if ENABLE_INPUT_SYSTEM
     private PlayerInput playerInput;
