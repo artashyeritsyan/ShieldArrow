@@ -14,7 +14,7 @@ public enum PlayerClass {
 public class PlayerController : MonoBehaviour
 {
     [Header("Stats")]
-    [SerializeField] PlayerClass playerClass;
+    [SerializeField] protected PlayerClass playerClass;
     [SerializeField] private PlayerStatsProfile baseProfile;
     [SerializeField] PlayerStats stats;
     [SerializeField] float speedMultiplier = 2000f;
@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     //[SerializeField] float weaponSwitchDelay = 0.2f;
 
     [Header("Movement")]
-    [SerializeField] float lerpTransitionSpeed = 10f;
+    [SerializeField] float speedTransitionTime = 10f;
     private Vector3 moveDirection;
     private Vector3 lerpedDirection;
 
@@ -48,32 +48,47 @@ public class PlayerController : MonoBehaviour
     private float currentAimAngle = 0f;
 
     [Header("Weapon")]
-    private GameObject weapon;
-    private WeaponScript weaponScript;
+    protected GameObject weapon;
+    //private WeaponScript weaponScript;
     //public GameObject arrow;
 
     [Header("Animation")]
-    [SerializeField] Animator animator;
+    [SerializeField] protected Animator animator;
+    [SerializeField] float animTransitionTime = 5f;
     private float blendValue;
 
+    [Header("Main Modifiers")]
+    bool isPause;
+    bool canMove;
 
     Rigidbody rb;
     private InputHandler input;
 
 
+    // FOR future me
+    // Do NOT use START() or AWAKE() in Childs
+    // Use AfterStart() and AfterAwake() instead, and override them.
     void Awake()
     {
         stats = baseProfile.GetStats().Clone();
+
+        AfterAwake();
     }
 
     void Start()
     {
         InitialiseValues();
+
+        AfterStart();
     }
 
     void Update()
     {
-        HandleMovement();
+        if (canMove)
+        {
+            HandleMovement();
+        }
+        
 
         // Implement it to listen the event inRoom(bool). and if in it is true than set canRotate = true
         if (canRotate)
@@ -85,8 +100,8 @@ public class PlayerController : MonoBehaviour
             //HandleMouseLookClamped();
             HandleAim();
         }
-        if (playerClass == PlayerClass.Archer)
-            HandleAttack();
+
+        HandleAttack();
 
     }
 
@@ -99,12 +114,7 @@ public class PlayerController : MonoBehaviour
         aimsManager = FindFirstObjectByType<AimsManager>();
         aimsManager.AddPlayerAim(aimTarget, aimColor);
 
-        // Init Weapon
-        if (playerClass == PlayerClass.Archer)
-        {
-            InitialiseWeapon();
-        }
-
+        canMove = true;
         canRotate = false;
     }
 
@@ -123,15 +133,15 @@ public class PlayerController : MonoBehaviour
     }
     public PlayerClass GetPlayerClass() { return playerClass; }
 
-    public virtual void Shoot() {
-        if (weaponScript != null)
-        {
-            weaponScript.Shoot();
-        }
-    }
-    public virtual void Dead() { }
 
-    
+    public virtual void AfterAwake() { }
+    public virtual void AfterStart() { }
+
+    public virtual void Dead() { }
+    public virtual void AdditiveAnimation() { }
+    public virtual void Attack() { }
+
+
 
     // ------------------- Private functions ------------------
     // --------------------------------------------------------
@@ -139,23 +149,22 @@ public class PlayerController : MonoBehaviour
     void HandleMovement()
     {
         moveDirection = new Vector3(input.move.x, 0, input.move.y);
-        lerpedDirection = Vector3.Lerp(lerpedDirection, moveDirection, Time.deltaTime * lerpTransitionSpeed);
+        lerpedDirection = Vector3.Lerp(lerpedDirection, moveDirection, Time.deltaTime * speedTransitionTime);
 
         rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * lerpedDirection);
 
-        if ((moveDirection == Vector3.zero))
-        {
-            animator.SetBool("Running", false);
-        }
-        else
-        {
-            animator.SetBool("Running", true);
-        }
-
-        float playerVector = Mathf.Sqrt(Mathf.Pow(moveDirection.x, 2) + Mathf.Pow(moveDirection.z, 2));
-        blendValue = Mathf.Lerp(blendValue, playerVector, Time.deltaTime * lerpTransitionSpeed);
-        animator.SetFloat("Blend", blendValue);
+        HandleAnimation();
     }
+
+    void HandleAnimation()
+    {
+        float playerVector = Mathf.Sqrt(Mathf.Pow(moveDirection.x, 2) + Mathf.Pow(moveDirection.z, 2));
+        blendValue = Mathf.Lerp(blendValue, playerVector, Time.deltaTime * animTransitionTime);
+        animator.SetFloat("Blend", blendValue);
+
+        AdditiveAnimation();
+    }
+
 
     void RotateCharacter(Vector3 direction)
     {
@@ -198,15 +207,12 @@ public class PlayerController : MonoBehaviour
     {
         if (input.attack)
         {
-            Shoot();
+            Attack();
         }
+
     }
 
-    private void InitialiseWeapon()
-    { 
-        weaponScript = transform.GetComponentInChildren<WeaponScript>();
-        weapon = weaponScript.gameObject;
-    }
+
 
 
     // Will be used for Ultra Attack
@@ -217,6 +223,7 @@ public class PlayerController : MonoBehaviour
 
     //}
 
-
+    public void SetCanMove(bool isCanMove) { canMove = isCanMove; }
+    public bool GetCanMove() { return canMove; } 
 
 }

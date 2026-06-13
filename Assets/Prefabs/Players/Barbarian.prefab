@@ -216,8 +216,16 @@ PrefabInstance:
       value: Barbarian
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4e4d77db7c73734438a65369c57cc482, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4e4d77db7c73734438a65369c57cc482, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4e4d77db7c73734438a65369c57cc482, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -340,6 +348,7 @@ MonoBehaviour:
       shieldSize: 1
       shieldAttackCooldown: 0
   speedMultiplier: 2000
+  speedTransitionTime: 10
   rotationSpeed: 15
   maxAngle: 60
   canRotate: 0
@@ -349,7 +358,7 @@ MonoBehaviour:
   aimDistance: 5
   aimSpeed: 3
   animator: {fileID: 8293333461215236067}
-  movementBlendSpeed: 10
+  animTransitionTime: 5
 --- !u!54 &9109097010885099644
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -428,4 +437,4 @@ MonoBehaviour:
   cursorLocked: 1
   cursorInputForLook: 1
   mouseSensitivity: 0.1
-  stickSensitivity: 0.3
+  stickSensitivity: 0.2
