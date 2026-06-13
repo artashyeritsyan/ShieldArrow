@@ -7,7 +7,8 @@ public class KnightController : PlayerController
     private WeaponScript weaponScript;
 
     [Header("Attack")]
-    [SerializeField] float attackTime = 1;
+    [SerializeField] float attacStartDelay = 0.1f;
+    [SerializeField] float attackTime = 0.3f;
     [SerializeField] float attackCooldown = 5;
 
     private bool canAttack;
@@ -37,16 +38,19 @@ public class KnightController : PlayerController
 
     IEnumerator WaitForAttackFinished()
     {
+        yield return new WaitForSeconds(attacStartDelay);
         SetCanMove(false);
+
         yield return new WaitForSeconds(attackTime);
         animator.SetLayerWeight(1, 1);
         SetCanMove(true);
     }
+
     IEnumerator ResetAttackCooldown()
     {
         canAttack = false;
-        yield return new WaitForSeconds(attackCooldown);
 
+        yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
     }
 

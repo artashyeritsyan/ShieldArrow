@@ -84,11 +84,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (canMove)
-        {
-            HandleMovement();
-        }
-        
+        HandleMovement();
 
         // Implement it to listen the event inRoom(bool). and if in it is true than set canRotate = true
         if (canRotate)
@@ -148,7 +144,16 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
-        moveDirection = new Vector3(input.move.x, 0, input.move.y);
+        // for smooth stop if canMove = false
+        if (canMove)
+        {
+            moveDirection = new Vector3(input.move.x, 0, input.move.y);
+        }
+        else
+        {
+            moveDirection = Vector3.zero;
+        }
+
         lerpedDirection = Vector3.Lerp(lerpedDirection, moveDirection, Time.deltaTime * speedTransitionTime);
 
         rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * lerpedDirection);
