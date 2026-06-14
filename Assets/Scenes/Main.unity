@@ -1040,8 +1040,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputManagerController
   playerMaxCount: 0
   playerPrefabs:
-  - {fileID: 584107783534973320, guid: 4af20db7359845e409423d95b2779e24, type: 3}
   - {fileID: 6963048947689508690, guid: 4b4e83e6e684b664a91192921c8bce42, type: 3}
+  - {fileID: 584107783534973320, guid: 4af20db7359845e409423d95b2779e24, type: 3}
   - {fileID: 7738733559713246254, guid: 55ab1b82d2c08474ea7b9a431541b2a2, type: 3}
 --- !u!1001 &289023401
 PrefabInstance:

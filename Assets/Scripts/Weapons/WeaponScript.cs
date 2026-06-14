@@ -54,6 +54,10 @@ public class WeaponScript : MonoBehaviour
         attackSpeed = newAttackSpeed;
     }
 
+    public bool GetCanShoot()     {
+        return canShoot;
+    }   
+
     private void OnEnable()
     {
         canShoot = true;

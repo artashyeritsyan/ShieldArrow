@@ -68,21 +68,18 @@ public class PlayerController : MonoBehaviour
     // FOR future me
     // Do NOT use START() or AWAKE() in Childs
     // Use AfterStart() and AfterAwake() instead, and override them.
-    void Awake()
+    protected virtual void Awake()
     {
         stats = baseProfile.GetStats().Clone();
 
-        AfterAwake();
     }
 
-    void Start()
+    protected virtual void Start()
     {
         InitialiseValues();
-
-        AfterStart();
     }
 
-    void Update()
+    protected virtual void Update()
     {
         HandleMovement();
 
@@ -132,6 +129,7 @@ public class PlayerController : MonoBehaviour
 
     public virtual void AfterAwake() { }
     public virtual void AfterStart() { }
+    public virtual void AfterUpdate() { }
 
     public virtual void Dead() { }
     public virtual void AdditiveAnimation() { }

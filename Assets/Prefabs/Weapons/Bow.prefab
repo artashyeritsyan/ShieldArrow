@@ -79,7 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponScript
   shootPoint: {fileID: 2754187627423734102}
   bullet: {fileID: 6890519995820334165, guid: 5f4e41f1c33d7fd48b963d57e403b9f6, type: 3}
-  attackSpeed: 2
+  attackSpeed: 1
 --- !u!1001 &458592355144641234
 PrefabInstance:
   m_ObjectHideFlags: 0

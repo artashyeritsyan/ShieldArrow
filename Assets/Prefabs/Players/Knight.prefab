@@ -294,8 +294,9 @@ MonoBehaviour:
   animator: {fileID: 1884691905671240189}
   animTransitionTime: 5
   attacStartDelay: 0.1
-  attackTime: 0.25
+  attackTime: 0.3
   attackCooldown: 2
+  animLayerTransitionTime: 5
 --- !u!54 &8338342028882916590
 Rigidbody:
   m_ObjectHideFlags: 0
