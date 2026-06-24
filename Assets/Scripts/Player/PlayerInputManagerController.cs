@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerInputManagerController : MonoBehaviour
 {
     [SerializeField] int playerMaxCount;
-    [SerializeField] List<GameObject> playerPrefabs;
+    [SerializeField] PlayersPrefabs playersPrefabs;
 
     PlayerInputManager inputManager;
 
@@ -39,6 +39,10 @@ public class PlayerInputManagerController : MonoBehaviour
         {
             SetPlayerClass(PlayerClass.Knight);
         }
+
+
+        PlayerManager.Instance.Register(player.GetComponent<PlayerController>());
+    
     }
 
     private void OnPlayerLeft(PlayerInput playerInput)
@@ -47,12 +51,13 @@ public class PlayerInputManagerController : MonoBehaviour
         {
             SetPlayerClass(PlayerClass.Archer);
         }
+
+        PlayerManager.Instance.Unregister(playerInput.gameObject.GetComponent<PlayerController>());
     }
 
     public void SetPlayerClass(PlayerClass playerClass)
     {
-        inputManager.playerPrefab = playerPrefabs[(int)playerClass];
-
+        inputManager.playerPrefab = playersPrefabs.GetPlayerOfClass(playerClass);
     }
 
     public void SetPlayerJoinEnabled(bool joinEnabled)
