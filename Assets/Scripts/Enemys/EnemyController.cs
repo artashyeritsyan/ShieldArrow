@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour
         float minDist = float.MaxValue;
         PlayerController closest = null;
 
-        foreach (var player in PlayerManager.Instance.players)
+        foreach (var player in PlayerManager.Instance.GetPlayers())
         {
             if (player == null) continue;
 
@@ -35,7 +35,7 @@ public class EnemyController : MonoBehaviour
                 closest = player;
             }
         }
-
+        Debug.Log("FInd player" +  minDist);
         return closest;
     }
 

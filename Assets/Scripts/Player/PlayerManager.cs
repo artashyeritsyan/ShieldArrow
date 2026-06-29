@@ -5,7 +5,7 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance;
 
-    public List<PlayerController> players = new List<PlayerController>();
+    private List<PlayerController> players = new List<PlayerController>();
 
     private void Awake()
     {
@@ -20,5 +20,10 @@ public class PlayerManager : MonoBehaviour
     public void Unregister(PlayerController player)
     {
         players.Remove(player);
+    }
+
+    public List<PlayerController> GetPlayers()
+    {
+        return players;
     }
 }
