@@ -1230,6 +1230,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5937461764481634635, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
+      propertyPath: bullet
+      value: 
+      objectReference: {fileID: 6221994979790774107, guid: b142933dfca1aeb48b122358bd3563f4, type: 3}
     - target: {fileID: 6067447479393992737, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
       propertyPath: m_Name
       value: Bow
@@ -2298,7 +2302,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 6892232844440235036, guid: 8f9c46e07226a314d8c984d8ab860b1e, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

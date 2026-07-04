@@ -98,5 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArrowScript
   lifeTime: 5
-  arrowSpeed: 4
+  speed: 5
   maxRicochetCount: 4
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 1344
