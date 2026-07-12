@@ -48,7 +48,7 @@ public class ArrowScript : MonoBehaviour
         }
         else if (hit.collider.CompareTag("Enemy"))
         {
-            //DealDamage();
+            //hit.collider.gameObject
             //ReturnToPool();
         }
         else {

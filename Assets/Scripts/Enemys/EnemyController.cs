@@ -39,6 +39,11 @@ public class EnemyController : MonoBehaviour
         return closest;
     }
 
+    public void GetDamage()
+    {
+
+    }
+
     void RotateTowards(Vector3 targetPos)
     {
         Vector3 dir = (targetPos - transform.position).normalized;
@@ -61,4 +66,6 @@ public class EnemyController : MonoBehaviour
             shootCooldown = 1f / shootingSpeed;
         }
     }
+
+    
 }
