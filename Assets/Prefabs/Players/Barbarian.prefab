@@ -58,8 +58,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 1}
-  m_LocalScale: {x: 2, y: 2, z: 2}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6930566518386882196}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -157,15 +157,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 4e4d77db7c73734438a65369c57cc482, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e4d77db7c73734438a65369c57cc482, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e4d77db7c73734438a65369c57cc482, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e4d77db7c73734438a65369c57cc482, type: 3}
       propertyPath: m_LocalPosition.x
@@ -347,7 +347,7 @@ MonoBehaviour:
       reflectDamageMultiplier: 1
       shieldSize: 1
       shieldAttackCooldown: 0
-  speedMultiplier: 2000
+  speedMultiplier: 3000
   speedTransitionTime: 10
   rotationSpeed: 15
   maxAngle: 60
