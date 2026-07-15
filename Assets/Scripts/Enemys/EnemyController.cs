@@ -8,6 +8,11 @@ public class EnemyController : MonoBehaviour
 
     float shootCooldown;
 
+    private void Start()
+    {
+
+    }
+
     void Update()
     {
         var target = GetClosestPlayer();
@@ -35,7 +40,7 @@ public class EnemyController : MonoBehaviour
                 closest = player;
             }
         }
-        Debug.Log("FInd player" +  minDist);
+        Debug.Log("Find player" +  minDist);
         return closest;
     }
 

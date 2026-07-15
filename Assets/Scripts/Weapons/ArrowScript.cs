@@ -8,7 +8,10 @@ public class ArrowScript : MonoBehaviour
     [SerializeField] float lifeTime = 5f;
     [SerializeField] float speed = 4f;
     // ricochet count means it will ricochet N times and will be destroyed on N+1 
-    [SerializeField] int maxRicochetCount = 4;
+    [SerializeField] int maxRicochetCount = 2;
+
+    [SerializeField] bool isEnemyArrow = false;
+
     private float ricochetsLeft;
     private Vector3 direction;
     [SerializeField] LayerMask hitMask;
@@ -19,6 +22,29 @@ public class ArrowScript : MonoBehaviour
         direction = transform.forward;
         StartCoroutine(DestroyArrow());
         ricochetsLeft = maxRicochetCount;
+
+        Color outlineColor;
+        if (isEnemyArrow)
+        {
+            outlineColor = Color.red;
+            if (gameObject.GetComponent<Outline>() != null)
+            {
+                gameObject.GetComponent<Outline>().enabled = true;
+            }
+            else
+            {
+                Outline outline = gameObject.AddComponent<Outline>();
+                outline.enabled = true;
+                gameObject.GetComponent<Outline>().OutlineColor = outlineColor;
+                gameObject.GetComponent<Outline>().OutlineWidth = 1.0f;
+            }
+        }
+        else
+        {
+            outlineColor = Color.cyan;
+        }
+
+        
     }
 
     // Update is called once per frame
@@ -42,9 +68,18 @@ public class ArrowScript : MonoBehaviour
     {
         if (hit.collider.CompareTag("Wall") || hit.collider.CompareTag("Shield"))
         {
-            direction = Vector3.Reflect(direction, hit.normal);
-            transform.forward = direction;
-            transform.position = hit.point + direction * 0.01f;
+            if (ricochetsLeft > 0)
+            {
+                direction = Vector3.Reflect(direction, hit.normal);
+                transform.forward = direction;
+                transform.position = hit.point + direction * 0.01f;
+
+                ricochetsLeft--;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
         else if (hit.collider.CompareTag("Enemy"))
         {

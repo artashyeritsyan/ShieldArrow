@@ -16,5 +16,12 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    
+}
+
+enum GameStates
+{
+    Lobby,
+    Aisle,
+    Room,
+    Boss
 }
