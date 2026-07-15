@@ -293,6 +293,8 @@ MonoBehaviour:
   aimSpeed: 3
   animator: {fileID: 1884691905671240189}
   animTransitionTime: 5
+  attackSoundEffects:
+  - {fileID: 8300000, guid: 7f066f2cb31fb8d4cb3bd4ffc12f60b4, type: 3}
   attacStartDelay: 0.1
   attackTime: 0.3
   attackCooldown: 2

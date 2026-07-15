@@ -40,6 +40,22 @@ public class KnightController : PlayerController
         weapon = weaponScript.gameObject;
     }
 
+    void PlayRandomSound(AudioClip[] sounds)
+    {
+        if (sounds.Length > 0)
+        {
+            int randomSound = Random.Range(0, sounds.Length);
+            float randomVolume = UnityEngine.Random.Range(0.7f, 0.9f);
+            float randomPitch = UnityEngine.Random.Range(0.8f, 1.2f);
+            AudioManager.Play(sounds[randomSound], randomVolume, randomPitch);
+        }
+    }
+
+    public override void PlayAttackSound()
+    {
+        PlayRandomSound(attackSoundEffects);
+    }
+
     public override void Attack()
     {
         if (canAttack)
@@ -50,6 +66,8 @@ public class KnightController : PlayerController
 
             StartCoroutine(ResetAttackCooldown());
             StartCoroutine(WaitForAttackFinished());
+
+            PlayAttackSound();
         }
     }
 

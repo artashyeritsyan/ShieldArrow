@@ -546,6 +546,8 @@ MonoBehaviour:
   aimSpeed: 3
   animator: {fileID: 4812885400586429195}
   animTransitionTime: 5
+  attackSoundEffects:
+  - {fileID: 8300000, guid: 9547efabc8f1e3b43a134e8cc8ce3bd1, type: 3}
   attackTime: 0.15
   attackCooldown: 5
   animLayerTransitionTime: 5

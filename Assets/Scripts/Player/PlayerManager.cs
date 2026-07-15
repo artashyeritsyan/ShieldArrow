@@ -4,8 +4,9 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance;
-
     private List<PlayerController> players = new List<PlayerController>();
+
+
 
     private void Awake()
     {

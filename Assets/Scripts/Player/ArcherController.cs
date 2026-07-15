@@ -39,6 +39,22 @@ public class ArcherController : PlayerController
         weapon = weaponScript.gameObject;
     }
 
+    void PlayRandomSound(AudioClip[] sounds)
+    {
+        if (sounds.Length > 0)
+        {
+            int randomSound = Random.Range(0, sounds.Length);
+            float randomVolume = UnityEngine.Random.Range(0.7f, 0.9f);
+            float randomPitch = UnityEngine.Random.Range(0.8f, 1.2f);
+            AudioManager.Play(sounds[randomSound], randomVolume, randomPitch);
+        }
+    }
+
+    public override void PlayAttackSound()
+    {
+        PlayRandomSound(attackSoundEffects);
+    }
+
     public override void Attack()
     {
         if (canAttack)
@@ -52,6 +68,8 @@ public class ArcherController : PlayerController
 
             StartCoroutine(ResetAttackCooldown());
             StartCoroutine(WaitForAttackFinished());
+
+            PlayAttackSound();
         }
     }
     IEnumerator WaitForAttackFinished()    {
@@ -71,6 +89,5 @@ public class ArcherController : PlayerController
         yield return new WaitForSeconds(1 / weaponScript.GetAttackSpeed());
         canAttack = true;
     }
-
     
 }

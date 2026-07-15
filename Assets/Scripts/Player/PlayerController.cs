@@ -57,6 +57,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float animTransitionTime = 5f;
     private float blendValue;
 
+    [Header("Sound Effects")]
+    public AudioClip[] attackSoundEffects;
+
     [Header("Main Modifiers")]
     bool isPause;
     bool canMove;
@@ -134,6 +137,8 @@ public class PlayerController : MonoBehaviour
     public virtual void Dead() { }
     public virtual void AdditiveAnimation() { }
     public virtual void Attack() { }
+
+    public virtual void PlayAttackSound() { }
 
 
 
