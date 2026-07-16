@@ -86,7 +86,10 @@ public class EnemyController : MonoBehaviour
     {
         if (canAttack)
         {
-            weaponScript.Shoot();
+            if (weaponScript != null)
+            {
+                weaponScript.Shoot();
+            }
             canAttack = false;
 
             Debug.Log(canAttack);
@@ -129,7 +132,10 @@ public class EnemyController : MonoBehaviour
         //layerTargetWeight = 0;
 
         animator.SetTrigger("Attack");
-        animator.SetFloat("AttackSpeed", weaponScript.GetAttackSpeed());
+        if (weaponScript)
+        {
+            animator.SetFloat("AttackSpeed", weaponScript.GetAttackSpeed());
+        }
     }
 
     void HandleAnimation()

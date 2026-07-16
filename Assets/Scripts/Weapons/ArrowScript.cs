@@ -11,6 +11,9 @@ public class ArrowScript : MonoBehaviour
     [SerializeField] int maxRicochetCount = 2;
 
     [SerializeField] bool isEnemyArrow = false;
+    [SerializeField] bool showOutline = false;
+    [SerializeField] Color outlineColor = Color.white;
+    [SerializeField] float outlineWidth = 1.0f;
 
     private float ricochetsLeft;
     private Vector3 direction;
@@ -23,10 +26,8 @@ public class ArrowScript : MonoBehaviour
         StartCoroutine(DestroyArrow());
         ricochetsLeft = maxRicochetCount;
 
-        Color outlineColor;
-        if (isEnemyArrow)
+        if (showOutline)
         {
-            outlineColor = Color.red;
             if (gameObject.GetComponent<Outline>() != null)
             {
                 gameObject.GetComponent<Outline>().enabled = true;
@@ -36,15 +37,9 @@ public class ArrowScript : MonoBehaviour
                 Outline outline = gameObject.AddComponent<Outline>();
                 outline.enabled = true;
                 gameObject.GetComponent<Outline>().OutlineColor = outlineColor;
-                gameObject.GetComponent<Outline>().OutlineWidth = 1.0f;
             }
+            gameObject.GetComponent<Outline>().OutlineWidth = outlineWidth;
         }
-        else
-        {
-            outlineColor = Color.cyan;
-        }
-
-        
     }
 
     // Update is called once per frame

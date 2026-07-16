@@ -110,6 +110,9 @@ MonoBehaviour:
   speed: 6
   maxRicochetCount: 2
   isEnemyArrow: 0
+  showOutline: 0
+  outlineColor: {r: 0, g: 0.5849056, b: 0.28614372, a: 1}
+  outlineWidth: 1
   hitMask:
     serializedVersion: 2
     m_Bits: 1280
@@ -133,7 +136,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.04, y: 0.13140118, z: 0.22691667}
-  m_Center: {x: 0.000000011175871, y: 0.019460514, z: -0.090942144}
+  m_Center: {x: 0.000000011175871, y: 0, z: -0.090942144}
 --- !u!65 &3342762114737911597
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -153,8 +156,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.13140118, z: 0.4789401}
-  m_Center: {x: 0.000000011175871, y: 0.019460514, z: 0.03506957}
+  m_Size: {x: 0.06, y: 0.13140118, z: 0.4789401}
+  m_Center: {x: 0.000000011175871, y: 0, z: 0.03506957}
 --- !u!54 &-6596171647501600550
 Rigidbody:
   m_ObjectHideFlags: 0

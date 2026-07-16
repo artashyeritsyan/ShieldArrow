@@ -27,7 +27,7 @@ public class ArcherController : PlayerController
 
     protected override void Update()
     {
-        //base.Update();
+        base.Update();
 
         //layerCurrentWeight = Mathf.Lerp(layerCurrentWeight, layerTargetWeight, animLayerTransitionTime * Time.deltaTime);
         //animator.SetLayerWeight(1, layerCurrentWeight);
