@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArrowScript
   lifeTime: 10
-  speed: 5
+  speed: 12
   maxRicochetCount: 0
   isEnemyArrow: 1
   showOutline: 1

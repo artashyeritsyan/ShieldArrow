@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,6 +8,8 @@ public class EnemyController : MonoBehaviour
     [Header("Parameters")]
     [SerializeField] float rotationSpeed = 5f;
     [SerializeField] float shootingSpeed = 1f;
+    [SerializeField] float shotsInRow = 1f; 
+    [SerializeField] float delayBetweenShots = 0.7f; 
 
 
     [Header("Weapon")]
@@ -89,17 +92,43 @@ public class EnemyController : MonoBehaviour
             if (weaponScript != null)
             {
                 weaponScript.Shoot();
+                PlayAttackSound();
+                if (shotsInRow > 1)
+                {
+                    StartCoroutine(ShootInRow());
+                }
+                else
+                {
+                    StartCoroutine(ResetAttackCooldown());
+                }
+                canAttack = false;
             }
-            canAttack = false;
+            else
+            {
+                canAttack = false;
+                StartCoroutine(ResetAttackCooldown());
+                PlayAttackSound();
+            }
+            AttackAnimation();
 
             Debug.Log(canAttack);
 
-            AttackAnimation();
-            StartCoroutine(ResetAttackCooldown());
-
-            PlayAttackSound();
 
         }
+    }
+
+    IEnumerator ShootInRow()
+    {
+        for (int i = 1; i < shotsInRow; i++)
+        {
+            yield return new WaitForSeconds(delayBetweenShots);
+            weaponScript.Shoot();
+            PlayAttackSound();
+            animator.SetTrigger("Attack");
+        }
+        StartCoroutine(ResetAttackCooldown());
+        animator.SetTrigger("Reload");
+
     }
 
     public void PlayAttackSound()
@@ -122,7 +151,16 @@ public class EnemyController : MonoBehaviour
     {
         canAttack = false;
         // 1 stands for 1 second
-        yield return new WaitForSeconds(1 / weaponScript.GetAttackSpeed());
+        float cooldown;
+        if (weaponScript)
+        {
+            cooldown = 1 / weaponScript.GetAttackSpeed();
+
+        }
+        else {
+            cooldown = 1 / shootingSpeed;
+        }
+        yield return new WaitForSeconds(cooldown);
         canAttack = true;
     }
 
@@ -131,7 +169,10 @@ public class EnemyController : MonoBehaviour
         //layerCurrentWeight = 0.1f;
         //layerTargetWeight = 0;
 
+
         animator.SetTrigger("Attack");
+        //animator.SetFloat("ShotsInRow", shotsInRow);
+
         if (weaponScript)
         {
             animator.SetFloat("AttackSpeed", weaponScript.GetAttackSpeed());

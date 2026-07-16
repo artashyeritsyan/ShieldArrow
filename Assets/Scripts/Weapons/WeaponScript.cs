@@ -26,11 +26,11 @@ public class WeaponScript : MonoBehaviour
 
     public void Shoot()
     {
-        if (canShoot)
-        {
+        //if (canShoot)
+        //{
             Instantiate(bullet, shootPoint.position, shootPoint.rotation);
             StartCoroutine(ShootCooldown());
-        }
+        //}
     }
 
     IEnumerator ShootCooldown()
