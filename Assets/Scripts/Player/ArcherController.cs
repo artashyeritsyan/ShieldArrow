@@ -27,8 +27,14 @@ public class ArcherController : PlayerController
 
     protected override void Update()
     {
-        base.Update();
+        //base.Update();
 
+        //layerCurrentWeight = Mathf.Lerp(layerCurrentWeight, layerTargetWeight, animLayerTransitionTime * Time.deltaTime);
+        //animator.SetLayerWeight(1, layerCurrentWeight);
+    }
+
+    public override void AdditiveAnimation()
+    {
         layerCurrentWeight = Mathf.Lerp(layerCurrentWeight, layerTargetWeight, animLayerTransitionTime * Time.deltaTime);
         animator.SetLayerWeight(1, layerCurrentWeight);
     }
@@ -59,11 +65,8 @@ public class ArcherController : PlayerController
     {
         if (canAttack)
         {
-            layerCurrentWeight = 0.1f;
-            layerTargetWeight = 0;
+            AttackAnimation();
 
-            animator.SetTrigger("Attack");
-            animator.SetFloat("AttackSpeed", weaponScript.GetAttackSpeed());
             weaponScript.Shoot();
 
             StartCoroutine(ResetAttackCooldown());
@@ -72,6 +75,16 @@ public class ArcherController : PlayerController
             PlayAttackSound();
         }
     }
+
+    void AttackAnimation()
+    {
+        layerCurrentWeight = 0.1f;
+        layerTargetWeight = 0;
+
+        animator.SetTrigger("Attack");
+        animator.SetFloat("AttackSpeed", weaponScript.GetAttackSpeed());
+    }
+
     IEnumerator WaitForAttackFinished()    {
         SetCanMove(false);
 

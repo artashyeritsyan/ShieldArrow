@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour
     protected virtual void Update()
     {
         HandleMovement();
+        HandleAnimation();
 
         // Implement it to listen the event inRoom(bool). and if in it is true than set canRotate = true
         if (canRotate)
@@ -161,7 +162,6 @@ public class PlayerController : MonoBehaviour
 
         rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * lerpedDirection);
 
-        HandleAnimation();
     }
 
     void HandleAnimation()
