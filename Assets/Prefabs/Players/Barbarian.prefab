@@ -47,7 +47,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7321418909076830642
 Transform:
   m_ObjectHideFlags: 0
@@ -359,6 +359,8 @@ MonoBehaviour:
   aimSpeed: 3
   animator: {fileID: 8293333461215236067}
   animTransitionTime: 5
+  attackSoundEffects:
+  - {fileID: 8300000, guid: 7f066f2cb31fb8d4cb3bd4ffc12f60b4, type: 3}
 --- !u!54 &9109097010885099644
 Rigidbody:
   m_ObjectHideFlags: 0

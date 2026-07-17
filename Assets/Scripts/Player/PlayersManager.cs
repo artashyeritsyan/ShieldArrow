@@ -6,7 +6,7 @@ public class PlayerManager : MonoBehaviour
     public static PlayerManager Instance;
     private List<PlayerController> players = new List<PlayerController>();
 
-
+    public Vector3 playerSpawnPosition;
 
     private void Awake()
     {
@@ -16,6 +16,7 @@ public class PlayerManager : MonoBehaviour
     public void Register(PlayerController player)
     {
         players.Add(player);
+        player.transform.position = playerSpawnPosition;
     }
 
     public void Unregister(PlayerController player)

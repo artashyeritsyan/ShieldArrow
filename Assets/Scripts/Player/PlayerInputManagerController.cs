@@ -37,7 +37,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
         if (playerInput.playerIndex == 0)
         {
-            SetPlayerClass(PlayerClass.Knight);
+            SetPlayerClass(PlayerClass.Barbarian);
         }
 
 

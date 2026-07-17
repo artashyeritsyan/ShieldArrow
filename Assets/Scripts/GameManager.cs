@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
 }
 
-enum GameStates
+enum LevelStates
 {
     Lobby,
     Aisle,
