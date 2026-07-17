@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: PlayersPrefabs
   m_EditorClassIdentifier: Assembly-CSharp::PlayersPrefabs
   playerPrefabs:
+  - {fileID: 8461413547539849048, guid: ea2e5c06d6a395b47a39d201320c348c, type: 3}
   - {fileID: 5473945032332348849, guid: 608a4c5b96534de4ea8ed8654551a765, type: 3}
   - {fileID: 7738733559713246254, guid: 55ab1b82d2c08474ea7b9a431541b2a2, type: 3}
   - {fileID: 6963048947689508690, guid: 4b4e83e6e684b664a91192921c8bce42, type: 3}
