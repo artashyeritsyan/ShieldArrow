@@ -112,7 +112,7 @@ AnimatorStateMachine:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BowAiming
+  m_Name: CrossbowAiming
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 2317309389827699329}
@@ -257,9 +257,9 @@ AnimatorController:
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
   - serializedVersion: 5
-    m_Name: BowAiming
+    m_Name: CrossbowAiming
     m_StateMachine: {fileID: -4857187863697990029}
-    m_Mask: {fileID: 31900000, guid: 80d003290bfa5b04f8c82544329ddefa, type: 2}
+    m_Mask: {fileID: 31900000, guid: e16f0598c2a229846a359b519dc1f4c6, type: 2}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0

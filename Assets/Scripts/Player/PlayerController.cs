@@ -7,8 +7,10 @@ using UnityEngine.Windows;
 public enum PlayerClass { 
     Archer, 
     Knight,
+    Crossbower,
     Barbarian,
-    Mage
+    Assasin,
+    Mage,
 }
 
 public class PlayerController : MonoBehaviour
@@ -17,7 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] protected PlayerClass playerClass;
     [SerializeField] private PlayerStatsProfile baseProfile;
     [SerializeField] PlayerStats stats;
-    [SerializeField] float speedMultiplier = 2000f;
+    [SerializeField] float speedMultiplier = 3000f;
 
     [Header("Skill")]
 

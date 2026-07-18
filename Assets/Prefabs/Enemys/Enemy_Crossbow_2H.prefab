@@ -49,8 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   rotationSpeed: 4
   shootingSpeed: 1
-  shotsInRow: 1
-  delayBetweenShots: 0.7
+  shotsInRow: 3
+  delayBetweenShots: 0.5
   weaponScript: {fileID: 2748378906268940932}
   animator: {fileID: 5368197704486974989}
   animTransitionTime: 5
@@ -638,19 +638,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: eca8adcf7ed620f4591a75ba7f58a87b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.99984777
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: eca8adcf7ed620f4591a75ba7f58a87b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: eca8adcf7ed620f4591a75ba7f58a87b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.01745245
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: eca8adcf7ed620f4591a75ba7f58a87b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: eca8adcf7ed620f4591a75ba7f58a87b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -658,7 +658,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: eca8adcf7ed620f4591a75ba7f58a87b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: eca8adcf7ed620f4591a75ba7f58a87b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z

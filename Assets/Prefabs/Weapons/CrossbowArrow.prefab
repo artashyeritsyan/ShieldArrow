@@ -144,7 +144,7 @@ MonoBehaviour:
   isEnemyArrow: 1
   showOutline: 1
   outlineColor: {r: 0.018206397, g: 0.4716981, b: 0.0062299506, a: 1}
-  outlineWidth: 5
+  outlineWidth: 3
   hitMask:
     serializedVersion: 2
     m_Bits: 1280

@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrajectoryPreview
   firePoint: {fileID: 5963250119838019544}
-  aimTarget: {fileID: 0}
+  aimTarget: {fileID: 5146158420358092166}
   maxDistance: 10
   maxBounces: 5
   hitMask:
@@ -228,7 +228,7 @@ PrefabInstance:
       addedObject: {fileID: 5338100337720968059}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dfb3f04fa6f980749a75de0f9c5d1165, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7588922579396972600}
+      addedObject: {fileID: 6452839345066206315}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dfb3f04fa6f980749a75de0f9c5d1165, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2553900701435401126}
@@ -294,7 +294,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &7588922579396972600
+--- !u!114 &6452839345066206315
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -303,10 +303,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5473945032332348849}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24baf32baf8170f47b01740c8d4b8280, type: 3}
+  m_Script: {fileID: 11500000, guid: fcca6d0ce8a6fb644ab4de523a024553, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ArcherController
-  playerClass: 0
+  m_EditorClassIdentifier: Assembly-CSharp::CrossbowerController
+  playerClass: 2
   baseProfile: {fileID: 11400000, guid: 98a9956e26e254e439652c09d8044cbd, type: 2}
   stats:
     core:
@@ -334,17 +334,17 @@ MonoBehaviour:
   canRotate: 0
   aimTarget: {fileID: 5146158420358092166}
   trajectory: {fileID: 3159937125279948819}
-  aimColor: {r: 0.027814675, g: 0.3433962, b: 0.012310381, a: 1}
+  aimColor: {r: 0.02745098, g: 0.34509805, b: 0.011764706, a: 1}
   aimDistance: 5
   aimSpeed: 3
   animator: {fileID: 1256401326742849770}
   animTransitionTime: 5
   attackSoundEffects:
   - {fileID: 8300000, guid: 9547efabc8f1e3b43a134e8cc8ce3bd1, type: 3}
-  attackTime: 0.15
+  attackTime: 0.1
   attackCooldown: 5
   animLayerTransitionTime: 5
-  animFinishTime: 0.2
+  animFinishTime: 0.1
 --- !u!114 &2553900701435401126
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3454,7 +3454,7 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 6963048947689508690, guid: 4b4e83e6e684b664a91192921c8bce42, type: 3}
+  m_PlayerPrefab: {fileID: 5473945032332348849, guid: 608a4c5b96534de4ea8ed8654551a765, type: 3}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
   m_FixedNumberOfSplitScreens: -1
@@ -19347,14 +19347,6 @@ PrefabInstance:
     - target: {fileID: 6580642929140171692, guid: bb22c52d82d37ae4da79216e35cb79f9, type: 3}
       propertyPath: m_Name
       value: Enemy_Crossbow_2H
-      objectReference: {fileID: 0}
-    - target: {fileID: 8894221311309460851, guid: bb22c52d82d37ae4da79216e35cb79f9, type: 3}
-      propertyPath: shotsInRow
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8894221311309460851, guid: bb22c52d82d37ae4da79216e35cb79f9, type: 3}
-      propertyPath: delayBetweenShots
-      value: 0.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

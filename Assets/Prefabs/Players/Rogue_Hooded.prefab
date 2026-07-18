@@ -252,7 +252,7 @@ PrefabInstance:
       addedObject: {fileID: 8841657335953610081}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 11993f8b834c6834c94140f708bb2ab9, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1405063245829400101}
+      addedObject: {fileID: -9021286900051376718}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 11993f8b834c6834c94140f708bb2ab9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 273643802093905491}
@@ -313,7 +313,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &1405063245829400101
+--- !u!114 &-9021286900051376718
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -322,10 +322,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8461413547539849048}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24baf32baf8170f47b01740c8d4b8280, type: 3}
+  m_Script: {fileID: 11500000, guid: 15b227944a31c034a8492aee20cd7973, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ArcherController
-  playerClass: 0
+  m_EditorClassIdentifier: Assembly-CSharp::AssasinController
+  playerClass: 4
   baseProfile: {fileID: 11400000, guid: 98a9956e26e254e439652c09d8044cbd, type: 2}
   stats:
     core:
@@ -347,23 +347,24 @@ MonoBehaviour:
       shieldSize: 1
       shieldAttackCooldown: 0
   speedMultiplier: 3000
-  speedTransitionTime: 15
+  speedTransitionTime: 10
   rotationSpeed: 15
   maxAngle: 60
   canRotate: 0
   aimTarget: {fileID: 9094435699238066794}
   trajectory: {fileID: 3384549862657485317}
-  aimColor: {r: 0.027814675, g: 0.3433962, b: 0.012310381, a: 1}
+  aimColor: {r: 0.02745098, g: 0.34509805, b: 0.011764706, a: 1}
   aimDistance: 5
   aimSpeed: 3
   animator: {fileID: 8305761038630627824}
   animTransitionTime: 5
   attackSoundEffects:
-  - {fileID: 8300000, guid: 7f066f2cb31fb8d4cb3bd4ffc12f60b4, type: 3}
-  attackTime: 0.15
+  - {fileID: 8300000, guid: 952b1ee16f2eb224094be2164168158d, type: 3}
+  attackStartDelay: 0.2
+  attackTime: 0.1
   attackCooldown: 5
   animLayerTransitionTime: 5
-  animFinishTime: 0.2
+  animFinishTime: 0.1
 --- !u!114 &273643802093905491
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -19,7 +19,7 @@ public class PlayerInputManagerController : MonoBehaviour
         inputManager.onPlayerJoined += OnPlayerJoined;
         inputManager.onPlayerLeft += OnPlayerLeft;
 
-        SetPlayerClass(PlayerClass.Archer);
+        SetPlayerClass(PlayerClass.Crossbower);
     }
 
     private void OnDestroy()
@@ -37,7 +37,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
         if (playerInput.playerIndex == 0)
         {
-            SetPlayerClass(PlayerClass.Barbarian);
+            SetPlayerClass(PlayerClass.Knight);
         }
 
 
