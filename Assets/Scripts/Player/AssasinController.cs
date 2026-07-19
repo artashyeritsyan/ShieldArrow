@@ -10,12 +10,8 @@ public class AssasinController : PlayerController
     [SerializeField] float attackStartDelay = 0.1f;
     [SerializeField] float attackTime = 0.3f;
     [SerializeField] float attackCooldown = 5;
-    [SerializeField] float animLayerTransitionTime = 10f;
     [SerializeField] float animFinishTime = 0.1f;
-    private float layerTargetWeight = 0;
-    private float layerCurrentWeight = 0;
 
-    private bool canAttack;
 
 
     protected override void Start()
@@ -36,8 +32,7 @@ public class AssasinController : PlayerController
 
     public override void AdditiveAnimation()
     {
-        layerCurrentWeight = Mathf.Lerp(layerCurrentWeight, layerTargetWeight, animLayerTransitionTime * Time.deltaTime);
-        animator.SetLayerWeight(1, layerCurrentWeight);
+
     }
 
     private void InitialiseWeapon()

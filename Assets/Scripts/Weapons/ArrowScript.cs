@@ -58,7 +58,6 @@ public class ArrowScript : MonoBehaviour
         }
     }
 
-
     void OnHit(RaycastHit hit)
     {
         if (hit.collider.CompareTag("Wall") || hit.collider.CompareTag("Shield"))
@@ -76,10 +75,16 @@ public class ArrowScript : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        else if (hit.collider.CompareTag("Enemy"))
+        else if (hit.collider.CompareTag("Enemy") && !isEnemyArrow)
         {
             //hit.collider.gameObject
             //ReturnToPool();
+            Destroy(gameObject);
+        }
+        else if (hit.collider.CompareTag("Player") && isEnemyArrow)
+        {
+            hit.collider.gameObject.GetComponent<PlayerController>().DealDamage();
+            Destroy(gameObject);
         }
         else {
             return;

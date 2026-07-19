@@ -9,10 +9,8 @@ public class CrossbowerController : PlayerController
     [Header("Attack")]
     [SerializeField] float attackTime = 0.3f;
     [SerializeField] float attackCooldown = 5;
-    [SerializeField] float animLayerTransitionTime = 10f;
     [SerializeField] float animFinishTime = 0.1f;
-    private float layerTargetWeight = 0;
-    private float layerCurrentWeight = 0;
+
 
     private bool canAttack;
 
@@ -35,8 +33,7 @@ public class CrossbowerController : PlayerController
 
     public override void AdditiveAnimation()
     {
-        layerCurrentWeight = Mathf.Lerp(layerCurrentWeight, layerTargetWeight, animLayerTransitionTime * Time.deltaTime);
-        animator.SetLayerWeight(1, layerCurrentWeight);
+
     }
 
     private void InitialiseWeapon()

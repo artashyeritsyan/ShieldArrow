@@ -59,12 +59,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float animTransitionTime = 5f;
     private float blendValue;
 
+    [SerializeField] float animLayerTransitionTime = 5f;
+    protected float layerTargetWeight = 0;
+    protected float layerCurrentWeight = 0;
+
     [Header("Sound Effects")]
     public AudioClip[] attackSoundEffects;
 
     [Header("Main Modifiers")]
-    bool isPause;
-    bool canMove;
+    [SerializeField] protected bool isDead;
+    protected bool isPause;
+    protected bool canMove;
+    protected bool canAttack;
+
 
     Rigidbody rb;
     private InputHandler input;
@@ -82,11 +89,18 @@ public class PlayerController : MonoBehaviour
     protected virtual void Start()
     {
         InitialiseValues();
+
+        layerTargetWeight = 1;
     }
 
     protected virtual void Update()
     {
-        HandleMovement();
+        if (!isDead)
+        {
+            HandleMovement();
+            HandleAttack();
+        }
+
         HandleAnimation();
 
         // Implement it to listen the event inRoom(bool). and if in it is true than set canRotate = true
@@ -100,7 +114,6 @@ public class PlayerController : MonoBehaviour
             HandleAim();
         }
 
-        HandleAttack();
 
     }
 
@@ -131,6 +144,12 @@ public class PlayerController : MonoBehaviour
         DamageSystem.ProcessDamage(dmg, stats.core, target);
     }
     public PlayerClass GetPlayerClass() { return playerClass; }
+
+
+    public virtual void GetHitAnimation()
+    {
+        animator.SetTrigger("Hit");
+    }
 
 
     public virtual void AfterAwake() { }
@@ -170,7 +189,13 @@ public class PlayerController : MonoBehaviour
     {
         float playerVector = Mathf.Sqrt(Mathf.Pow(moveDirection.x, 2) + Mathf.Pow(moveDirection.z, 2));
         blendValue = Mathf.Lerp(blendValue, playerVector, Time.deltaTime * animTransitionTime);
+
+        layerCurrentWeight = Mathf.Lerp(layerCurrentWeight, layerTargetWeight, animLayerTransitionTime * Time.deltaTime);
+        animator.SetLayerWeight(1, layerCurrentWeight);
+
         animator.SetFloat("Blend", blendValue);
+
+        animator.SetBool("Dead", isDead);
 
         AdditiveAnimation();
     }

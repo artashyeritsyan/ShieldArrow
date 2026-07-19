@@ -10,11 +10,7 @@ public class KnightController : PlayerController
     [SerializeField] float attacStartDelay = 0.1f;
     [SerializeField] float attackTime = 0.3f;
     [SerializeField] float attackCooldown = 5;
-    [SerializeField] float animLayerTransitionTime = 10f;
-    private float layerTargetWeight = 1;
-    private float layerCurrentWeight = 0;
 
-    private bool canAttack;
 
     // Instead of Start()
     protected override void Start()
@@ -29,9 +25,6 @@ public class KnightController : PlayerController
     protected override void Update()
     {
         base.Update();
-
-        layerCurrentWeight = Mathf.Lerp(layerCurrentWeight, layerTargetWeight, animLayerTransitionTime * Time.deltaTime);
-        animator.SetLayerWeight(1, layerCurrentWeight);
     }
 
     private void InitialiseWeapon()
@@ -62,6 +55,7 @@ public class KnightController : PlayerController
         {
             layerCurrentWeight = 0.5f;
             layerTargetWeight = 0;
+
             animator.SetTrigger("Attack");
 
             StartCoroutine(ResetAttackCooldown());

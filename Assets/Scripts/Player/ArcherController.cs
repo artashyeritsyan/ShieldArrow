@@ -9,20 +9,13 @@ public class ArcherController : PlayerController
     [Header("Attack")]
     [SerializeField] float attackTime = 0.3f;
     [SerializeField] float attackCooldown = 5;
-    [SerializeField] float animLayerTransitionTime = 10f;
     [SerializeField] float animFinishTime = 0.1f;
-    private float layerTargetWeight = 0;
-    private float layerCurrentWeight = 0;
-
-    private bool canAttack;
-
 
     protected override void Start()
     {
         base.Start();
         InitialiseWeapon();
         canAttack = true;
-        layerTargetWeight = 1;
     }
 
     protected override void Update()
@@ -35,8 +28,7 @@ public class ArcherController : PlayerController
 
     public override void AdditiveAnimation()
     {
-        layerCurrentWeight = Mathf.Lerp(layerCurrentWeight, layerTargetWeight, animLayerTransitionTime * Time.deltaTime);
-        animator.SetLayerWeight(1, layerCurrentWeight);
+
     }
 
     private void InitialiseWeapon()
@@ -63,7 +55,7 @@ public class ArcherController : PlayerController
 
     public override void Attack()
     {
-        if (canAttack)
+        if (canAttack && !isDead)
         {
             AttackAnimation();
 

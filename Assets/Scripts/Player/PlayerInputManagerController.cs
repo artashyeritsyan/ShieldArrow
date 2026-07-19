@@ -19,7 +19,7 @@ public class PlayerInputManagerController : MonoBehaviour
         inputManager.onPlayerJoined += OnPlayerJoined;
         inputManager.onPlayerLeft += OnPlayerLeft;
 
-        SetPlayerClass(PlayerClass.Crossbower);
+        SetPlayerClass(PlayerClass.Archer);
     }
 
     private void OnDestroy()
