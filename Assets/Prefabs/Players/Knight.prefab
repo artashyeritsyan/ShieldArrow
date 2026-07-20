@@ -281,7 +281,7 @@ MonoBehaviour:
       reflectDamageMultiplier: 1
       shieldSize: 1
       shieldAttackCooldown: 0
-  speedMultiplier: 3000
+  speedMultiplier: 4000
   speedTransitionTime: 10
   rotationSpeed: 15
   maxAngle: 60
@@ -293,12 +293,13 @@ MonoBehaviour:
   aimSpeed: 3
   animator: {fileID: 1884691905671240189}
   animTransitionTime: 5
+  animLayerTransitionTime: 5
   attackSoundEffects:
   - {fileID: 8300000, guid: 7f066f2cb31fb8d4cb3bd4ffc12f60b4, type: 3}
+  isDead: 0
   attacStartDelay: 0.1
   attackTime: 0.3
   attackCooldown: 2
-  animLayerTransitionTime: 5
 --- !u!54 &8338342028882916590
 Rigidbody:
   m_ObjectHideFlags: 0
