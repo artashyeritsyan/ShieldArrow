@@ -13,6 +13,12 @@ public enum PlayerClass {
     Mage,
 }
 
+public enum Team
+{
+    Player,
+    Enemy
+}
+
 public class PlayerController : MonoBehaviour
 {
     [Header("Stats")]

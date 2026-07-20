@@ -1,16 +1,19 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDamageable
 {
     [Header("Parameters")]
     [SerializeField] float rotationSpeed = 5f;
     [SerializeField] float shootingSpeed = 1f;
-    [SerializeField] float shotsInRow = 1f; 
-    [SerializeField] float delayBetweenShots = 0.7f; 
+    [SerializeField] float shotsInRow = 1f;
+    [SerializeField] float delayBetweenShots = 0.7f;
 
+    [Header("Stats")] // ADDED
+    [SerializeField] private CoreStats coreStats; // ADDED
+
+    public CoreStats CoreStats => coreStats; // ADDED
+    public Team Team => Team.Enemy; // ADDED
 
     [Header("Weapon")]
     [SerializeField] WeaponScript weaponScript;
@@ -30,15 +33,19 @@ public class EnemyController : MonoBehaviour
     bool canMove;
     bool canAttack;
 
-
     private void Start()
     {
+        coreStats.currentHP = coreStats.maxHP; // ADDED
         canAttack = true;
     }
 
     void Update()
     {
+        if (isDead || isInactive || isPause) // ADDED
+            return; // ADDED
+
         var target = GetClosestPlayer();
+
         if (target == null)
             return;
 
@@ -54,9 +61,12 @@ public class EnemyController : MonoBehaviour
 
         foreach (var player in PlayerManager.Instance.GetPlayers())
         {
-            if (player == null) continue;
+            if (player == null)
+                continue;
 
-            float dist = Vector3.Distance(transform.position, player.transform.position);
+            float dist = Vector3.Distance(
+                transform.position,
+                player.transform.position);
 
             if (dist < minDist)
             {
@@ -64,57 +74,127 @@ public class EnemyController : MonoBehaviour
                 closest = player;
             }
         }
-        Debug.Log("Find player" +  minDist);
+
+        Debug.Log("Find player " + minDist);
         return closest;
     }
 
-    public void GetDamage()
+    public void TakeDamage( // ADDED
+        DamageData damageData, // ADDED
+        CoreStats attackerStats) // ADDED
     {
+        if (isDead) // ADDED
+            return; // ADDED
 
+        DamageSystem.ProcessDamage( // ADDED
+            damageData, // ADDED
+            attackerStats, // ADDED
+            coreStats); // ADDED
+
+        OnDamageReceived(); // ADDED
+
+        if (coreStats.currentHP <= 0f) // ADDED
+        {
+            Die(); // ADDED
+        }
+    }
+
+    private void OnDamageReceived() // ADDED
+    {
+        Debug.Log( // ADDED
+            $"{name} received damage. Remaining HP: " + // ADDED
+            $"{coreStats.currentHP}/{coreStats.maxHP}"); // ADDED
+
+        if (animator != null) // ADDED
+        {
+            animator.SetTrigger("Hit"); // ADDED
+        }
+
+        // Update your health bar here.
+        // Example:
+        // healthBar.SetValue(coreStats.currentHP, coreStats.maxHP);
+    }
+
+    private void Die() // ADDED
+    {
+        if (isDead) // ADDED
+            return; // ADDED
+
+        isDead = true; // ADDED
+        canAttack = false; // ADDED
+        canMove = false; // ADDED
+
+        StopAllCoroutines(); // ADDED
+
+        if (animator != null) // ADDED
+        {
+            animator.SetBool("Dead", true); // ADDED
+        }
+
+        if (weaponScript != null) // ADDED
+        {
+            weaponScript.enabled = false; // ADDED
+        }
+
+        Collider enemyCollider = GetComponent<Collider>(); // ADDED
+
+        if (enemyCollider != null) // ADDED
+        {
+            enemyCollider.enabled = false; // ADDED
+        }
+
+        Destroy(gameObject, 2f); // ADDED
     }
 
     void RotateTowards(Vector3 targetPos)
     {
-        Vector3 dir = (targetPos - transform.position).normalized;
+        Vector3 dir =
+            (targetPos - transform.position).normalized;
+
         dir.y = 0f;
 
         if (dir == Vector3.zero)
             return;
 
         Quaternion targetRot = Quaternion.LookRotation(dir);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * rotationSpeed);
+
+        transform.rotation = Quaternion.Lerp(
+            transform.rotation,
+            targetRot,
+            Time.deltaTime * rotationSpeed);
     }
 
     void HandleAttack()
     {
-        if (canAttack)
+        if (!canAttack || isDead || isInactive) // CHANGED
+            return; // ADDED
+
+        if (weaponScript != null)
         {
-            if (weaponScript != null)
+            weaponScript.Shoot();
+            PlayAttackSound();
+
+            if (shotsInRow > 1)
             {
-                weaponScript.Shoot();
-                PlayAttackSound();
-                if (shotsInRow > 1)
-                {
-                    StartCoroutine(ShootInRow());
-                }
-                else
-                {
-                    StartCoroutine(ResetAttackCooldown());
-                }
-                canAttack = false;
+                StartCoroutine(ShootInRow());
             }
             else
             {
-                canAttack = false;
                 StartCoroutine(ResetAttackCooldown());
-                PlayAttackSound();
             }
-            AttackAnimation();
 
-            Debug.Log(canAttack);
-
-
+            canAttack = false;
         }
+        else
+        {
+            canAttack = false;
+            StartCoroutine(ResetAttackCooldown());
+            PlayAttackSound();
+        }
+
+        AttackAnimation();
+
+        Debug.Log(canAttack);
     }
 
     IEnumerator ShootInRow()
@@ -122,13 +202,25 @@ public class EnemyController : MonoBehaviour
         for (int i = 1; i < shotsInRow; i++)
         {
             yield return new WaitForSeconds(delayBetweenShots);
+
+            if (isDead || isInactive) // ADDED
+                yield break; // ADDED
+
             weaponScript.Shoot();
             PlayAttackSound();
-            animator.SetTrigger("Attack");
-        }
-        StartCoroutine(ResetAttackCooldown());
-        animator.SetTrigger("Reload");
 
+            if (animator != null) // CHANGED
+            {
+                animator.SetTrigger("Attack");
+            }
+        }
+
+        StartCoroutine(ResetAttackCooldown());
+
+        if (animator != null) // CHANGED
+        {
+            animator.SetTrigger("Reload");
+        }
     }
 
     public void PlayAttackSound()
@@ -138,62 +230,72 @@ public class EnemyController : MonoBehaviour
 
     void PlayRandomSound(AudioClip[] sounds)
     {
-        if (sounds.Length > 0)
-        {
-            int randomSound = Random.Range(0, sounds.Length);
-            float randomVolume = UnityEngine.Random.Range(0.7f, 0.9f);
-            float randomPitch = UnityEngine.Random.Range(0.8f, 1.2f);
-            AudioManager.Play(sounds[randomSound], randomVolume, randomPitch);
-        }
+        if (sounds == null || sounds.Length == 0) // CHANGED
+            return; // ADDED
+
+        int randomSound = Random.Range(0, sounds.Length);
+        float randomVolume = Random.Range(0.7f, 0.9f);
+        float randomPitch = Random.Range(0.8f, 1.2f);
+
+        AudioManager.Play(
+            sounds[randomSound],
+            randomVolume,
+            randomPitch);
     }
 
     IEnumerator ResetAttackCooldown()
     {
         canAttack = false;
-        // 1 stands for 1 second
-        float cooldown;
-        if (weaponScript)
-        {
-            cooldown = 1 / weaponScript.GetAttackSpeed();
 
+        float cooldown;
+
+        if (weaponScript != null)
+        {
+            cooldown = 1f / weaponScript.GetAttackSpeed(); // CHANGED
         }
-        else {
-            cooldown = 1 / shootingSpeed;
+        else
+        {
+            cooldown = 1f / shootingSpeed; // CHANGED
         }
+
         yield return new WaitForSeconds(cooldown);
-        canAttack = true;
+
+        if (!isDead && !isInactive) // ADDED
+        {
+            canAttack = true;
+        }
     }
 
     void AttackAnimation()
     {
-        //layerCurrentWeight = 0.1f;
-        //layerTargetWeight = 0;
-
+        if (animator == null) // ADDED
+            return; // ADDED
 
         animator.SetTrigger("Attack");
-        //animator.SetFloat("ShotsInRow", shotsInRow);
 
-        if (weaponScript)
+        if (weaponScript != null)
         {
-            animator.SetFloat("AttackSpeed", weaponScript.GetAttackSpeed());
+            animator.SetFloat(
+                "AttackSpeed",
+                weaponScript.GetAttackSpeed());
         }
     }
 
     void HandleAnimation()
     {
-        //float playerVector = Mathf.Sqrt(Mathf.Pow(moveDirection.x, 2) + Mathf.Pow(moveDirection.z, 2));
-        //blendValue = Mathf.Lerp(blendValue, playerVector, Time.deltaTime * animTransitionTime);
+        if (animator == null) // ADDED
+            return; // ADDED
+
         blendValue = 0f;
         animator.SetFloat("Blend", blendValue);
 
         if (isDead || isInactive)
         {
-            //StopCoroutine(ResetAttackCooldown());
             StopAllCoroutines();
             canAttack = false;
         }
+
         animator.SetBool("Dead", isDead);
         animator.SetBool("Inactive", isInactive);
     }
-
 }

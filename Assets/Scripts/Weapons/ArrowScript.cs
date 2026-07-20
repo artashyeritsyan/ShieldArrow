@@ -1,55 +1,82 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.Rendering;
 
 public class ArrowScript : MonoBehaviour
 {
     [Header("Parameters")]
-    [SerializeField] float lifeTime = 5f;
-    [SerializeField] float speed = 4f;
-    // ricochet count means it will ricochet N times and will be destroyed on N+1 
-    [SerializeField] int maxRicochetCount = 2;
+    [SerializeField] private float lifeTime = 5f;
+    [SerializeField] private float speed = 4f;
 
-    [SerializeField] bool isEnemyArrow = false;
-    [SerializeField] bool showOutline = false;
-    [SerializeField] Color outlineColor = Color.white;
-    [SerializeField] float outlineWidth = 1.0f;
+    // Ricochet count means it ricochets N times
+    // and is destroyed on collision N+1.
+    [SerializeField] private int maxRicochetCount = 2;
 
-    private float ricochetsLeft;
+    [SerializeField] private LayerMask hitMask;
+
+    [Header("Visuals")]
+    [SerializeField] private bool showOutline;
+    [SerializeField] private Color outlineColor = Color.white;
+    [SerializeField] private float outlineWidth = 1f;
+
+    private int ricochetsLeft; // CHANGED: float -> int
     private Vector3 direction;
-    [SerializeField] LayerMask hitMask;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private GameObject owner; // ADDED
+    private Team ownerTeam; // ADDED
+    private DamageData damageData; // ADDED
+    private CoreStats attackerStats; // ADDED
+    private bool isInitialized; // ADDED
+
+    private Coroutine lifetimeCoroutine; // ADDED
+
+    private void Start()
     {
-        direction = transform.forward;
-        StartCoroutine(DestroyArrow());
-        ricochetsLeft = maxRicochetCount;
-
-        if (showOutline)
-        {
-            if (gameObject.GetComponent<Outline>() != null)
-            {
-                gameObject.GetComponent<Outline>().enabled = true;
-            }
-            else
-            {
-                Outline outline = gameObject.AddComponent<Outline>();
-                outline.enabled = true;
-                gameObject.GetComponent<Outline>().OutlineColor = outlineColor;
-            }
-            gameObject.GetComponent<Outline>().OutlineWidth = outlineWidth;
-        }
+        SetupProjectile(); // CHANGED
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SetupProjectile() // ADDED
+    {
+        direction = transform.forward.normalized; // CHANGED
+        ricochetsLeft = maxRicochetCount;
+
+        SetupOutline(); // ADDED
+
+        if (lifetimeCoroutine != null) // ADDED
+        {
+            StopCoroutine(lifetimeCoroutine); // ADDED
+        }
+
+        lifetimeCoroutine = StartCoroutine(DestroyArrow()); // CHANGED
+    }
+
+    public void Initialize( // ADDED
+        GameObject projectileOwner, // ADDED
+        Team projectileOwnerTeam, // ADDED
+        DamageData projectileDamage, // ADDED
+        CoreStats sourceStats) // ADDED
+    {
+        owner = projectileOwner; // ADDED
+        ownerTeam = projectileOwnerTeam; // ADDED
+        damageData = projectileDamage; // ADDED
+        attackerStats = sourceStats; // ADDED
+        isInitialized = true; // ADDED
+
+        direction = transform.forward.normalized; // ADDED
+        ricochetsLeft = maxRicochetCount; // ADDED
+    }
+
+    private void Update()
     {
         float moveDist = speed * Time.deltaTime;
 
-        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, moveDist, hitMask))
+        if (Physics.Raycast(
+                transform.position,
+                direction,
+                out RaycastHit hit,
+                moveDist,
+                hitMask,
+                QueryTriggerInteraction.Ignore)) // CHANGED
         {
-            // HIT something
             OnHit(hit);
         }
         else
@@ -58,92 +85,146 @@ public class ArrowScript : MonoBehaviour
         }
     }
 
-    void OnHit(RaycastHit hit)
+    private void OnHit(RaycastHit hit)
     {
-        if (hit.collider.CompareTag("Wall") || hit.collider.CompareTag("Shield"))
+        if (hit.collider.CompareTag("Wall") ||
+            hit.collider.CompareTag("Shield"))
         {
-            if (ricochetsLeft > 0)
-            {
-                direction = Vector3.Reflect(direction, hit.normal);
-                transform.forward = direction;
-                transform.position = hit.point + direction * 0.01f;
-
-                ricochetsLeft--;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
-        else if (hit.collider.CompareTag("Enemy") && !isEnemyArrow)
-        {
-            //hit.collider.gameObject
-            //ReturnToPool();
-            Destroy(gameObject);
-        }
-        else if (hit.collider.CompareTag("Player") && isEnemyArrow)
-        {
-            hit.collider.gameObject.GetComponent<PlayerController>().DealDamage();
-            Destroy(gameObject);
-        }
-        else {
-            return;
+            HandleRicochet(hit); // CHANGED
         }
     }
 
-    IEnumerator DestroyArrow()
+    private void HandleRicochet(RaycastHit hit) // ADDED
+    {
+        if (ricochetsLeft <= 0)
+        {
+            DestroyProjectile(); // CHANGED
+            return;
+        }
+
+        direction = Vector3
+            .Reflect(direction, hit.normal)
+            .normalized; // CHANGED
+
+        transform.forward = direction;
+
+        // Move the arrow slightly away from the surface to prevent
+        // immediately hitting the same collider again.
+        transform.position = hit.point + direction * 0.01f;
+
+        ricochetsLeft--;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!isInitialized) // ADDED
+        {
+            Debug.LogWarning( // ADDED
+                $"{name} was not initialized before hitting an object."); // ADDED
+
+            return; // ADDED
+        }
+
+        if (IsOwnerCollider(other)) // ADDED
+        {
+            return;
+        }
+
+        IDamageable target =
+            other.GetComponentInParent<IDamageable>(); // CHANGED
+
+        if (target == null) // ADDED
+        {
+            return;
+        }
+
+        if (target.Team == ownerTeam) // ADDED
+        {
+            return;
+        }
+
+        target.TakeDamage( // ADDED
+            damageData,
+            attackerStats);
+
+        DestroyProjectile(); // CHANGED
+    }
+
+    private bool IsOwnerCollider(Collider other) // ADDED
+    {
+        if (owner == null)
+        {
+            return false;
+        }
+
+        if (other.gameObject == owner)
+        {
+            return true;
+        }
+
+        return other.transform.IsChildOf(owner.transform);
+    }
+
+    private IEnumerator DestroyArrow()
     {
         yield return new WaitForSeconds(lifeTime);
+
+        DestroyProjectile(); // CHANGED
+    }
+
+    private void DestroyProjectile() // ADDED
+    {
+        if (lifetimeCoroutine != null) // ADDED
+        {
+            StopCoroutine(lifetimeCoroutine); // ADDED
+            lifetimeCoroutine = null; // ADDED
+        }
 
         Destroy(gameObject);
     }
 
-    void resetRicochets()
+    private void SetupOutline() // ADDED
     {
-        ricochetsLeft = maxRicochetCount;
-    }
-    bool turned = false;
-    void Ricochet(Collision collision)
-    {
-        if (ricochetsLeft > 0)
+        Outline outline = GetComponent<Outline>();
+
+        if (!showOutline)
         {
-            Vector3 normal = collision.contacts[0].normal;
-            Vector3 newDir = Vector3.Reflect(transform.forward, normal);
-            transform.forward = newDir;
+            if (outline != null)
+            {
+                outline.enabled = false;
+            }
 
-            ricochetsLeft--;
+            return;
         }
-        else
+
+        if (outline == null)
         {
-            Destroy(gameObject);
+            outline = gameObject.AddComponent<Outline>();
         }
+
+        outline.enabled = true;
+        outline.OutlineColor = outlineColor;
+        outline.OutlineWidth = outlineWidth;
     }
-    void ResetTurn() => turned = false;
 
-    public void SetSpeed(float speed) { this.speed = speed; }
-    public float GetSpeed() { return speed; }
-
-    public void SetMaxRicochetCount(int count) { maxRicochetCount = count; }
-    public int GetMaxRicochetCount() { return maxRicochetCount; }
-
-    void OnTriggerEnter(Collider other)
+    public void SetSpeed(float newSpeed)
     {
-        //if (other.CompareTag("Enemy"))
-        //{
-        //    // damage logic
-        //    Destroy(gameObject);
-        //}
+        speed = newSpeed;
     }
-    //void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Wall"))
-    //    {
-    //        Ricochet(collision);
-    //    }
-    //    if (collision.gameObject.CompareTag("Shield"))
-    //    {
-    //        Debug.Log("Shield");
-    //        Ricochet(collision);
-    //    }
-    //}
+
+    public float GetSpeed()
+    {
+        return speed;
+    }
+
+    public void SetMaxRicochetCount(int count)
+    {
+        maxRicochetCount = count;
+        ricochetsLeft = count; // ADDED
+    }
+
+    public int GetMaxRicochetCount()
+    {
+        return maxRicochetCount;
+    }
 }

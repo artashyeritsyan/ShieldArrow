@@ -1,5 +1,14 @@
 using UnityEngine;
 
+public interface IDamageable
+{
+    Team Team { get; }
+
+    void TakeDamage(
+        DamageData damageData,
+        CoreStats attackerStats);
+}
+
 public class DamageData
 {
     public float baseDamage;
