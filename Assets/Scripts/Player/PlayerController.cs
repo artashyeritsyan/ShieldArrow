@@ -1,17 +1,13 @@
-using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Windows;
-using static UnityEngine.Rendering.DebugUI;
 
-public enum PlayerClass { 
-    Archer, 
+public enum PlayerClass
+{
+    Archer,
     Knight,
     Crossbower,
     Barbarian,
     Assasin,
-    Mage,
+    Mage
 }
 
 public enum Team
@@ -25,257 +21,510 @@ public class PlayerController : MonoBehaviour
     [Header("Stats")]
     [SerializeField] protected PlayerClass playerClass;
     [SerializeField] private PlayerStatsProfile baseProfile;
-    [SerializeField] PlayerStats stats;
-    [SerializeField] float speedMultiplier = 3000f;
-
-    [Header("Skill")]
-
-    // Some skill data
-
-    //[Header("Weapons")]
-    //[SerializeField] GameObject[] weapons;
-    //[SerializeField] float weaponSwitchDelay = 0.2f;
+    [SerializeField] protected PlayerStats stats;
+    [SerializeField] private float speedMultiplier = 3000f;
 
     [Header("Movement")]
-    [SerializeField] float speedTransitionTime = 10f;
+    [SerializeField] private float speedTransitionTime = 10f;
+
     private Vector3 moveDirection;
     private Vector3 lerpedDirection;
 
     [Header("Rotation")]
-    [SerializeField] float rotationSpeed = 15f;
-    [SerializeField] float maxAngle = 60f;
-    public bool canRotate = false;
+    [SerializeField] private float rotationSpeed = 15f;
+    [SerializeField] private float maxAngle = 60f;
+
+    public bool canRotate;
 
     [Header("Aim")]
-    [SerializeField] Transform aimTarget;
-    [SerializeField] TrajectoryPreview trajectory;
-    [SerializeField] Color aimColor;
-    [SerializeField] float aimDistance = 5f;
-    [SerializeField] float aimSpeed = 3f;
+    [SerializeField] private Transform aimTarget;
+    [SerializeField] private TrajectoryPreview trajectory;
+    [SerializeField] private Color aimColor;
+    [SerializeField] private float aimDistance = 5f;
+    [SerializeField] private float aimSpeed = 3f;
 
     private AimsManager aimsManager;
-    private float currentAimAngle = 0f;
+    private float currentAimAngle;
 
-    [Header("Weapon")]
-    protected GameObject weapon;
-    //private WeaponScript weaponScript;
-    //public GameObject arrow;
+    [Header("Combat Equipment")]
+    [Tooltip(
+        "Assign a BowWeapon, CrossbowWeapon, ShieldController, " +
+        "or another component implementing ICombatEquipment.")]
+    [SerializeField] private MonoBehaviour combatEquipmentBehaviour;
+
+    protected ICombatEquipment combatEquipment;
 
     [Header("Animation")]
     [SerializeField] protected Animator animator;
-    [SerializeField] float animTransitionTime = 5f;
+    [SerializeField] private float animTransitionTime = 5f;
+
     private float blendValue;
 
-    [SerializeField] float animLayerTransitionTime = 5f;
-    protected float layerTargetWeight = 0;
-    protected float layerCurrentWeight = 0;
+    [SerializeField] private float animLayerTransitionTime = 5f;
+
+    protected float layerTargetWeight;
+    protected float layerCurrentWeight;
 
     [Header("Sound Effects")]
-    public AudioClip[] attackSoundEffects;
+    [SerializeField] protected AudioClip[] attackSoundEffects;
 
     [Header("Main Modifiers")]
     [SerializeField] protected bool isDead;
+
     protected bool isPause;
     protected bool canMove;
     protected bool canAttack;
 
+    protected Rigidbody rb;
+    protected InputHandler input;
 
-    Rigidbody rb;
-    private InputHandler input;
-
-
-    // FOR future me
-    // Do NOT use START() or AWAKE() in Childs
-    // Use AfterStart() and AfterAwake() instead, and override them.
     protected virtual void Awake()
     {
-        stats = baseProfile.GetStats().Clone();
+        InitializeStats();
+        GetRequiredComponents();
+        ResolveCombatEquipment();
 
+        AfterAwake();
     }
 
     protected virtual void Start()
     {
-        InitialiseValues();
+        InitializeValues();
+        InitializeCombatEquipment();
+        SubscribeToEquipmentEvents();
 
-        layerTargetWeight = 1;
+        layerTargetWeight = 1f;
+
+        AfterStart();
     }
 
     protected virtual void Update()
     {
-        if (!isDead)
+        if (!isDead && !isPause)
         {
             HandleMovement();
             HandleAttack();
+
+            if (canRotate)
+            {
+                HandleRotation();
+            }
+            else
+            {
+                HandleAim();
+            }
         }
 
         HandleAnimation();
-
-        // Implement it to listen the event inRoom(bool). and if in it is true than set canRotate = true
-        if (canRotate)
-        {
-            HandleRotation();
-        }
-        else
-        {
-            //HandleMouseLookClamped();
-            HandleAim();
-        }
-
-
+        AfterUpdate();
     }
 
-    private void InitialiseValues()
+    private void InitializeStats()
+    {
+        if (baseProfile == null)
+        {
+            Debug.LogError(
+                $"{name}: PlayerStatsProfile is not assigned.");
+
+            return;
+        }
+
+        stats = baseProfile.GetStats().Clone();
+    }
+
+    private void GetRequiredComponents()
     {
         rb = GetComponent<Rigidbody>();
         input = GetComponent<InputHandler>();
-        animator = GetComponent<Animator>();
 
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
+
+        if (rb == null)
+        {
+            Debug.LogError(
+                $"{name}: Rigidbody component is missing.");
+        }
+
+        if (input == null)
+        {
+            Debug.LogError(
+                $"{name}: InputHandler component is missing.");
+        }
+    }
+
+    private void InitializeValues()
+    {
         aimsManager = FindFirstObjectByType<AimsManager>();
-        aimsManager.AddPlayerAim(aimTarget, aimColor);
+
+        if (aimsManager != null && aimTarget != null)
+        {
+            aimsManager.AddPlayerAim(
+                aimTarget,
+                aimColor);
+        }
 
         canMove = true;
+        canAttack = true;
         canRotate = false;
     }
 
-    // Predefine for further development
-    public void DealDamage(CoreStats target)
+    private void ResolveCombatEquipment()
     {
-        DamageData dmg = new DamageData
+        if (combatEquipmentBehaviour == null)
         {
-            baseDamage = stats.core.damage,
-            canCrit = true,
-            critChance = 0.2f,
-            critMultiplier = 2f
-        };
+            Debug.LogWarning(
+                $"{name}: No combat equipment is assigned.");
 
-        DamageSystem.ProcessDamage(dmg, stats.core, target);
+            return;
+        }
+
+        combatEquipment = combatEquipmentBehaviour as ICombatEquipment;
+
+        if (combatEquipment == null)
+        {
+            Debug.LogError(
+                $"{name}: Assigned component " +
+                $"{combatEquipmentBehaviour.GetType().Name} " +
+                $"does not implement {nameof(ICombatEquipment)}.");
+        }
     }
-    public PlayerClass GetPlayerClass() { return playerClass; }
 
-
-    public virtual void GetHitAnimation()
+    private void InitializeCombatEquipment()
     {
-        animator.SetTrigger("Hit");
+        if (combatEquipment == null ||
+            stats == null)
+        {
+            return;
+        }
+
+        combatEquipment.Initialize(
+            gameObject,
+            Team.Player,
+            stats.core);
     }
 
-
-    public virtual void AfterAwake() { }
-    public virtual void AfterStart() { }
-    public virtual void AfterUpdate() { }
-
-    public virtual void Dead() { }
-    public virtual void AdditiveAnimation() { }
-    public virtual void Attack() { }
-
-    public virtual void PlayAttackSound() { }
-
-
-
-    // ------------------- Private functions ------------------
-    // --------------------------------------------------------
-
-    void HandleMovement()
+    private void SubscribeToEquipmentEvents()
     {
-        // for smooth stop if canMove = false
+        if (combatEquipment == null)
+            return;
+
+        combatEquipment.OnAttack += HandleEquipmentAttack;
+        combatEquipment.OnReloadStarted += HandleReloadStarted;
+        combatEquipment.OnReloadFinished += HandleReloadFinished;
+    }
+
+    private void UnsubscribeFromEquipmentEvents()
+    {
+        if (combatEquipment == null)
+            return;
+
+        combatEquipment.OnAttack -= HandleEquipmentAttack;
+        combatEquipment.OnReloadStarted -= HandleReloadStarted;
+        combatEquipment.OnReloadFinished -= HandleReloadFinished;
+    }
+
+    private void HandleMovement()
+    {
+        if (rb == null || input == null || stats == null)
+            return;
+
         if (canMove)
         {
-            moveDirection = new Vector3(input.move.x, 0, input.move.y);
+            moveDirection = new Vector3(
+                input.move.x,
+                0f,
+                input.move.y);
         }
         else
         {
             moveDirection = Vector3.zero;
         }
 
-        lerpedDirection = Vector3.Lerp(lerpedDirection, moveDirection, Time.deltaTime * speedTransitionTime);
+        lerpedDirection = Vector3.Lerp(
+            lerpedDirection,
+            moveDirection,
+            Time.deltaTime * speedTransitionTime);
 
-        rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * lerpedDirection);
-
+        rb.AddForce(
+            stats.core.speed *
+            speedMultiplier *
+            Time.deltaTime *
+            lerpedDirection);
     }
 
-    void HandleAnimation()
+    private void HandleAttack()
     {
-        float playerVector = Mathf.Sqrt(Mathf.Pow(moveDirection.x, 2) + Mathf.Pow(moveDirection.z, 2));
-        blendValue = Mathf.Lerp(blendValue, playerVector, Time.deltaTime * animTransitionTime);
+        if (input == null ||
+            !input.attack ||
+            !canAttack ||
+            combatEquipment == null)
+        {
+            return;
+        }
 
-        layerCurrentWeight = Mathf.Lerp(layerCurrentWeight, layerTargetWeight, animLayerTransitionTime * Time.deltaTime);
-        animator.SetLayerWeight(1, layerCurrentWeight);
+        /*
+         * Use() returns false when:
+         *
+         * Bow is on cooldown.
+         * Crossbow is shooting or reloading.
+         * Shield is attacking or cooling down.
+         */
+        combatEquipment.Use();
+    }
 
-        animator.SetFloat("Blend", blendValue);
+    private void HandleEquipmentAttack()
+    {
+        if (isDead)
+            return;
 
-        animator.SetBool("Dead", isDead);
+        PlayAttackSound();
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Attack");
+        }
+
+        OnEquipmentAttack();
+    }
+
+    private void HandleReloadStarted()
+    {
+        if (isDead)
+            return;
+
+        if (animator != null)
+        {
+            animator.ResetTrigger("Attack");
+            animator.SetBool("Reloading", true);
+            animator.SetTrigger("Reload");
+        }
+
+        OnEquipmentReloadStarted();
+    }
+
+    private void HandleReloadFinished()
+    {
+        if (animator != null)
+        {
+            animator.SetBool("Reloading", false);
+        }
+
+        OnEquipmentReloadFinished();
+    }
+
+    private void HandleAnimation()
+    {
+        if (animator == null)
+            return;
+
+        float movementAmount =
+            moveDirection.magnitude;
+
+        blendValue = Mathf.Lerp(
+            blendValue,
+            movementAmount,
+            Time.deltaTime * animTransitionTime);
+
+        layerCurrentWeight = Mathf.Lerp(
+            layerCurrentWeight,
+            layerTargetWeight,
+            animLayerTransitionTime * Time.deltaTime);
+
+        if (animator.layerCount > 1)
+        {
+            animator.SetLayerWeight(
+                1,
+                layerCurrentWeight);
+        }
+
+        animator.SetFloat(
+            "Blend",
+            blendValue);
+
+        animator.SetBool(
+            "Dead",
+            isDead);
 
         AdditiveAnimation();
     }
 
-    void RotateCharacter(Vector3 direction)
+    private void HandleAim()
     {
-        if (direction == Vector3.zero) return;
+        if (input == null)
+            return;
 
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-        transform.rotation = Quaternion.Slerp(
-            transform.rotation,
-            targetRotation,
-            rotationSpeed * Time.deltaTime
-        );
-    }
-
-    void HandleAim()
-    {
         float inputX = input.look.x;
 
-        currentAimAngle += inputX * aimSpeed;
-        currentAimAngle = Mathf.Clamp(currentAimAngle, -maxAngle, maxAngle);
+        currentAimAngle +=
+            inputX * aimSpeed;
 
-        Quaternion rotation = Quaternion.Euler(0f, currentAimAngle, 0f);
-        Vector3 direction = rotation * Vector3.forward;
+        currentAimAngle = Mathf.Clamp(
+            currentAimAngle,
+            -maxAngle,
+            maxAngle);
 
-        aimTarget.localPosition = Vector3.forward * aimDistance;
+        Quaternion rotation =
+            Quaternion.Euler(
+                0f,
+                currentAimAngle,
+                0f);
+
+        Vector3 direction =
+            rotation * Vector3.forward;
+
+        if (aimTarget != null)
+        {
+            aimTarget.localPosition =
+                Vector3.forward * aimDistance;
+        }
 
         RotateCharacter(direction);
     }
 
-    void HandleRotation()
+    private void HandleRotation()
     {
-        if (moveDirection == Vector3.zero) return;
+        if (moveDirection.sqrMagnitude <= 0.0001f)
+            return;
 
         currentAimAngle = 0f;
 
-        RotateCharacter(moveDirection.normalized);
+        RotateCharacter(
+            moveDirection.normalized);
     }
 
-    void HandleAttack()
+    private void RotateCharacter(Vector3 direction)
     {
-        if (input.attack)
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude <= 0.0001f)
+            return;
+
+        Quaternion targetRotation =
+            Quaternion.LookRotation(
+                direction.normalized);
+
+        transform.rotation =
+            Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                rotationSpeed * Time.deltaTime);
+    }
+
+    public virtual void GetHitAnimation()
+    {
+        if (animator != null)
         {
-            Attack();
+            animator.SetTrigger("Hit");
+        }
+    }
+
+    public virtual void PlayAttackSound()
+    {
+        PlayRandomSound(attackSoundEffects);
+    }
+
+    protected void PlayRandomSound(AudioClip[] sounds)
+    {
+        if (sounds == null ||
+            sounds.Length == 0)
+        {
+            return;
         }
 
-        //if (weapon != null)
-        //{
-        //    weapon.Shoot();
-        //    return;
-        //}
+        int randomIndex =
+            Random.Range(0, sounds.Length);
 
-        //if (shield != null)
-        //{
-        //    shield.Attack();
-        //}
+        float randomVolume =
+            Random.Range(0.7f, 0.9f);
 
+        float randomPitch =
+            Random.Range(0.8f, 1.2f);
+
+        AudioManager.Play(
+            sounds[randomIndex],
+            randomVolume,
+            randomPitch);
     }
 
+    public PlayerClass GetPlayerClass()
+    {
+        return playerClass;
+    }
 
+    public PlayerStats GetStats()
+    {
+        return stats;
+    }
 
+    public void SetCanMove(bool value)
+    {
+        canMove = value;
+    }
 
-    // Will be used for Ultra Attack
+    public bool GetCanMove()
+    {
+        return canMove;
+    }
 
-    //IEnumerator AttackCooldown()
-    //{
+    public void SetCanAttack(bool value)
+    {
+        canAttack = value;
+    }
 
+    public bool GetCanAttack()
+    {
+        return canAttack;
+    }
 
-    //}
+    public void SetPaused(bool value)
+    {
+        isPause = value;
+    }
 
-    public void SetCanMove(bool isCanMove) { canMove = isCanMove; }
-    public bool GetCanMove() { return canMove; } 
+    /*
+     * Child-class hooks.
+     *
+     * Derived player classes don't need Awake(), Start(), or Update().
+     * Override these methods instead.
+     */
 
+    protected virtual void AfterAwake()
+    {
+    }
+
+    protected virtual void AfterStart()
+    {
+    }
+
+    protected virtual void AfterUpdate()
+    {
+    }
+
+    protected virtual void OnEquipmentAttack()
+    {
+    }
+
+    protected virtual void OnEquipmentReloadStarted()
+    {
+    }
+
+    protected virtual void OnEquipmentReloadFinished()
+    {
+    }
+
+    public virtual void Dead()
+    {
+    }
+
+    public virtual void AdditiveAnimation()
+    {
+    }
+
+    protected virtual void OnDestroy()
+    {
+        UnsubscribeFromEquipmentEvents();
+    }
 }

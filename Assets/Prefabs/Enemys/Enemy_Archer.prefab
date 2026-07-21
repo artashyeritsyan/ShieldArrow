@@ -56,15 +56,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb171eb743c03954faf0b51f1a1c4aca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  combatType: 0
   rotationSpeed: 4
-  shootingSpeed: 1
-  weaponScript: {fileID: 6227432402808041960}
+  rangedAttackRange: 12
+  shieldAttackRange: 2
+  coreStats:
+    speed: 0
+    maxHP: 0
+    currentHP: 0
+    damage: 0
+    attackSpeed: 0
+    lifeSteal: 0
+    poisonDamage: 0
+    fireDamage: 0
+    iceDamage: 0
+    lightningDamage: 0
+  bowWeapon: {fileID: 5620006895824191268}
+  crossbowWeapon: {fileID: 0}
+  shieldController: {fileID: 0}
   animator: {fileID: 1067172571039549162}
-  animTransitionTime: 5
   attackSoundEffects:
   - {fileID: 8300000, guid: 9547efabc8f1e3b43a134e8cc8ce3bd1, type: 3}
+  reloadSoundEffects: []
+  hitSoundEffects: []
   isDead: 0
   isInactive: 0
+  isPaused: 0
 --- !u!95 &1067172571039549162
 Animator:
   serializedVersion: 7
@@ -122,6 +139,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SkeletBow
       objectReference: {fileID: 0}
+    - target: {fileID: 4863358233378362238, guid: 5504f6d569eb97a4190d69ead3563175, type: 3}
+      propertyPath: shootingSpeed
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5286538941624380721, guid: 5504f6d569eb97a4190d69ead3563175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.007999897
@@ -172,17 +193,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5286538941624380721, guid: 5504f6d569eb97a4190d69ead3563175, type: 3}
   m_PrefabInstance: {fileID: 1044932923631184986}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6227432402808041960 stripped
+--- !u!114 &5620006895824191268 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6407514183335992754, guid: 5504f6d569eb97a4190d69ead3563175, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4863358233378362238, guid: 5504f6d569eb97a4190d69ead3563175, type: 3}
   m_PrefabInstance: {fileID: 1044932923631184986}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f82023d99c859145bf0f4e03d03711a, type: 3}
+  m_Script: {fileID: 11500000, guid: 8203a3d05f1f27940b9d086423d05b50, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponScript
+  m_EditorClassIdentifier: Assembly-CSharp::BowWeapon
 --- !u!1001 &5684045545628845792
 PrefabInstance:
   m_ObjectHideFlags: 0

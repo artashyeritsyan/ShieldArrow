@@ -151,6 +151,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3694314964495093740, guid: 293d6ebfc6b39654ba98d94c3fb6eae9, type: 3}
   m_PrefabInstance: {fileID: 4196937462746726441}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2614254438141833175 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2195846686237192190, guid: 293d6ebfc6b39654ba98d94c3fb6eae9, type: 3}
+  m_PrefabInstance: {fileID: 4196937462746726441}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 620ae0b3f09b8654eb50dfdf6134c3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CrossbowWeapon
 --- !u!1001 &5131347996396630240
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -337,15 +348,15 @@ MonoBehaviour:
   aimColor: {r: 0.02745098, g: 0.34509805, b: 0.011764706, a: 1}
   aimDistance: 5
   aimSpeed: 3
+  combatEquipmentBehaviour: {fileID: 2614254438141833175}
   animator: {fileID: 1256401326742849770}
   animTransitionTime: 5
   animLayerTransitionTime: 5
   attackSoundEffects:
   - {fileID: 8300000, guid: 9547efabc8f1e3b43a134e8cc8ce3bd1, type: 3}
   isDead: 0
-  attackTime: 0.1
-  attackCooldown: 5
-  animFinishTime: 0.1
+  movementLockTime: 0.3
+  animationFinishTime: 0.1
 --- !u!114 &2553900701435401126
 MonoBehaviour:
   m_ObjectHideFlags: 0

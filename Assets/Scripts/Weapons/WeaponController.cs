@@ -14,9 +14,9 @@ public interface ICombatEquipment
 
     bool Use();
 }
-
-
-public abstract class WeaponController : MonoBehaviour
+public abstract class WeaponController :
+    MonoBehaviour,
+    ICombatEquipment
 {
     [Header("Weapon")]
     [SerializeField] protected Transform shootPoint;
@@ -25,6 +25,11 @@ public abstract class WeaponController : MonoBehaviour
     [Header("Parameters")]
     [SerializeField] protected float shootingSpeed = 2f;
 
+    [Tooltip(
+        "Time between starting the attack animation " +
+        "and performing the actual attack.")]
+    [SerializeField] protected float attackStartDelay = 0f;
+
     protected GameObject owner;
     protected Team ownerTeam;
     protected CoreStats ownerStats;
@@ -32,8 +37,12 @@ public abstract class WeaponController : MonoBehaviour
     protected bool canShoot = true;
     protected bool isInitialized;
 
-    // Player or enemy can subscribe to these for animations.
-    public event Action OnShotFired;
+    /*
+     * OnAttack means:
+     * Start the character attack animation now.
+     */
+    public event Action OnAttack;
+
     public event Action OnReloadStarted;
     public event Action OnReloadFinished;
 
@@ -50,6 +59,17 @@ public abstract class WeaponController : MonoBehaviour
         canShoot = true;
     }
 
+    /*
+     * PlayerController and EnemyController call Use().
+     *
+     * The existing derived weapon Shoot() implementation
+     * still controls the actual weapon behavior.
+     */
+    public virtual bool Use()
+    {
+        return Shoot();
+    }
+
     public abstract bool Shoot();
 
     protected bool CanShoot()
@@ -59,37 +79,47 @@ public abstract class WeaponController : MonoBehaviour
 
         if (!isInitialized)
         {
-            Debug.LogError($"{name}: Weapon is not initialized.");
+            Debug.LogError(
+                $"{name}: Weapon is not initialized.");
+
             return false;
         }
 
         if (shootPoint == null)
         {
-            Debug.LogError($"{name}: Shoot point is missing.");
+            Debug.LogError(
+                $"{name}: Shoot point is missing.");
+
             return false;
         }
 
         if (projectilePrefab == null)
         {
-            Debug.LogError($"{name}: Projectile prefab is missing.");
+            Debug.LogError(
+                $"{name}: Projectile prefab is missing.");
+
             return false;
         }
 
         if (ownerStats == null)
         {
-            Debug.LogError($"{name}: Owner stats are missing.");
+            Debug.LogError(
+                $"{name}: Owner stats are missing.");
+
             return false;
         }
 
         return true;
     }
 
-    protected void CreateProjectile(Quaternion rotation)
+    protected void CreateProjectile(
+        Quaternion rotation)
     {
-        GameObject projectileObject = Instantiate(
-            projectilePrefab,
-            shootPoint.position,
-            rotation);
+        GameObject projectileObject =
+            Instantiate(
+                projectilePrefab,
+                shootPoint.position,
+                rotation);
 
         ArrowScript arrow =
             projectileObject.GetComponent<ArrowScript>();
@@ -97,19 +127,21 @@ public abstract class WeaponController : MonoBehaviour
         if (arrow == null)
         {
             Debug.LogError(
-                $"{projectilePrefab.name} does not contain ArrowScript.");
+                $"{projectilePrefab.name} does not " +
+                $"contain ArrowScript.");
 
             Destroy(projectileObject);
             return;
         }
 
-        DamageData damageData = new DamageData
-        {
-            baseDamage = ownerStats.damage,
-            canCrit = true,
-            critChance = 0.2f,
-            critMultiplier = 2f
-        };
+        DamageData damageData =
+            new DamageData
+            {
+                baseDamage = ownerStats.damage,
+                canCrit = true,
+                critChance = 0.2f,
+                critMultiplier = 2f
+            };
 
         arrow.Initialize(
             owner,
@@ -118,9 +150,13 @@ public abstract class WeaponController : MonoBehaviour
             ownerStats);
     }
 
-    protected void NotifyShotFired()
+    /*
+     * Derived weapons call this when the character
+     * should begin its attack animation.
+     */
+    protected void NotifyAttack()
     {
-        OnShotFired?.Invoke();
+        OnAttack?.Invoke();
     }
 
     protected void NotifyReloadStarted()
@@ -138,9 +174,25 @@ public abstract class WeaponController : MonoBehaviour
         return shootingSpeed;
     }
 
-    public void SetShootingSpeed(float newShootingSpeed)
+    public void SetShootingSpeed(
+        float newShootingSpeed)
     {
-        shootingSpeed = Mathf.Max(newShootingSpeed, 0.01f);
+        shootingSpeed =
+            Mathf.Max(
+                newShootingSpeed,
+                0.01f);
+    }
+
+    public float GetAttackStartDelay()
+    {
+        return attackStartDelay;
+    }
+
+    public void SetAttackStartDelay(
+        float newDelay)
+    {
+        attackStartDelay =
+            Mathf.Max(newDelay, 0f);
     }
 
     public bool GetCanShoot()

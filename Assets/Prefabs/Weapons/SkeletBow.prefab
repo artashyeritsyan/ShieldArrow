@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5286538941624380721}
-  - component: {fileID: 6407514183335992754}
+  - component: {fileID: 4863358233378362238}
   m_Layer: 9
   m_Name: SkeletBow
   m_TagString: Weapon
@@ -34,7 +34,7 @@ Transform:
   - {fileID: 1030558930244181391}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6407514183335992754
+--- !u!114 &4863358233378362238
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,12 +43,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 789570489302161773}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f82023d99c859145bf0f4e03d03711a, type: 3}
+  m_Script: {fileID: 11500000, guid: 8203a3d05f1f27940b9d086423d05b50, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponScript
+  m_EditorClassIdentifier: Assembly-CSharp::BowWeapon
   shootPoint: {fileID: 3700411793094615679}
-  bullet: {fileID: 6890519995820334165, guid: d654920e50102b94c9cbc33923f60e64, type: 3}
-  attackSpeed: 0.5
+  projectilePrefab: {fileID: 6890519995820334165, guid: d654920e50102b94c9cbc33923f60e64, type: 3}
+  shootingSpeed: 1
+  attackStartDelay: 0
+  arrowsPerShot: 1
+  spreadAngle: 20
 --- !u!1 &1849024544870227950
 GameObject:
   m_ObjectHideFlags: 0

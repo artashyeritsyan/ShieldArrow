@@ -153,6 +153,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8406958776630931287, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
+      propertyPath: shootingSpeed
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -163,6 +167,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3694314964495093740, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
   m_PrefabInstance: {fileID: 4113544920881222682}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5601839362905783117 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8406958776630931287, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
+  m_PrefabInstance: {fileID: 4113544920881222682}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8203a3d05f1f27940b9d086423d05b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BowWeapon
 --- !u!1001 &7809472589775892995
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -544,15 +559,15 @@ MonoBehaviour:
   aimColor: {r: 0.1254902, g: 0.4156863, b: 0.54509807, a: 1}
   aimDistance: 5
   aimSpeed: 3
+  combatEquipmentBehaviour: {fileID: 5601839362905783117}
   animator: {fileID: 4812885400586429195}
   animTransitionTime: 5
   animLayerTransitionTime: 5
   attackSoundEffects:
   - {fileID: 8300000, guid: 9547efabc8f1e3b43a134e8cc8ce3bd1, type: 3}
   isDead: 0
-  attackTime: 0.15
-  attackCooldown: 5
-  animFinishTime: 0.2
+  movementLockTime: 0.3
+  animationFinishTime: 0.1
 --- !u!114 &8799433064518598810
 MonoBehaviour:
   m_ObjectHideFlags: 0

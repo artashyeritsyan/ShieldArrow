@@ -72,7 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3694314964495093740}
-  - component: {fileID: 5937461764481634635}
+  - component: {fileID: 8749701788102016558}
   m_Layer: 0
   m_Name: DaggerThrower
   m_TagString: Weapon
@@ -97,7 +97,7 @@ Transform:
   - {fileID: 6300685709666132722}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5937461764481634635
+--- !u!114 &8749701788102016558
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,12 +106,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6067447479393992737}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f82023d99c859145bf0f4e03d03711a, type: 3}
+  m_Script: {fileID: 11500000, guid: 8203a3d05f1f27940b9d086423d05b50, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponScript
+  m_EditorClassIdentifier: Assembly-CSharp::BowWeapon
   shootPoint: {fileID: 2754187627423734102}
-  bullet: {fileID: 6890519995820334165, guid: a48be553b7541ab4f9c618c495bf3452, type: 3}
-  attackSpeed: 1
+  projectilePrefab: {fileID: 8852923472221947330, guid: 50d73c3fb535b804087a1d287ca3a137, type: 3}
+  shootingSpeed: 2
+  attackStartDelay: 0.3
+  arrowsPerShot: 1
+  spreadAngle: 20
 --- !u!1001 &9200400200983186438
 PrefabInstance:
   m_ObjectHideFlags: 0

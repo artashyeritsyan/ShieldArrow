@@ -3,84 +3,79 @@ using UnityEngine;
 
 public class KnightController : PlayerController
 {
-    [Header("Weapon")]
-    private WeaponController weaponScript;
+    [Header("Attack Movement")]
+    [SerializeField] private float attackStartDelay = 0.1f;
+    [SerializeField] private float movementLockTime = 0.3f;
 
-    [Header("Attack")]
-    [SerializeField] float attacStartDelay = 0.1f;
-    [SerializeField] float attackTime = 0.3f;
-    [SerializeField] float attackCooldown = 5;
+    private Coroutine attackAnimationRoutine;
 
-
-    // Instead of Start()
-    protected override void Start()
+    protected override void AfterStart()
     {
-        base.Start();
-
-        canAttack = true;
-
-        layerTargetWeight = 1;
+        layerTargetWeight = 1f;
     }
 
-    protected override void Update()
+    protected override void OnEquipmentAttack()
     {
-        base.Update();
-    }
+        /*
+         * The ShieldController invokes OnAttack when the shield
+         * attack actually begins.
+         *
+         * The base PlayerController already:
+         *
+         * 1. Plays the sound.
+         * 2. Triggers the Attack animation.
+         *
+         * KnightController only manages Knight-specific movement
+         * and animation-layer behavior.
+         */
 
-    private void InitialiseWeapon()
-    {
-        weaponScript = transform.GetComponentInChildren<WeaponController>();
-        weapon = weaponScript.gameObject;
-    }
-
-    void PlayRandomSound(AudioClip[] sounds)
-    {
-        if (sounds.Length > 0)
+        if (attackAnimationRoutine != null)
         {
-            int randomSound = Random.Range(0, sounds.Length);
-            float randomVolume = UnityEngine.Random.Range(0.7f, 0.9f);
-            float randomPitch = UnityEngine.Random.Range(0.8f, 1.2f);
-            AudioManager.Play(sounds[randomSound], randomVolume, randomPitch);
+            StopCoroutine(attackAnimationRoutine);
         }
+
+        attackAnimationRoutine =
+            StartCoroutine(AttackAnimationRoutine());
     }
 
-    public override void PlayAttackSound()
+    private IEnumerator AttackAnimationRoutine()
     {
-        PlayRandomSound(attackSoundEffects);
-    }
+        layerCurrentWeight = 0.5f;
+        layerTargetWeight = 0f;
 
-    public override void Attack()
-    {
-        if (canAttack)
-        {
-            layerCurrentWeight = 0.5f;
-            layerTargetWeight = 0;
+        yield return new WaitForSeconds(
+            attackStartDelay);
 
-            animator.SetTrigger("Attack");
-
-            StartCoroutine(ResetAttackCooldown());
-            StartCoroutine(WaitForAttackFinished());
-
-            PlayAttackSound();
-        }
-    }
-
-    IEnumerator WaitForAttackFinished()
-    {
-        yield return new WaitForSeconds(attacStartDelay);
         SetCanMove(false);
 
-        yield return new WaitForSeconds(attackTime);
-        layerTargetWeight = 1;
+        yield return new WaitForSeconds(
+            movementLockTime);
+
         SetCanMove(true);
+        layerTargetWeight = 1f;
+
+        attackAnimationRoutine = null;
     }
 
-    IEnumerator ResetAttackCooldown()
+    public override void AdditiveAnimation()
     {
-        canAttack = false;
-
-        yield return new WaitForSeconds(attackCooldown);
-        canAttack = true;
+        /*
+         * Add continuous shield-layer animation logic here.
+         *
+         * For example, this could control whether the shield
+         * holding layer should remain active.
+         */
     }
 
+    public override void Dead()
+    {
+        if (attackAnimationRoutine != null)
+        {
+            StopCoroutine(attackAnimationRoutine);
+            attackAnimationRoutine = null;
+        }
+
+        SetCanMove(false);
+        SetCanAttack(false);
+    }
 }

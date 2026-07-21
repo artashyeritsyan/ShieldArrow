@@ -10248,10 +10248,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb171eb743c03954faf0b51f1a1c4aca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  combatType: 2
   rotationSpeed: 4
-  shootingSpeed: 0.01
-  shotsInRow: 1
-  delayBetweenShots: 1
+  rangedAttackRange: 12
+  shieldAttackRange: 2
   coreStats:
     speed: 0
     maxHP: 0
@@ -10263,12 +10263,16 @@ MonoBehaviour:
     fireDamage: 0
     iceDamage: 0
     lightningDamage: 0
-  weaponScript: {fileID: 0}
+  bowWeapon: {fileID: 0}
+  crossbowWeapon: {fileID: 0}
+  shieldController: {fileID: 536208030742268543, guid: a5e4039ae58173d4abe65d08e827a4d7, type: 3}
   animator: {fileID: 1105662297}
-  animTransitionTime: 5
   attackSoundEffects: []
+  reloadSoundEffects: []
+  hitSoundEffects: []
   isDead: 0
   isInactive: 0
+  isPaused: 0
 --- !u!33 &1105662299
 MeshFilter:
   m_ObjectHideFlags: 0

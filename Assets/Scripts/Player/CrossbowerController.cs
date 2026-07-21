@@ -3,101 +3,86 @@ using UnityEngine;
 
 public class CrossbowerController : PlayerController
 {
-    [Header("Weapon")]
-    private WeaponController weaponScript;
+    [Header("Attack Movement")]
+    [SerializeField] private float movementLockTime = 0.3f;
+    [SerializeField] private float animationFinishTime = 0.1f;
 
-    [Header("Attack")]
-    [SerializeField] float attackTime = 0.3f;
-    [SerializeField] float attackCooldown = 5;
-    [SerializeField] float animFinishTime = 0.1f;
+    private Coroutine attackAnimationRoutine;
+    private bool isReloading;
 
-
-    private bool canAttack;
-
-
-    protected override void Start()
+    protected override void AfterStart()
     {
-        base.Start();
-        InitialiseWeapon();
-        canAttack = true;
-        layerTargetWeight = 1;
+        layerTargetWeight = 1f;
     }
 
-    protected override void Update()
+    protected override void OnEquipmentAttack()
     {
-        base.Update();
+        if (attackAnimationRoutine != null)
+        {
+            StopCoroutine(attackAnimationRoutine);
+        }
 
-        //layerCurrentWeight = Mathf.Lerp(layerCurrentWeight, layerTargetWeight, animLayerTransitionTime * Time.deltaTime);
-        //animator.SetLayerWeight(1, layerCurrentWeight);
+        attackAnimationRoutine =
+            StartCoroutine(AttackAnimationRoutine());
+    }
+
+    protected override void OnEquipmentReloadStarted()
+    {
+        isReloading = true;
+
+        SetCanMove(false);
+        layerTargetWeight = 0f;
+    }
+
+    protected override void OnEquipmentReloadFinished()
+    {
+        isReloading = false;
+
+        SetCanMove(true);
+        layerTargetWeight = 1f;
+    }
+
+    private IEnumerator AttackAnimationRoutine()
+    {
+        layerCurrentWeight = 0.1f;
+        layerTargetWeight = 0f;
+
+        SetCanMove(false);
+
+        yield return new WaitForSeconds(
+            movementLockTime);
+
+        if (!isReloading)
+        {
+            SetCanMove(true);
+        }
+
+        yield return new WaitForSeconds(
+            animationFinishTime);
+
+        if (!isReloading)
+        {
+            layerTargetWeight = 1f;
+        }
+
+        attackAnimationRoutine = null;
     }
 
     public override void AdditiveAnimation()
     {
-
     }
 
-    private void InitialiseWeapon()
+    public override void Dead()
     {
-        weaponScript = transform.GetComponentInChildren<WeaponController>();
-        weapon = weaponScript.gameObject;
-    }
-
-    void PlayRandomSound(AudioClip[] sounds)
-    {
-        if (sounds.Length > 0)
+        if (attackAnimationRoutine != null)
         {
-            int randomSound = Random.Range(0, sounds.Length);
-            float randomVolume = UnityEngine.Random.Range(0.7f, 0.9f);
-            float randomPitch = UnityEngine.Random.Range(0.8f, 1.2f);
-            AudioManager.Play(sounds[randomSound], randomVolume, randomPitch);
+            StopCoroutine(attackAnimationRoutine);
+            attackAnimationRoutine = null;
         }
-    }
 
-    public override void PlayAttackSound()
-    {
-        PlayRandomSound(attackSoundEffects);
-    }
+        isReloading = false;
 
-    public override void Attack()
-    {
-        if (canAttack)
-        {
-            AttackAnimation();
-
-            weaponScript.Shoot();
-
-            StartCoroutine(ResetAttackCooldown());
-            StartCoroutine(WaitForAttackFinished());
-
-            PlayAttackSound();
-        }
-    }
-
-    void AttackAnimation()
-    {
-        layerCurrentWeight = 0.1f;
-        layerTargetWeight = 0;
-
-        animator.SetTrigger("Attack");
-        animator.SetFloat("AttackSpeed", weaponScript.GetShootingSpeed());
-    }
-
-    IEnumerator WaitForAttackFinished()    {
         SetCanMove(false);
-
-        yield return new WaitForSeconds(attackTime);
-        SetCanMove(true);
-
-        yield return new WaitForSeconds(animFinishTime);
-        layerTargetWeight = 1;
+        SetCanAttack(false);
     }
-
-    IEnumerator ResetAttackCooldown()
-    {
-        canAttack = false;
-        // 1 stands for 1 second
-        yield return new WaitForSeconds(1 / weaponScript.GetShootingSpeed());
-        canAttack = true;
-    }
-    
 }

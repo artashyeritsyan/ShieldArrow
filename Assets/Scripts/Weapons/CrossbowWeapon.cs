@@ -1,25 +1,18 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
-public class CrossbowWeapon : MonoBehaviour, ICombatEquipment
+public class CrossbowWeapon : WeaponController
 {
-    [SerializeField] private Transform shootPoint;
-    [SerializeField] private GameObject projectilePrefab;
-
+    [Header("Crossbow")]
     [SerializeField] private int shotsInRow = 3;
     [SerializeField] private float delayBetweenShots = 0.3f;
     [SerializeField] private float reloadTime = 1.2f;
 
-    private bool isBusy;
+    private bool isBurstActive;
 
-    public event Action OnAttack;
-    public event Action OnReloadStarted;
-    public event Action OnReloadFinished;
-
-    public bool Use()
+    public override bool Shoot()
     {
-        if (isBusy)
+        if (!CanShoot() || isBurstActive)
             return false;
 
         StartCoroutine(BurstRoutine());
@@ -28,36 +21,90 @@ public class CrossbowWeapon : MonoBehaviour, ICombatEquipment
 
     private IEnumerator BurstRoutine()
     {
-        isBusy = true;
+        canShoot = false;
+        isBurstActive = true;
 
-        for (int i = 0; i < shotsInRow; i++)
+        int shotCount = Mathf.Max(shotsInRow, 1);
+
+        for (int i = 0; i < shotCount; i++)
         {
-            FireProjectile();
+            // Start one attack animation for this shot.
+            NotifyAttack();
 
-            // One attack animation for every shot.
-            OnAttack?.Invoke();
-
-            if (i < shotsInRow - 1)
+            // Wait until the animation reaches the firing moment.
+            if (attackStartDelay > 0f)
             {
                 yield return new WaitForSeconds(
-                    delayBetweenShots);
+                    attackStartDelay);
+            }
+
+            // Uses WeaponController projectile initialization.
+            CreateProjectile(shootPoint.rotation);
+
+            if (i < shotCount - 1)
+            {
+                float remainingShotDelay =
+                    Mathf.Max(
+                        delayBetweenShots -
+                        attackStartDelay,
+                        0f);
+
+                if (remainingShotDelay > 0f)
+                {
+                    yield return new WaitForSeconds(
+                        remainingShotDelay);
+                }
             }
         }
 
-        OnReloadStarted?.Invoke();
+        NotifyReloadStarted();
 
-        yield return new WaitForSeconds(reloadTime);
+        if (reloadTime > 0f)
+        {
+            yield return new WaitForSeconds(
+                reloadTime);
+        }
 
-        OnReloadFinished?.Invoke();
+        NotifyReloadFinished();
 
-        isBusy = false;
+        isBurstActive = false;
+        canShoot = true;
     }
 
-    private void FireProjectile()
+    protected override void OnDisable()
     {
-        Instantiate(
-            projectilePrefab,
-            shootPoint.position,
-            shootPoint.rotation);
+        base.OnDisable();
+
+        isBurstActive = false;
+    }
+
+    public int GetShotsInRow()
+    {
+        return shotsInRow;
+    }
+
+    public void SetShotsInRow(int newShotCount)
+    {
+        shotsInRow = Mathf.Max(newShotCount, 1);
+    }
+
+    public float GetDelayBetweenShots()
+    {
+        return delayBetweenShots;
+    }
+
+    public void SetDelayBetweenShots(float newDelay)
+    {
+        delayBetweenShots = Mathf.Max(newDelay, 0f);
+    }
+
+    public float GetReloadTime()
+    {
+        return reloadTime;
+    }
+
+    public void SetReloadTime(float newReloadTime)
+    {
+        reloadTime = Mathf.Max(newReloadTime, 0f);
     }
 }

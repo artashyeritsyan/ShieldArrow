@@ -3,102 +3,77 @@ using UnityEngine;
 
 public class AssasinController : PlayerController
 {
-    [Header("Weapon")]
-    private WeaponController weaponScript;
+    [Header("Attack Movement")]
+    [SerializeField] private float attackStartDelay = 0.1f;
+    [SerializeField] private float movementLockTime = 0.3f;
+    [SerializeField] private float animationFinishTime = 0.1f;
 
-    [Header("Attack")]
-    [SerializeField] float attackStartDelay = 0.1f;
-    [SerializeField] float attackTime = 0.3f;
-    [SerializeField] float attackCooldown = 5;
-    [SerializeField] float animFinishTime = 0.1f;
+    private Coroutine attackAnimationRoutine;
 
-
-
-    protected override void Start()
+    protected override void AfterStart()
     {
-        base.Start();
-        InitialiseWeapon();
-        canAttack = true;
-        layerTargetWeight = 1;
+        layerTargetWeight = 1f;
     }
 
-    protected override void Update()
+    protected override void OnEquipmentAttack()
     {
-        base.Update();
+        /*
+         * The assassin equipment invokes OnAttack when the
+         * attack actually starts.
+         *
+         * The base PlayerController already:
+         * - triggers Attack
+         * - plays the attack sound
+         *
+         * This controller handles only delayed movement locking
+         * and animation-layer behavior.
+         */
 
-        //layerCurrentWeight = Mathf.Lerp(layerCurrentWeight, layerTargetWeight, animLayerTransitionTime * Time.deltaTime);
-        //animator.SetLayerWeight(1, layerCurrentWeight);
+        if (attackAnimationRoutine != null)
+        {
+            StopCoroutine(attackAnimationRoutine);
+        }
+
+        attackAnimationRoutine =
+            StartCoroutine(AttackAnimationRoutine());
+    }
+
+    private IEnumerator AttackAnimationRoutine()
+    {
+        layerCurrentWeight = 0.1f;
+        layerTargetWeight = 0f;
+
+        yield return new WaitForSeconds(
+            attackStartDelay);
+
+        SetCanMove(false);
+
+        yield return new WaitForSeconds(
+            movementLockTime);
+
+        SetCanMove(true);
+
+        yield return new WaitForSeconds(
+            animationFinishTime);
+
+        layerTargetWeight = 1f;
+        attackAnimationRoutine = null;
     }
 
     public override void AdditiveAnimation()
     {
-
+        // Add continuous assassin animation logic here if needed.
     }
 
-    private void InitialiseWeapon()
+    public override void Dead()
     {
-        weaponScript = transform.GetComponentInChildren<WeaponController>();
-        weapon = weaponScript.gameObject;
-    }
-
-    void PlayRandomSound(AudioClip[] sounds)
-    {
-        if (sounds.Length > 0)
+        if (attackAnimationRoutine != null)
         {
-            int randomSound = Random.Range(0, sounds.Length);
-            float randomVolume = UnityEngine.Random.Range(0.7f, 0.9f);
-            float randomPitch = UnityEngine.Random.Range(0.8f, 1.2f);
-            AudioManager.Play(sounds[randomSound], randomVolume, randomPitch);
+            StopCoroutine(attackAnimationRoutine);
+            attackAnimationRoutine = null;
         }
-    }
 
-    public override void PlayAttackSound()
-    {
-        PlayRandomSound(attackSoundEffects);
-    }
-
-    public override void Attack()
-    {
-        if (canAttack)
-        {
-            AttackAnimation();
-
-            
-
-            StartCoroutine(ResetAttackCooldown());
-            StartCoroutine(WaitForAttackFinished());
-
-            PlayAttackSound();
-        }
-    }
-
-    void AttackAnimation()
-    {
-        layerCurrentWeight = 0.1f;
-        layerTargetWeight = 0;
-
-        animator.SetTrigger("Attack");
-        animator.SetFloat("AttackSpeed", weaponScript.GetShootingSpeed());
-    }
-
-    IEnumerator WaitForAttackFinished()    {
-        yield return new WaitForSeconds(attackStartDelay);
         SetCanMove(false);
-        weaponScript.Shoot();
-
-        yield return new WaitForSeconds(attackTime);
-        SetCanMove(true);
-
-        yield return new WaitForSeconds(animFinishTime);
-        layerTargetWeight = 1;
+        SetCanAttack(false);
     }
-
-    IEnumerator ResetAttackCooldown()
-    {
-        canAttack = false;
-        // 1 stands for 1 second
-        yield return new WaitForSeconds(1 / weaponScript.GetShootingSpeed());
-        canAttack = true;
-    }
-    
 }
