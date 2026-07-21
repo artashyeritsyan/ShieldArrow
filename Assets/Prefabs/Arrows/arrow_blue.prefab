@@ -113,13 +113,12 @@ MonoBehaviour:
   lifeTime: 10
   speed: 6
   maxRicochetCount: 2
-  isEnemyArrow: 0
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 1856
   showOutline: 1
   outlineColor: {r: 0.10946945, g: 0.46060446, b: 0.7735849, a: 1}
   outlineWidth: 1
-  hitMask:
-    serializedVersion: 2
-    m_Bits: 1280
 --- !u!65 &6723025866345557165
 BoxCollider:
   m_ObjectHideFlags: 0

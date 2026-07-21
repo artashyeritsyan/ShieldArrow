@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
+using static UnityEngine.Rendering.DebugUI;
 
 public enum PlayerClass { 
     Archer, 
@@ -249,6 +250,17 @@ public class PlayerController : MonoBehaviour
         {
             Attack();
         }
+
+        //if (weapon != null)
+        //{
+        //    weapon.Shoot();
+        //    return;
+        //}
+
+        //if (shield != null)
+        //{
+        //    shield.Attack();
+        //}
 
     }
 

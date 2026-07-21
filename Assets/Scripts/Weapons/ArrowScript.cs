@@ -67,32 +67,108 @@ public class ArrowScript : MonoBehaviour
 
     private void Update()
     {
-        float moveDist = speed * Time.deltaTime;
+        if (!isInitialized)
+        {
+            return;
+        }
+
+        float moveDistance = speed * Time.deltaTime;
 
         if (Physics.Raycast(
                 transform.position,
                 direction,
                 out RaycastHit hit,
-                moveDist,
+                moveDistance,
                 hitMask,
-                QueryTriggerInteraction.Ignore)) // CHANGED
+                QueryTriggerInteraction.Ignore))
         {
-            OnHit(hit);
+            if (!OnHit(hit))
+            {
+                transform.position += direction * moveDistance;
+            }
         }
         else
         {
-            transform.position += direction * moveDist;
+            transform.position += direction * moveDistance;
         }
     }
 
-    private void OnHit(RaycastHit hit)
+    private bool OnHit(RaycastHit hit)
     {
-        if (hit.collider.CompareTag("Wall") ||
-            hit.collider.CompareTag("Shield"))
+        if (IsOwnerCollider(hit.collider))
+            return true;
+
+        ShieldReflector shield =
+            hit.collider.GetComponentInParent<ShieldReflector>();
+
+        if (shield != null)
         {
-            HandleRicochet(hit); // CHANGED
+            HandleShieldHit(hit, shield);
+            return true;
         }
+
+        IDamageable target =
+            hit.collider.GetComponentInParent<IDamageable>();
+
+        if (target != null && target.Team != ownerTeam)
+        {
+            target.TakeDamage(
+                damageData,
+                attackerStats);
+
+            DestroyProjectile();
+            return true;
+        }
+
+        if (hit.collider.CompareTag("Wall"))
+        {
+            HandleRicochet(hit);
+            return true;
+        }
+
+        return false;
     }
+
+    private void HandleShieldHit(
+    RaycastHit hit,
+    ShieldReflector shield)
+    {
+        if (!shield.CanReflect(ownerTeam))
+        {
+            // Inactive shield: arrow is blocked.
+            DestroyProjectile();
+            return;
+        }
+
+        ReflectFromShield(
+            hit.normal,
+            shield.GetOwner(),
+            shield.GetOwnerTeam(),
+            shield.GetOwnerStats());
+
+        shield.NotifyProjectileReflected();
+    }
+
+    public void ReflectFromShield(
+    Vector3 surfaceNormal,
+    GameObject newOwner,
+    Team newOwnerTeam,
+    CoreStats newOwnerStats)
+    {
+        direction = Vector3
+            .Reflect(direction, surfaceNormal)
+            .normalized;
+
+        transform.forward = direction;
+
+        owner = newOwner;
+        ownerTeam = newOwnerTeam;
+        attackerStats = newOwnerStats;
+
+        transform.position += direction * 0.02f;
+    }
+
+
 
     private void HandleRicochet(RaycastHit hit) // ADDED
     {
@@ -115,40 +191,53 @@ public class ArrowScript : MonoBehaviour
         ricochetsLeft--;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private bool TryDamageTarget(Collider other)
     {
-        if (!isInitialized) // ADDED
+        if (!isInitialized)
         {
-            Debug.LogWarning( // ADDED
-                $"{name} was not initialized before hitting an object."); // ADDED
-
-            return; // ADDED
-        }
-
-        if (IsOwnerCollider(other)) // ADDED
-        {
-            return;
+            return false;
         }
 
         IDamageable target =
-            other.GetComponentInParent<IDamageable>(); // CHANGED
+            other.GetComponentInParent<IDamageable>();
 
-        if (target == null) // ADDED
+        if (target == null)
         {
-            return;
+            return false;
         }
 
-        if (target.Team == ownerTeam) // ADDED
+        // Do not damage allies.
+        if (target.Team == ownerTeam)
         {
-            return;
+            return false;
         }
 
-        target.TakeDamage( // ADDED
+        target.TakeDamage(
             damageData,
             attackerStats);
 
-        DestroyProjectile(); // CHANGED
+        DestroyProjectile();
+
+        return true;
     }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (!isInitialized)
+    //    {
+    //        Debug.LogWarning(
+    //            $"{name} was not initialized before hitting an object.");
+
+    //        return;
+    //    }
+
+    //    if (IsOwnerCollider(other))
+    //    {
+    //        return;
+    //    }
+
+    //    TryDamageTarget(other);
+    //}
 
     private bool IsOwnerCollider(Collider other) // ADDED
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 public class KnightController : PlayerController
 {
     [Header("Weapon")]
-    private WeaponScript weaponScript;
+    private WeaponController weaponScript;
 
     [Header("Attack")]
     [SerializeField] float attacStartDelay = 0.1f;
@@ -29,7 +29,7 @@ public class KnightController : PlayerController
 
     private void InitialiseWeapon()
     {
-        weaponScript = transform.GetComponentInChildren<WeaponScript>();
+        weaponScript = transform.GetComponentInChildren<WeaponController>();
         weapon = weaponScript.gameObject;
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 public class ArcherController : PlayerController
 {
     [Header("Weapon")]
-    private WeaponScript weaponScript;
+    private WeaponController weaponScript;
 
     [Header("Attack")]
     [SerializeField] float attackTime = 0.3f;
@@ -33,7 +33,7 @@ public class ArcherController : PlayerController
 
     private void InitialiseWeapon()
     {
-        weaponScript = transform.GetComponentInChildren<WeaponScript>();
+        weaponScript = transform.GetComponentInChildren<WeaponController>();
         weapon = weaponScript.gameObject;
     }
 
@@ -74,7 +74,7 @@ public class ArcherController : PlayerController
         layerTargetWeight = 0;
 
         animator.SetTrigger("Attack");
-        animator.SetFloat("AttackSpeed", weaponScript.GetAttackSpeed());
+        //animator.SetFloat("AttackSpeed", weaponScript.GetAttackSpeed());
     }
 
     IEnumerator WaitForAttackFinished()    {
@@ -91,7 +91,7 @@ public class ArcherController : PlayerController
     {
         canAttack = false;
         // 1 stands for 1 second
-        yield return new WaitForSeconds(1 / weaponScript.GetAttackSpeed());
+        yield return new WaitForSeconds(1 / weaponScript.GetShootingSpeed());
         canAttack = true;
     }
     

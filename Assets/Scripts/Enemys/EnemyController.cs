@@ -1,226 +1,361 @@
-using System.Collections;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour, IDamageable
 {
-    [Header("Parameters")]
-    [SerializeField] float rotationSpeed = 5f;
-    [SerializeField] float shootingSpeed = 1f;
-    [SerializeField] float shotsInRow = 1f;
-    [SerializeField] float delayBetweenShots = 0.7f;
+    [Header("Movement")]
+    [SerializeField] private float rotationSpeed = 5f;
 
-    [Header("Stats")] // ADDED
-    [SerializeField] private CoreStats coreStats; // ADDED
+    [Header("Stats")]
+    [SerializeField] private CoreStats coreStats;
 
-    public CoreStats CoreStats => coreStats; // ADDED
-    public Team Team => Team.Enemy; // ADDED
+    public CoreStats CoreStats => coreStats;
+    public Team Team => Team.Enemy;
 
-    [Header("Weapon")]
-    [SerializeField] WeaponScript weaponScript;
+    [Header("Combat Equipment")]
+    [Tooltip("Assign BowWeapon, CrossbowWeapon, or ShieldController.")]
+    [SerializeField] private MonoBehaviour combatEquipmentBehaviour;
+
+    private ICombatEquipment combatEquipment;
 
     [Header("Animation")]
     [SerializeField] protected Animator animator;
-    [SerializeField] float animTransitionTime = 5f;
-    private float blendValue;
 
     [Header("Sound Effects")]
-    public AudioClip[] attackSoundEffects;
+    [SerializeField] private AudioClip[] attackSoundEffects;
+    [SerializeField] private AudioClip[] reloadSoundEffects;
+    [SerializeField] private AudioClip[] hitSoundEffects;
 
-    [Header("Main Modifiers")]
-    [SerializeField] bool isDead;
-    [SerializeField] bool isInactive;
-    bool isPause;
-    bool canMove;
-    bool canAttack;
+    [Header("State")]
+    [SerializeField] private bool isDead;
+    [SerializeField] private bool isInactive;
+    [SerializeField] private bool isPaused;
+
+    private PlayerController currentTarget;
+
+    private void Awake()
+    {
+        ResolveCombatEquipment();
+    }
 
     private void Start()
     {
-        coreStats.currentHP = coreStats.maxHP; // ADDED
-        canAttack = true;
+        if (coreStats != null)
+        {
+            coreStats.currentHP = coreStats.maxHP;
+        }
+        else
+        {
+            Debug.LogError(
+                $"{name}: CoreStats is not assigned.");
+        }
+
+        InitializeCombatEquipment();
+        SubscribeToEquipmentEvents();
     }
 
-    void Update()
+    private void Update()
     {
-        if (isDead || isInactive || isPause) // ADDED
-            return; // ADDED
+        if (!CanAct())
+        {
+            UpdateAnimationState();
+            return;
+        }
 
-        var target = GetClosestPlayer();
+        currentTarget = GetClosestPlayer();
 
-        if (target == null)
+        if (currentTarget == null)
+        {
+            UpdateAnimationState();
+            return;
+        }
+
+        RotateTowards(currentTarget.transform.position);
+        HandleAttack();
+        UpdateAnimationState();
+    }
+
+    private void ResolveCombatEquipment()
+    {
+        if (combatEquipmentBehaviour == null)
+        {
+            Debug.LogWarning(
+                $"{name}: No combat equipment assigned.");
+
+            return;
+        }
+
+        combatEquipment =
+            combatEquipmentBehaviour as ICombatEquipment;
+
+        if (combatEquipment == null)
+        {
+            Debug.LogError(
+                $"{name}: {combatEquipmentBehaviour.GetType().Name} " +
+                $"must implement {nameof(ICombatEquipment)}.");
+        }
+    }
+
+    private void InitializeCombatEquipment()
+    {
+        if (combatEquipment == null)
             return;
 
-        RotateTowards(target.transform.position);
-        HandleAttack();
-        HandleAnimation();
+        combatEquipment.Initialize(
+            gameObject,
+            Team.Enemy,
+            coreStats);
     }
 
-    PlayerController GetClosestPlayer()
+    private void SubscribeToEquipmentEvents()
     {
-        float minDist = float.MaxValue;
-        PlayerController closest = null;
+        if (combatEquipment == null)
+            return;
 
-        foreach (var player in PlayerManager.Instance.GetPlayers())
+        combatEquipment.OnAttack += HandleAttackEvent;
+        combatEquipment.OnReloadStarted += HandleReloadStarted;
+        combatEquipment.OnReloadFinished += HandleReloadFinished;
+        combatEquipment.OnActionFinished += HandleActionFinished;
+    }
+
+    private void UnsubscribeFromEquipmentEvents()
+    {
+        if (combatEquipment == null)
+            return;
+
+        combatEquipment.OnAttack -= HandleAttackEvent;
+        combatEquipment.OnReloadStarted -= HandleReloadStarted;
+        combatEquipment.OnReloadFinished -= HandleReloadFinished;
+        combatEquipment.OnActionFinished -= HandleActionFinished;
+    }
+
+    private bool CanAct()
+    {
+        return !isDead &&
+               !isInactive &&
+               !isPaused;
+    }
+
+    private void HandleAttack()
+    {
+        if (combatEquipment == null)
+            return;
+
+        /*
+         * The equipment decides whether it can currently act.
+         *
+         * Bow:
+         * - returns false during its cooldown.
+         *
+         * Crossbow:
+         * - returns false while bursting or reloading.
+         *
+         * Shield:
+         * - returns false while attacking or cooling down.
+         */
+        combatEquipment.Use();
+    }
+
+    private PlayerController GetClosestPlayer()
+    {
+        if (PlayerManager.Instance == null)
+            return null;
+
+        float minimumSqrDistance = float.MaxValue;
+        PlayerController closestPlayer = null;
+
+        foreach (
+            PlayerController player in
+            PlayerManager.Instance.GetPlayers())
         {
             if (player == null)
                 continue;
 
-            float dist = Vector3.Distance(
-                transform.position,
-                player.transform.position);
+            Vector3 difference =
+                player.transform.position -
+                transform.position;
 
-            if (dist < minDist)
-            {
-                minDist = dist;
-                closest = player;
-            }
+            float sqrDistance =
+                difference.sqrMagnitude;
+
+            if (sqrDistance >= minimumSqrDistance)
+                continue;
+
+            minimumSqrDistance = sqrDistance;
+            closestPlayer = player;
         }
 
-        Debug.Log("Find player " + minDist);
-        return closest;
+        return closestPlayer;
     }
 
-    public void TakeDamage( // ADDED
-        DamageData damageData, // ADDED
-        CoreStats attackerStats) // ADDED
+    private void RotateTowards(Vector3 targetPosition)
     {
-        if (isDead) // ADDED
-            return; // ADDED
+        Vector3 direction =
+            targetPosition - transform.position;
 
-        DamageSystem.ProcessDamage( // ADDED
-            damageData, // ADDED
-            attackerStats, // ADDED
-            coreStats); // ADDED
+        direction.y = 0f;
 
-        OnDamageReceived(); // ADDED
-
-        if (coreStats.currentHP <= 0f) // ADDED
-        {
-            Die(); // ADDED
-        }
-    }
-
-    private void OnDamageReceived() // ADDED
-    {
-        Debug.Log( // ADDED
-            $"{name} received damage. Remaining HP: " + // ADDED
-            $"{coreStats.currentHP}/{coreStats.maxHP}"); // ADDED
-
-        if (animator != null) // ADDED
-        {
-            animator.SetTrigger("Hit"); // ADDED
-        }
-
-        // Update your health bar here.
-        // Example:
-        // healthBar.SetValue(coreStats.currentHP, coreStats.maxHP);
-    }
-
-    private void Die() // ADDED
-    {
-        if (isDead) // ADDED
-            return; // ADDED
-
-        isDead = true; // ADDED
-        canAttack = false; // ADDED
-        canMove = false; // ADDED
-
-        StopAllCoroutines(); // ADDED
-
-        if (animator != null) // ADDED
-        {
-            animator.SetBool("Dead", true); // ADDED
-        }
-
-        if (weaponScript != null) // ADDED
-        {
-            weaponScript.enabled = false; // ADDED
-        }
-
-        Collider enemyCollider = GetComponent<Collider>(); // ADDED
-
-        if (enemyCollider != null) // ADDED
-        {
-            enemyCollider.enabled = false; // ADDED
-        }
-
-        Destroy(gameObject, 2f); // ADDED
-    }
-
-    void RotateTowards(Vector3 targetPos)
-    {
-        Vector3 dir =
-            (targetPos - transform.position).normalized;
-
-        dir.y = 0f;
-
-        if (dir == Vector3.zero)
+        if (direction.sqrMagnitude <= 0.0001f)
             return;
 
-        Quaternion targetRot = Quaternion.LookRotation(dir);
+        Quaternion targetRotation =
+            Quaternion.LookRotation(
+                direction.normalized);
 
-        transform.rotation = Quaternion.Lerp(
-            transform.rotation,
-            targetRot,
-            Time.deltaTime * rotationSpeed);
+        transform.rotation =
+            Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                rotationSpeed * Time.deltaTime);
     }
 
-    void HandleAttack()
+    private void HandleAttackEvent()
     {
-        if (!canAttack || isDead || isInactive) // CHANGED
-            return; // ADDED
+        if (isDead || isInactive)
+            return;
 
-        if (weaponScript != null)
-        {
-            weaponScript.Shoot();
-            PlayAttackSound();
+        PlayAttackSound();
 
-            if (shotsInRow > 1)
-            {
-                StartCoroutine(ShootInRow());
-            }
-            else
-            {
-                StartCoroutine(ResetAttackCooldown());
-            }
+        if (animator == null)
+            return;
 
-            canAttack = false;
-        }
-        else
-        {
-            canAttack = false;
-            StartCoroutine(ResetAttackCooldown());
-            PlayAttackSound();
-        }
+        /*
+         * This event is invoked once for every actual attack.
+         *
+         * Crossbow with 3 shots:
+         * - event invoked 3 times
+         * - attack animation plays 3 times
+         *
+         * Bow spread:
+         * - event invoked once
+         *
+         * Shield attack:
+         * - event invoked once
+         */
+        animator.SetTrigger("Attack");
 
-        AttackAnimation();
+        float animationSpeed =
+            combatEquipment?.GetAnimationSpeed() ?? 1f;
 
-        Debug.Log(canAttack);
+        animator.SetFloat(
+            "AttackSpeed",
+            Mathf.Max(animationSpeed, 0.01f));
     }
 
-    IEnumerator ShootInRow()
+    private void HandleReloadStarted()
     {
-        for (int i = 1; i < shotsInRow; i++)
+        if (isDead || animator == null)
+            return;
+
+        animator.ResetTrigger("Attack");
+        animator.SetBool("Reloading", true);
+        animator.SetTrigger("Reload");
+
+        PlayRandomSound(reloadSoundEffects);
+    }
+
+    private void HandleReloadFinished()
+    {
+        if (animator == null)
+            return;
+
+        animator.SetBool("Reloading", false);
+    }
+
+    private void HandleActionFinished()
+    {
+        /*
+         * Optional event.
+         *
+         * Useful when an equipment action has fully finished:
+         * - bow cooldown completed;
+         * - crossbow reload completed;
+         * - shield attack and cooldown completed.
+         *
+         * No enemy-side cooldown is necessary because the equipment
+         * already controls whether Use() succeeds.
+         */
+    }
+
+    public void TakeDamage(
+        DamageData damageData,
+        CoreStats attackerStats)
+    {
+        if (isDead || coreStats == null)
+            return;
+
+        DamageSystem.ProcessDamage(
+            damageData,
+            attackerStats,
+            coreStats);
+
+        OnDamageReceived();
+
+        if (coreStats.currentHP <= 0f)
         {
-            yield return new WaitForSeconds(delayBetweenShots);
+            Die();
+        }
+    }
 
-            if (isDead || isInactive) // ADDED
-                yield break; // ADDED
+    private void OnDamageReceived()
+    {
+        Debug.Log(
+            $"{name} received damage. Remaining HP: " +
+            $"{coreStats.currentHP}/{coreStats.maxHP}");
 
-            weaponScript.Shoot();
-            PlayAttackSound();
+        PlayRandomSound(hitSoundEffects);
 
-            if (animator != null) // CHANGED
-            {
-                animator.SetTrigger("Attack");
-            }
+        if (animator != null)
+        {
+            animator.SetTrigger("Hit");
         }
 
-        StartCoroutine(ResetAttackCooldown());
+        // Update the enemy health bar here.
+    }
 
-        if (animator != null) // CHANGED
+    private void Die()
+    {
+        if (isDead)
+            return;
+
+        isDead = true;
+
+        UnsubscribeFromEquipmentEvents();
+
+        if (combatEquipmentBehaviour != null)
         {
-            animator.SetTrigger("Reload");
+            combatEquipmentBehaviour.enabled = false;
         }
+
+        if (animator != null)
+        {
+            animator.SetBool("Reloading", false);
+            animator.SetBool("Dead", true);
+        }
+
+        DisableEnemyColliders();
+
+        Destroy(gameObject, 2f);
+    }
+
+    private void DisableEnemyColliders()
+    {
+        Collider[] colliders =
+            GetComponentsInChildren<Collider>();
+
+        foreach (Collider enemyCollider in colliders)
+        {
+            enemyCollider.enabled = false;
+        }
+    }
+
+    private void UpdateAnimationState()
+    {
+        if (animator == null)
+            return;
+
+        animator.SetFloat("Blend", 0f);
+        animator.SetBool("Dead", isDead);
+        animator.SetBool("Inactive", isInactive);
     }
 
     public void PlayAttackSound()
@@ -228,74 +363,45 @@ public class EnemyController : MonoBehaviour, IDamageable
         PlayRandomSound(attackSoundEffects);
     }
 
-    void PlayRandomSound(AudioClip[] sounds)
+    private void PlayRandomSound(AudioClip[] sounds)
     {
-        if (sounds == null || sounds.Length == 0) // CHANGED
-            return; // ADDED
+        if (sounds == null || sounds.Length == 0)
+            return;
 
-        int randomSound = Random.Range(0, sounds.Length);
-        float randomVolume = Random.Range(0.7f, 0.9f);
-        float randomPitch = Random.Range(0.8f, 1.2f);
+        int randomIndex =
+            Random.Range(0, sounds.Length);
+
+        float randomVolume =
+            Random.Range(0.7f, 0.9f);
+
+        float randomPitch =
+            Random.Range(0.8f, 1.2f);
 
         AudioManager.Play(
-            sounds[randomSound],
+            sounds[randomIndex],
             randomVolume,
             randomPitch);
     }
 
-    IEnumerator ResetAttackCooldown()
+    public void SetInactive(bool value)
     {
-        canAttack = false;
+        isInactive = value;
 
-        float cooldown;
-
-        if (weaponScript != null)
+        if (animator != null)
         {
-            cooldown = 1f / weaponScript.GetAttackSpeed(); // CHANGED
-        }
-        else
-        {
-            cooldown = 1f / shootingSpeed; // CHANGED
-        }
-
-        yield return new WaitForSeconds(cooldown);
-
-        if (!isDead && !isInactive) // ADDED
-        {
-            canAttack = true;
+            animator.SetBool(
+                "Inactive",
+                isInactive);
         }
     }
 
-    void AttackAnimation()
+    public void SetPaused(bool value)
     {
-        if (animator == null) // ADDED
-            return; // ADDED
-
-        animator.SetTrigger("Attack");
-
-        if (weaponScript != null)
-        {
-            animator.SetFloat(
-                "AttackSpeed",
-                weaponScript.GetAttackSpeed());
-        }
+        isPaused = value;
     }
 
-    void HandleAnimation()
+    private void OnDestroy()
     {
-        if (animator == null) // ADDED
-            return; // ADDED
-
-        blendValue = 0f;
-        animator.SetFloat("Blend", blendValue);
-
-        if (isDead || isInactive)
-        {
-            StopAllCoroutines();
-            canAttack = false;
-        }
-
-        animator.SetBool("Dead", isDead);
-        animator.SetBool("Inactive", isInactive);
+        UnsubscribeFromEquipmentEvents();
     }
 }

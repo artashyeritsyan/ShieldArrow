@@ -4,7 +4,7 @@ using UnityEngine;
 public class AssasinController : PlayerController
 {
     [Header("Weapon")]
-    private WeaponScript weaponScript;
+    private WeaponController weaponScript;
 
     [Header("Attack")]
     [SerializeField] float attackStartDelay = 0.1f;
@@ -37,7 +37,7 @@ public class AssasinController : PlayerController
 
     private void InitialiseWeapon()
     {
-        weaponScript = transform.GetComponentInChildren<WeaponScript>();
+        weaponScript = transform.GetComponentInChildren<WeaponController>();
         weapon = weaponScript.gameObject;
     }
 
@@ -78,7 +78,7 @@ public class AssasinController : PlayerController
         layerTargetWeight = 0;
 
         animator.SetTrigger("Attack");
-        animator.SetFloat("AttackSpeed", weaponScript.GetAttackSpeed());
+        animator.SetFloat("AttackSpeed", weaponScript.GetShootingSpeed());
     }
 
     IEnumerator WaitForAttackFinished()    {
@@ -97,7 +97,7 @@ public class AssasinController : PlayerController
     {
         canAttack = false;
         // 1 stands for 1 second
-        yield return new WaitForSeconds(1 / weaponScript.GetAttackSpeed());
+        yield return new WaitForSeconds(1 / weaponScript.GetShootingSpeed());
         canAttack = true;
     }
     
