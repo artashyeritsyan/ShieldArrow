@@ -1,11 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
-public class ArcherController : PlayerController
+public class ArcherController :
+    PlayerController
 {
     [Header("Attack Movement")]
-    [SerializeField] private float movementLockTime = 0.3f;
-    [SerializeField] private float animationFinishTime = 0.1f;
+    [SerializeField]
+    private float movementLockTime = 0.3f;
+
+    [SerializeField]
+    private float animationFinishTime = 0.1f;
 
     private Coroutine attackAnimationRoutine;
 
@@ -16,24 +20,15 @@ public class ArcherController : PlayerController
 
     protected override void OnEquipmentAttack()
     {
-        /*
-         * The base PlayerController already:
-         *
-         * 1. Receives OnAttack from the bow.
-         * 2. Plays the attack sound.
-         * 3. Triggers animator.SetTrigger("Attack").
-         *
-         * This class only handles Archer-specific movement
-         * and animation-layer behavior.
-         */
-
         if (attackAnimationRoutine != null)
         {
-            StopCoroutine(attackAnimationRoutine);
+            StopCoroutine(
+                attackAnimationRoutine);
         }
 
         attackAnimationRoutine =
-            StartCoroutine(AttackAnimationRoutine());
+            StartCoroutine(
+                AttackAnimationRoutine());
     }
 
     private IEnumerator AttackAnimationRoutine()
@@ -43,13 +38,27 @@ public class ArcherController : PlayerController
 
         SetCanMove(false);
 
-        yield return new WaitForSeconds(
-            movementLockTime);
+        float scaledMovementLock =
+            GetScaledEquipmentDuration(
+                movementLockTime);
+
+        if (scaledMovementLock > 0f)
+        {
+            yield return new WaitForSeconds(
+                scaledMovementLock);
+        }
 
         SetCanMove(true);
 
-        yield return new WaitForSeconds(
-            animationFinishTime);
+        float scaledFinishTime =
+            GetScaledEquipmentDuration(
+                animationFinishTime);
+
+        if (scaledFinishTime > 0f)
+        {
+            yield return new WaitForSeconds(
+                scaledFinishTime);
+        }
 
         layerTargetWeight = 1f;
         attackAnimationRoutine = null;
@@ -57,19 +66,15 @@ public class ArcherController : PlayerController
 
     public override void AdditiveAnimation()
     {
-        /*
-         * Add Archer-specific continuous animation
-         * updates here when needed.
-         *
-         * Do not trigger the main attack animation here.
-         */
     }
 
     public override void Dead()
     {
         if (attackAnimationRoutine != null)
         {
-            StopCoroutine(attackAnimationRoutine);
+            StopCoroutine(
+                attackAnimationRoutine);
+
             attackAnimationRoutine = null;
         }
 

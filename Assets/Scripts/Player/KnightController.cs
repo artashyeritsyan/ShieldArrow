@@ -1,11 +1,18 @@
 using System.Collections;
 using UnityEngine;
 
-public class KnightController : PlayerController
+public class KnightController :
+    PlayerController
 {
     [Header("Attack Movement")]
-    [SerializeField] private float attackStartDelay = 0.1f;
-    [SerializeField] private float movementLockTime = 0.3f;
+    [Tooltip(
+        "Movement delay relative to the beginning " +
+        "of the shield animation.")]
+    [SerializeField]
+    private float attackStartDelay = 0.1f;
+
+    [SerializeField]
+    private float movementLockTime = 0.3f;
 
     private Coroutine attackAnimationRoutine;
 
@@ -16,26 +23,15 @@ public class KnightController : PlayerController
 
     protected override void OnEquipmentAttack()
     {
-        /*
-         * The ShieldController invokes OnAttack when the shield
-         * attack actually begins.
-         *
-         * The base PlayerController already:
-         *
-         * 1. Plays the sound.
-         * 2. Triggers the Attack animation.
-         *
-         * KnightController only manages Knight-specific movement
-         * and animation-layer behavior.
-         */
-
         if (attackAnimationRoutine != null)
         {
-            StopCoroutine(attackAnimationRoutine);
+            StopCoroutine(
+                attackAnimationRoutine);
         }
 
         attackAnimationRoutine =
-            StartCoroutine(AttackAnimationRoutine());
+            StartCoroutine(
+                AttackAnimationRoutine());
     }
 
     private IEnumerator AttackAnimationRoutine()
@@ -43,13 +39,27 @@ public class KnightController : PlayerController
         layerCurrentWeight = 0.5f;
         layerTargetWeight = 0f;
 
-        yield return new WaitForSeconds(
-            attackStartDelay);
+        float scaledStartDelay =
+            GetScaledEquipmentDuration(
+                attackStartDelay);
+
+        if (scaledStartDelay > 0f)
+        {
+            yield return new WaitForSeconds(
+                scaledStartDelay);
+        }
 
         SetCanMove(false);
 
-        yield return new WaitForSeconds(
-            movementLockTime);
+        float scaledMovementLock =
+            GetScaledEquipmentDuration(
+                movementLockTime);
+
+        if (scaledMovementLock > 0f)
+        {
+            yield return new WaitForSeconds(
+                scaledMovementLock);
+        }
 
         SetCanMove(true);
         layerTargetWeight = 1f;
@@ -59,19 +69,15 @@ public class KnightController : PlayerController
 
     public override void AdditiveAnimation()
     {
-        /*
-         * Add continuous shield-layer animation logic here.
-         *
-         * For example, this could control whether the shield
-         * holding layer should remain active.
-         */
     }
 
     public override void Dead()
     {
         if (attackAnimationRoutine != null)
         {
-            StopCoroutine(attackAnimationRoutine);
+            StopCoroutine(
+                attackAnimationRoutine);
+
             attackAnimationRoutine = null;
         }
 

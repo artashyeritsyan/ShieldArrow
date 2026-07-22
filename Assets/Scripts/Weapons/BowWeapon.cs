@@ -6,15 +6,19 @@ public class BowWeapon : WeaponController
     private const float SECOND = 1f;
 
     [Header("Bow")]
-    [SerializeField] private int arrowsPerShot = 1;
-    [SerializeField] private float spreadAngle = 20f;
+    [SerializeField]
+    private int arrowsPerShot = 1;
+
+    [SerializeField]
+    private float spreadAngle = 20f;
 
     public override bool Shoot()
     {
         if (!CanShoot())
             return false;
 
-        StartCoroutine(ShootSpread());
+        StartCoroutine(
+            ShootSpread());
 
         return true;
     }
@@ -24,23 +28,28 @@ public class BowWeapon : WeaponController
         canShoot = false;
 
         /*
-         * Start the player's or enemy's attack animation.
-         * This happens only once for the entire spread.
+         * One animation event for the complete spread.
          */
         NotifyAttack();
 
         /*
-         * Wait until the bow animation reaches
-         * the arrow-release moment.
+         * The release delay becomes shorter when
+         * the action-speed multiplier increases.
          */
-        if (attackStartDelay > 0f)
+        float scaledAttackStartDelay =
+            GetScaledDuration(
+                attackStartDelay);
+
+        if (scaledAttackStartDelay > 0f)
         {
             yield return new WaitForSeconds(
-                attackStartDelay);
+                scaledAttackStartDelay);
         }
 
         int arrowCount =
-            Mathf.Max(arrowsPerShot, 1);
+            Mathf.Max(
+                arrowsPerShot,
+                1);
 
         if (arrowCount == 1)
         {
@@ -56,9 +65,10 @@ public class BowWeapon : WeaponController
             float startingAngle =
                 -spreadAngle * 0.5f;
 
-            for (int i = 0;
-                 i < arrowCount;
-                 i++)
+            for (
+                int i = 0;
+                i < arrowCount;
+                i++)
             {
                 float currentAngle =
                     startingAngle +
@@ -75,20 +85,24 @@ public class BowWeapon : WeaponController
             }
         }
 
+        /*
+         * EffectiveActionSpeed includes both:
+         *
+         * shootingSpeed
+         * actionSpeedMultiplier
+         */
         float totalAttackInterval =
             SECOND /
-            Mathf.Max(
-                shootingSpeed,
-                0.01f);
+            EffectiveActionSpeed;
 
         /*
-         * attackStartDelay is treated as part of
-         * the complete attack interval.
+         * The attack-start delay is already part
+         * of the complete attack interval.
          */
         float remainingCooldown =
             Mathf.Max(
                 totalAttackInterval -
-                attackStartDelay,
+                scaledAttackStartDelay,
                 0f);
 
         if (remainingCooldown > 0f)

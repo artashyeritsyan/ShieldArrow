@@ -4,18 +4,34 @@ using UnityEngine;
 public class CrossbowWeapon : WeaponController
 {
     [Header("Crossbow")]
-    [SerializeField] private int shotsInRow = 3;
-    [SerializeField] private float delayBetweenShots = 0.3f;
-    [SerializeField] private float reloadTime = 1.2f;
+    [SerializeField]
+    private int shotsInRow = 3;
+
+    [Tooltip(
+        "Base time between the start of each " +
+        "shot animation.")]
+    [SerializeField]
+    private float delayBetweenShots = 0.3f;
+
+    [Tooltip(
+        "Base reload duration before applying " +
+        "the action-speed multiplier.")]
+    [SerializeField]
+    private float reloadTime = 1.2f;
 
     private bool isBurstActive;
 
     public override bool Shoot()
     {
-        if (!CanShoot() || isBurstActive)
+        if (!CanShoot() ||
+            isBurstActive)
+        {
             return false;
+        }
 
-        StartCoroutine(BurstRoutine());
+        StartCoroutine(
+            BurstRoutine());
+
         return true;
     }
 
@@ -24,29 +40,49 @@ public class CrossbowWeapon : WeaponController
         canShoot = false;
         isBurstActive = true;
 
-        int shotCount = Mathf.Max(shotsInRow, 1);
+        int shotCount =
+            Mathf.Max(
+                shotsInRow,
+                1);
 
-        for (int i = 0; i < shotCount; i++)
+        float scaledAttackStartDelay =
+            GetScaledDuration(
+                attackStartDelay);
+
+        float scaledDelayBetweenShots =
+            GetScaledDuration(
+                delayBetweenShots);
+
+        for (
+            int i = 0;
+            i < shotCount;
+            i++)
         {
-            // Start one attack animation for this shot.
+            /*
+             * One animation event for every
+             * individual crossbow shot.
+             */
             NotifyAttack();
 
-            // Wait until the animation reaches the firing moment.
-            if (attackStartDelay > 0f)
+            if (scaledAttackStartDelay > 0f)
             {
                 yield return new WaitForSeconds(
-                    attackStartDelay);
+                    scaledAttackStartDelay);
             }
 
-            // Uses WeaponController projectile initialization.
-            CreateProjectile(shootPoint.rotation);
+            CreateProjectile(
+                shootPoint.rotation);
 
             if (i < shotCount - 1)
             {
+                /*
+                 * The attack delay is already part of
+                 * the complete delay between shots.
+                 */
                 float remainingShotDelay =
                     Mathf.Max(
-                        delayBetweenShots -
-                        attackStartDelay,
+                        scaledDelayBetweenShots -
+                        scaledAttackStartDelay,
                         0f);
 
                 if (remainingShotDelay > 0f)
@@ -59,10 +95,14 @@ public class CrossbowWeapon : WeaponController
 
         NotifyReloadStarted();
 
-        if (reloadTime > 0f)
+        float scaledReloadTime =
+            GetScaledDuration(
+                reloadTime);
+
+        if (scaledReloadTime > 0f)
         {
             yield return new WaitForSeconds(
-                reloadTime);
+                scaledReloadTime);
         }
 
         NotifyReloadFinished();
@@ -83,9 +123,13 @@ public class CrossbowWeapon : WeaponController
         return shotsInRow;
     }
 
-    public void SetShotsInRow(int newShotCount)
+    public void SetShotsInRow(
+        int newShotCount)
     {
-        shotsInRow = Mathf.Max(newShotCount, 1);
+        shotsInRow =
+            Mathf.Max(
+                newShotCount,
+                1);
     }
 
     public float GetDelayBetweenShots()
@@ -93,9 +137,19 @@ public class CrossbowWeapon : WeaponController
         return delayBetweenShots;
     }
 
-    public void SetDelayBetweenShots(float newDelay)
+    public float GetEffectiveDelayBetweenShots()
     {
-        delayBetweenShots = Mathf.Max(newDelay, 0f);
+        return GetScaledDuration(
+            delayBetweenShots);
+    }
+
+    public void SetDelayBetweenShots(
+        float newDelay)
+    {
+        delayBetweenShots =
+            Mathf.Max(
+                newDelay,
+                0f);
     }
 
     public float GetReloadTime()
@@ -103,8 +157,23 @@ public class CrossbowWeapon : WeaponController
         return reloadTime;
     }
 
-    public void SetReloadTime(float newReloadTime)
+    public float GetEffectiveReloadTime()
     {
-        reloadTime = Mathf.Max(newReloadTime, 0f);
+        return GetScaledDuration(
+            reloadTime);
+    }
+
+    public void SetReloadTime(
+        float newReloadTime)
+    {
+        reloadTime =
+            Mathf.Max(
+                newReloadTime,
+                0f);
+    }
+
+    public bool GetIsBurstActive()
+    {
+        return isBurstActive;
     }
 }

@@ -47,17 +47,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb171eb743c03954faf0b51f1a1c4aca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  combatType: 0
   rotationSpeed: 4
-  shootingSpeed: 1
-  shotsInRow: 3
-  delayBetweenShots: 0.5
-  weaponScript: {fileID: 2748378906268940932}
+  coreStats:
+    speed: 0
+    maxHP: 0
+    currentHP: 0
+    damage: 0
+    attackSpeed: 0
+    lifeSteal: 0
+    poisonDamage: 0
+    fireDamage: 0
+    iceDamage: 0
+    lightningDamage: 0
+  combatEquipmentBehaviour: {fileID: 4431699212412659931}
+  equipmentSpeedMultiplier: 1
   animator: {fileID: 5368197704486974989}
-  animTransitionTime: 5
   attackSoundEffects:
   - {fileID: 8300000, guid: 9547efabc8f1e3b43a134e8cc8ce3bd1, type: 3}
+  reloadSoundEffects: []
+  hitSoundEffects: []
   isDead: 0
   isInactive: 0
+  isPaused: 0
 --- !u!95 &5368197704486974989
 Animator:
   serializedVersion: 7
@@ -677,17 +689,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eca8adcf7ed620f4591a75ba7f58a87b, type: 3}
---- !u!114 &2748378906268940932 stripped
+--- !u!114 &4431699212412659931 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5937461764481634635, guid: eca8adcf7ed620f4591a75ba7f58a87b, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5314987521154630420, guid: eca8adcf7ed620f4591a75ba7f58a87b, type: 3}
   m_PrefabInstance: {fileID: 8377308875387464655}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f82023d99c859145bf0f4e03d03711a, type: 3}
+  m_Script: {fileID: 11500000, guid: 620ae0b3f09b8654eb50dfdf6134c3bd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponScript
+  m_EditorClassIdentifier: Assembly-CSharp::CrossbowWeapon
 --- !u!4 &5118052812119450659 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3694314964495093740, guid: eca8adcf7ed620f4591a75ba7f58a87b, type: 3}

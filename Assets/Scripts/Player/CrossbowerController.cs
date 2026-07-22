@@ -1,11 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
-public class CrossbowerController : PlayerController
+public class CrossbowerController :
+    PlayerController
 {
     [Header("Attack Movement")]
-    [SerializeField] private float movementLockTime = 0.3f;
-    [SerializeField] private float animationFinishTime = 0.1f;
+    [SerializeField]
+    private float movementLockTime = 0.3f;
+
+    [SerializeField]
+    private float animationFinishTime = 0.1f;
 
     private Coroutine attackAnimationRoutine;
     private bool isReloading;
@@ -19,16 +23,26 @@ public class CrossbowerController : PlayerController
     {
         if (attackAnimationRoutine != null)
         {
-            StopCoroutine(attackAnimationRoutine);
+            StopCoroutine(
+                attackAnimationRoutine);
         }
 
         attackAnimationRoutine =
-            StartCoroutine(AttackAnimationRoutine());
+            StartCoroutine(
+                AttackAnimationRoutine());
     }
 
     protected override void OnEquipmentReloadStarted()
     {
         isReloading = true;
+
+        if (attackAnimationRoutine != null)
+        {
+            StopCoroutine(
+                attackAnimationRoutine);
+
+            attackAnimationRoutine = null;
+        }
 
         SetCanMove(false);
         layerTargetWeight = 0f;
@@ -49,16 +63,30 @@ public class CrossbowerController : PlayerController
 
         SetCanMove(false);
 
-        yield return new WaitForSeconds(
-            movementLockTime);
+        float scaledMovementLock =
+            GetScaledEquipmentDuration(
+                movementLockTime);
+
+        if (scaledMovementLock > 0f)
+        {
+            yield return new WaitForSeconds(
+                scaledMovementLock);
+        }
 
         if (!isReloading)
         {
             SetCanMove(true);
         }
 
-        yield return new WaitForSeconds(
-            animationFinishTime);
+        float scaledFinishTime =
+            GetScaledEquipmentDuration(
+                animationFinishTime);
+
+        if (scaledFinishTime > 0f)
+        {
+            yield return new WaitForSeconds(
+                scaledFinishTime);
+        }
 
         if (!isReloading)
         {
@@ -76,7 +104,9 @@ public class CrossbowerController : PlayerController
     {
         if (attackAnimationRoutine != null)
         {
-            StopCoroutine(attackAnimationRoutine);
+            StopCoroutine(
+                attackAnimationRoutine);
+
             attackAnimationRoutine = null;
         }
 

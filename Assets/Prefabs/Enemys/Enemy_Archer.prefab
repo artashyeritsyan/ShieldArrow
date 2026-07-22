@@ -58,8 +58,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   combatType: 0
   rotationSpeed: 4
-  rangedAttackRange: 12
-  shieldAttackRange: 2
   coreStats:
     speed: 0
     maxHP: 0
@@ -71,9 +69,8 @@ MonoBehaviour:
     fireDamage: 0
     iceDamage: 0
     lightningDamage: 0
-  bowWeapon: {fileID: 5620006895824191268}
-  crossbowWeapon: {fileID: 0}
-  shieldController: {fileID: 0}
+  combatEquipmentBehaviour: {fileID: 5620006895824191268}
+  equipmentSpeedMultiplier: 1
   animator: {fileID: 1067172571039549162}
   attackSoundEffects:
   - {fileID: 8300000, guid: 9547efabc8f1e3b43a134e8cc8ce3bd1, type: 3}

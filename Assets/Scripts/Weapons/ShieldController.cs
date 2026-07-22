@@ -9,12 +9,39 @@ public class ShieldController :
     private const float SECOND = 1f;
 
     [Header("Shield")]
-    [SerializeField] private Collider shieldCollider;
+    [SerializeField]
+    private Collider shieldCollider;
 
     [Header("Attack")]
-    [SerializeField] private float attackSpeed = 1f;
-    [SerializeField] private float attackStartDelay = 0f;
-    [SerializeField] private float activeTime = 0.25f;
+    [Tooltip(
+        "Base shield attacks per second before " +
+        "applying the action-speed multiplier.")]
+    [SerializeField]
+    private float attackSpeed = 1f;
+
+    [Tooltip(
+        "Time between starting the animation and " +
+        "activating the shield collider.")]
+    [SerializeField]
+    private float attackStartDelay = 0f;
+
+    [Tooltip(
+        "How long the shield collider remains active.")]
+    [SerializeField]
+    private float activeTime = 0.25f;
+
+    [Tooltip(
+        "Maximum distance from which an enemy can " +
+        "start a shield attack.")]
+    [SerializeField]
+    private float effectiveRange = 2f;
+
+    [Header("Runtime Speed Modifier")]
+    [Tooltip(
+        "1 = normal speed, 1.5 = 50% faster, " +
+        "2 = twice as fast.")]
+    [SerializeField]
+    private float actionSpeedMultiplier = 1f;
 
     private GameObject owner;
     private Team ownerTeam;
@@ -24,31 +51,37 @@ public class ShieldController :
     private bool isAttacking;
     private bool isInitialized;
 
-    /*
-     * Generic combat-equipment events.
-     *
-     * PlayerController can subscribe to these without knowing
-     * whether the equipment is a bow, crossbow, dagger, or shield.
-     */
     public event Action OnAttack;
     public event Action OnReloadStarted;
     public event Action OnReloadFinished;
 
-    /*
-     * Shield-specific events.
-     */
     public event Action OnShieldAttackStarted;
     public event Action OnShieldAttackFinished;
     public event Action OnProjectileReflected;
 
+    public float BaseActionSpeed =>
+        Mathf.Max(
+            attackSpeed,
+            0.01f);
+
+    public float ActionSpeedMultiplier =>
+        Mathf.Max(
+            actionSpeedMultiplier,
+            0.01f);
+
+    public float EffectiveActionSpeed =>
+        Mathf.Max(
+            BaseActionSpeed *
+            ActionSpeedMultiplier,
+            0.01f);
+
+    public float EffectiveRange =>
+        Mathf.Max(
+            effectiveRange,
+            0f);
+
     private void Awake()
     {
-        /*
-         * Your original condition was reversed.
-         *
-         * Previously, GetComponent was called only when
-         * shieldCollider was already assigned.
-         */
         if (shieldCollider == null)
         {
             shieldCollider =
@@ -80,12 +113,6 @@ public class ShieldController :
         }
     }
 
-    /*
-     * Generic interface entry point.
-     *
-     * PlayerController calls combatEquipment.Use()
-     * for every equipment type.
-     */
     public bool Use()
     {
         return Attack();
@@ -96,15 +123,19 @@ public class ShieldController :
         if (!CanAttack())
             return false;
 
-        StartCoroutine(ShieldAttackRoutine());
+        StartCoroutine(
+            ShieldAttackRoutine());
 
         return true;
     }
 
     private bool CanAttack()
     {
-        if (!canAttack || isAttacking)
+        if (!canAttack ||
+            isAttacking)
+        {
             return false;
+        }
 
         if (!isInitialized)
         {
@@ -138,19 +169,19 @@ public class ShieldController :
         canAttack = false;
 
         /*
-         * Generic event:
-         * tells PlayerController to start the attack animation.
+         * Start the player's or enemy's shield
+         * attack animation.
          */
         OnAttack?.Invoke();
 
-        /*
-         * Wait until the shield animation reaches
-         * the active hit/reflect moment.
-         */
-        if (attackStartDelay > 0f)
+        float scaledAttackStartDelay =
+            GetScaledDuration(
+                attackStartDelay);
+
+        if (scaledAttackStartDelay > 0f)
         {
             yield return new WaitForSeconds(
-                attackStartDelay);
+                scaledAttackStartDelay);
         }
 
         isAttacking = true;
@@ -158,10 +189,18 @@ public class ShieldController :
 
         OnShieldAttackStarted?.Invoke();
 
-        if (activeTime > 0f)
+        /*
+         * The active reflection window is also scaled,
+         * keeping it synchronized with a faster animation.
+         */
+        float scaledActiveTime =
+            GetScaledDuration(
+                activeTime);
+
+        if (scaledActiveTime > 0f)
         {
             yield return new WaitForSeconds(
-                activeTime);
+                scaledActiveTime);
         }
 
         shieldCollider.enabled = false;
@@ -171,19 +210,17 @@ public class ShieldController :
 
         float totalAttackInterval =
             SECOND /
-            Mathf.Max(
-                attackSpeed,
-                0.01f);
+            EffectiveActionSpeed;
 
         /*
-         * Delay and active time are treated as part
-         * of the full attack interval.
+         * The start delay and active time are already
+         * included in the complete attack interval.
          */
         float remainingCooldown =
             Mathf.Max(
                 totalAttackInterval -
-                attackStartDelay -
-                activeTime,
+                scaledAttackStartDelay -
+                scaledActiveTime,
                 0f);
 
         if (remainingCooldown > 0f)
@@ -195,6 +232,34 @@ public class ShieldController :
         canAttack = true;
     }
 
+    private float GetScaledDuration(
+        float baseDuration)
+    {
+        return Mathf.Max(
+            baseDuration /
+            ActionSpeedMultiplier,
+            0f);
+    }
+
+    public void SetActionSpeedMultiplier(
+        float multiplier)
+    {
+        actionSpeedMultiplier =
+            Mathf.Max(
+                multiplier,
+                0.01f);
+    }
+
+    public void AddActionSpeedMultiplier(
+        float amount)
+    {
+        actionSpeedMultiplier =
+            Mathf.Max(
+                actionSpeedMultiplier +
+                amount,
+                0.01f);
+    }
+
     public bool CanReflectProjectile(
         Team projectileTeam)
     {
@@ -203,11 +268,6 @@ public class ShieldController :
             projectileTeam != ownerTeam;
     }
 
-    // TODO:
-    // Change this part OR NOT, but add there the Audio manager to play reflection sound
-    // Or Change the Audio manager, to subscribe to events,
-    // and to keep sounds in on file not spread into many files
-    // OR some Effects for it
     public void NotifyProjectileReflected()
     {
         OnProjectileReflected?.Invoke();
@@ -243,6 +303,16 @@ public class ShieldController :
         return attackSpeed;
     }
 
+    public float GetEffectiveAttackSpeed()
+    {
+        return EffectiveActionSpeed;
+    }
+
+    public float GetActionSpeedMultiplier()
+    {
+        return ActionSpeedMultiplier;
+    }
+
     public void SetAttackSpeed(
         float newAttackSpeed)
     {
@@ -257,12 +327,46 @@ public class ShieldController :
         return attackStartDelay;
     }
 
+    public float GetScaledAttackStartDelay()
+    {
+        return GetScaledDuration(
+            attackStartDelay);
+    }
+
     public void SetAttackStartDelay(
         float newDelay)
     {
         attackStartDelay =
             Mathf.Max(
                 newDelay,
+                0f);
+    }
+
+    public float GetActiveTime()
+    {
+        return activeTime;
+    }
+
+    public void SetActiveTime(
+        float newActiveTime)
+    {
+        activeTime =
+            Mathf.Max(
+                newActiveTime,
+                0f);
+    }
+
+    public float GetEffectiveRange()
+    {
+        return EffectiveRange;
+    }
+
+    public void SetEffectiveRange(
+        float newRange)
+    {
+        effectiveRange =
+            Mathf.Max(
+                newRange,
                 0f);
     }
 

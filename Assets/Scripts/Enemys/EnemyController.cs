@@ -7,57 +7,71 @@ public enum EnemyCombatType
     Shieldman
 }
 
-public class EnemyController : MonoBehaviour, IDamageable
+public class EnemyController :
+    MonoBehaviour,
+    IDamageable
 {
-    [Header("Enemy Type")]
+    [Header("Enemy Class")]
     [SerializeField]
     private EnemyCombatType combatType =
         EnemyCombatType.Archer;
 
     [Header("Movement")]
-    [SerializeField] private float rotationSpeed = 5f;
-
-    [Header("Attack Range")]
-    [SerializeField] private float rangedAttackRange = 12f;
-    [SerializeField] private float shieldAttackRange = 2f;
+    [SerializeField]
+    private float rotationSpeed = 5f;
 
     [Header("Stats")]
-    [SerializeField] private CoreStats coreStats;
+    [SerializeField]
+    private CoreStats coreStats;
 
     public CoreStats CoreStats => coreStats;
     public Team Team => Team.Enemy;
 
     [Header("Combat Equipment")]
-    [Tooltip("Bow used when enemy type is Archer.")]
-    [SerializeField] private BowWeapon bowWeapon;
+    [Tooltip(
+        "Assign BowWeapon, CrossbowWeapon, " +
+        "or ShieldController.")]
+    [SerializeField]
+    private MonoBehaviour combatEquipmentBehaviour;
 
-    [Tooltip("Crossbow used when enemy type is Crossbower.")]
-    [SerializeField] private CrossbowWeapon crossbowWeapon;
+    [Tooltip(
+        "Enemy-specific equipment speed multiplier. " +
+        "1 = normal, 1.5 = 50% faster.")]
+    [SerializeField]
+    private float equipmentSpeedMultiplier = 1f;
 
-    [Tooltip("Shield used when enemy type is Shieldman.")]
-    [SerializeField] private ShieldController shieldController;
-
-    private MonoBehaviour activeEquipmentBehaviour;
     private ICombatEquipment combatEquipment;
 
     [Header("Animation")]
-    [SerializeField] protected Animator animator;
+    [SerializeField]
+    protected Animator animator;
 
     [Header("Sound Effects")]
-    [SerializeField] private AudioClip[] attackSoundEffects;
-    [SerializeField] private AudioClip[] reloadSoundEffects;
-    [SerializeField] private AudioClip[] hitSoundEffects;
+    [SerializeField]
+    private AudioClip[] attackSoundEffects;
+
+    [SerializeField]
+    private AudioClip[] reloadSoundEffects;
+
+    [SerializeField]
+    private AudioClip[] hitSoundEffects;
 
     [Header("State")]
-    [SerializeField] private bool isDead;
-    [SerializeField] private bool isInactive;
-    [SerializeField] private bool isPaused;
+    [SerializeField]
+    private bool isDead;
+
+    [SerializeField]
+    private bool isInactive;
+
+    [SerializeField]
+    private bool isPaused;
 
     private PlayerController currentTarget;
 
     private void Awake()
     {
         ResolveCombatEquipment();
+        ConfigureClassAnimation();
     }
 
     private void Start()
@@ -88,16 +102,84 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         RotateTowards(targetPosition);
 
-        float sqrDistance =
+        float targetSqrDistance =
             (targetPosition - transform.position)
             .sqrMagnitude;
 
-        if (IsTargetWithinAttackRange(sqrDistance))
+        if (IsTargetWithinAttackRange(
+                targetSqrDistance))
         {
             HandleAttack();
         }
 
         UpdateAnimationState();
+    }
+
+    private void ResolveCombatEquipment()
+    {
+        if (combatEquipmentBehaviour == null)
+        {
+            Debug.LogError(
+                $"{name}: Combat equipment is not assigned.");
+
+            return;
+        }
+
+        combatEquipment =
+            combatEquipmentBehaviour as
+                ICombatEquipment;
+
+        if (combatEquipment == null)
+        {
+            Debug.LogError(
+                $"{name}: " +
+                $"{combatEquipmentBehaviour.GetType().Name} " +
+                $"must implement " +
+                $"{nameof(ICombatEquipment)}.");
+
+            return;
+        }
+
+        ValidateEquipmentForClass();
+    }
+
+    private void ValidateEquipmentForClass()
+    {
+        bool isValid =
+            combatType switch
+            {
+                EnemyCombatType.Archer =>
+                    combatEquipmentBehaviour
+                        is BowWeapon,
+
+                EnemyCombatType.Crossbower =>
+                    combatEquipmentBehaviour
+                        is CrossbowWeapon,
+
+                EnemyCombatType.Shieldman =>
+                    combatEquipmentBehaviour
+                        is ShieldController,
+
+                _ => false
+            };
+
+        if (!isValid)
+        {
+            Debug.LogWarning(
+                $"{name}: Enemy class is {combatType}, " +
+                $"but assigned equipment is " +
+                $"{combatEquipmentBehaviour.GetType().Name}.");
+        }
+    }
+
+    private void ConfigureClassAnimation()
+    {
+        if (animator == null)
+            return;
+
+        animator.SetInteger(
+            "CombatType",
+            (int)combatType);
     }
 
     private void InitializeStats()
@@ -110,100 +192,26 @@ public class EnemyController : MonoBehaviour, IDamageable
             return;
         }
 
-        coreStats.currentHP = coreStats.maxHP;
-    }
-
-    private void ResolveCombatEquipment()
-    {
-        DisableAllEquipment();
-
-        switch (combatType)
-        {
-            case EnemyCombatType.Archer:
-                SelectEquipment(bowWeapon);
-                break;
-
-            case EnemyCombatType.Crossbower:
-                SelectEquipment(crossbowWeapon);
-                break;
-
-            case EnemyCombatType.Shieldman:
-                SelectEquipment(shieldController);
-                break;
-
-            default:
-                Debug.LogError(
-                    $"{name}: Unsupported enemy combat type: " +
-                    $"{combatType}.");
-
-                break;
-        }
-
-        if (activeEquipmentBehaviour == null)
-        {
-            Debug.LogError(
-                $"{name}: Equipment for {combatType} " +
-                $"is not assigned.");
-        }
-    }
-
-    private void SelectEquipment(
-        MonoBehaviour equipmentBehaviour)
-    {
-        if (equipmentBehaviour == null)
-            return;
-
-        combatEquipment =
-            equipmentBehaviour as ICombatEquipment;
-
-        if (combatEquipment == null)
-        {
-            Debug.LogError(
-                $"{name}: " +
-                $"{equipmentBehaviour.GetType().Name} " +
-                $"must implement {nameof(ICombatEquipment)}.");
-
-            return;
-        }
-
-        activeEquipmentBehaviour =
-            equipmentBehaviour;
-
-        activeEquipmentBehaviour.enabled = true;
-    }
-
-    private void DisableAllEquipment()
-    {
-        SetEquipmentEnabled(bowWeapon, false);
-        SetEquipmentEnabled(crossbowWeapon, false);
-        SetEquipmentEnabled(shieldController, false);
-
-        activeEquipmentBehaviour = null;
-        combatEquipment = null;
-    }
-
-    private void SetEquipmentEnabled(
-        MonoBehaviour equipment,
-        bool value)
-    {
-        if (equipment != null)
-        {
-            equipment.enabled = value;
-        }
+        coreStats.currentHP =
+            coreStats.maxHP;
     }
 
     private void InitializeCombatEquipment()
     {
-        if (combatEquipment == null)
+        if (combatEquipment == null ||
+            coreStats == null)
+        {
             return;
-
-        if (coreStats == null)
-            return;
+        }
 
         combatEquipment.Initialize(
             gameObject,
             Team.Enemy,
             coreStats);
+
+        combatEquipment
+            .SetActionSpeedMultiplier(
+                equipmentSpeedMultiplier);
     }
 
     private void SubscribeToEquipmentEvents()
@@ -241,57 +249,26 @@ public class EnemyController : MonoBehaviour, IDamageable
         return
             !isDead &&
             !isInactive &&
-            !isPaused;
+            !isPaused &&
+            combatEquipment != null;
     }
 
     private bool IsTargetWithinAttackRange(
         float targetSqrDistance)
     {
+        if (combatEquipment == null)
+            return false;
+
         float attackRange =
-            GetAttackRange();
+            combatEquipment.EffectiveRange;
 
         return targetSqrDistance <=
                attackRange * attackRange;
     }
 
-    private float GetAttackRange()
-    {
-        switch (combatType)
-        {
-            case EnemyCombatType.Shieldman:
-                return Mathf.Max(
-                    shieldAttackRange,
-                    0f);
-
-            case EnemyCombatType.Archer:
-            case EnemyCombatType.Crossbower:
-                return Mathf.Max(
-                    rangedAttackRange,
-                    0f);
-
-            default:
-                return 0f;
-        }
-    }
-
     private void HandleAttack()
     {
-        if (combatEquipment == null)
-            return;
-
-        /*
-         * Equipment controls its own availability:
-         *
-         * Bow:
-         * cooldown and spread shooting.
-         *
-         * Crossbow:
-         * burst and reload.
-         *
-         * Shield:
-         * active collider and cooldown.
-         */
-        combatEquipment.Use();
+        combatEquipment?.Use();
     }
 
     private PlayerController GetClosestPlayer()
@@ -319,8 +296,11 @@ public class EnemyController : MonoBehaviour, IDamageable
             float sqrDistance =
                 difference.sqrMagnitude;
 
-            if (sqrDistance >= minimumSqrDistance)
+            if (sqrDistance >=
+                minimumSqrDistance)
+            {
                 continue;
+            }
 
             minimumSqrDistance =
                 sqrDistance;
@@ -340,8 +320,11 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         direction.y = 0f;
 
-        if (direction.sqrMagnitude <= 0.0001f)
+        if (direction.sqrMagnitude <=
+            0.0001f)
+        {
             return;
+        }
 
         Quaternion targetRotation =
             Quaternion.LookRotation(
@@ -365,45 +348,12 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (animator == null)
             return;
 
-        /*
-         * Bow spread:
-         * one event for the full spread.
-         *
-         * Crossbow:
-         * one event for every burst shot.
-         *
-         * Shield:
-         * one event when shield animation starts.
-         */
-        animator.SetTrigger("Attack");
-
         animator.SetFloat(
             "AttackSpeed",
-            GetEquipmentAttackSpeed());
-    }
+            combatEquipment
+                .EffectiveActionSpeed);
 
-    private float GetEquipmentAttackSpeed()
-    {
-        switch (combatType)
-        {
-            case EnemyCombatType.Archer:
-                return bowWeapon != null
-                    ? bowWeapon.GetShootingSpeed()
-                    : 1f;
-
-            case EnemyCombatType.Crossbower:
-                return crossbowWeapon != null
-                    ? crossbowWeapon.GetShootingSpeed()
-                    : 1f;
-
-            case EnemyCombatType.Shieldman:
-                return shieldController != null
-                    ? shieldController.GetAttackSpeed()
-                    : 1f;
-
-            default:
-                return 1f;
-        }
+        animator.SetTrigger("Attack");
     }
 
     private void HandleReloadStarted()
@@ -427,6 +377,36 @@ public class EnemyController : MonoBehaviour, IDamageable
         animator.SetBool(
             "Reloading",
             false);
+    }
+
+    public void SetEquipmentSpeedMultiplier(
+        float multiplier)
+    {
+        equipmentSpeedMultiplier =
+            Mathf.Max(multiplier, 0.01f);
+
+        combatEquipment?
+            .SetActionSpeedMultiplier(
+                equipmentSpeedMultiplier);
+    }
+
+    public void UpgradeEquipmentSpeed(
+        float multiplierIncrease)
+    {
+        equipmentSpeedMultiplier =
+            Mathf.Max(
+                equipmentSpeedMultiplier +
+                multiplierIncrease,
+                0.01f);
+
+        combatEquipment?
+            .SetActionSpeedMultiplier(
+                equipmentSpeedMultiplier);
+    }
+
+    public float GetEquipmentSpeedMultiplier()
+    {
+        return equipmentSpeedMultiplier;
     }
 
     public void TakeDamage(
@@ -475,9 +455,9 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         UnsubscribeFromEquipmentEvents();
 
-        if (activeEquipmentBehaviour != null)
+        if (combatEquipmentBehaviour != null)
         {
-            activeEquipmentBehaviour.enabled =
+            combatEquipmentBehaviour.enabled =
                 false;
         }
 
@@ -522,7 +502,7 @@ public class EnemyController : MonoBehaviour, IDamageable
             isInactive);
     }
 
-    public void PlayAttackSound()
+    private void PlayAttackSound()
     {
         PlayRandomSound(
             attackSoundEffects);
