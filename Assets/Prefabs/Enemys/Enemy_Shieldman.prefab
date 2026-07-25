@@ -131,6 +131,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7219006501411435704}
     m_Modifications:
+    - target: {fileID: 1009853670607461437, guid: 45be1d300b47a664e8401fecbe7d6c3d, type: 3}
+      propertyPath: effectiveRange
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1929257725082812471, guid: 45be1d300b47a664e8401fecbe7d6c3d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.054
+      objectReference: {fileID: 0}
     - target: {fileID: 2785282846553788580, guid: 45be1d300b47a664e8401fecbe7d6c3d, type: 3}
       propertyPath: m_Name
       value: EnemyShield
@@ -145,7 +153,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8963965698006526308, guid: 45be1d300b47a664e8401fecbe7d6c3d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.82
+      value: 0.794
       objectReference: {fileID: 0}
     - target: {fileID: 8963965698006526308, guid: 45be1d300b47a664e8401fecbe7d6c3d, type: 3}
       propertyPath: m_LocalRotation.w

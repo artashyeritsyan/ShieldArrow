@@ -48,8 +48,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BowWeapon
   shootPoint: {fileID: 3700411793094615679}
   projectilePrefab: {fileID: 6890519995820334165, guid: d654920e50102b94c9cbc33923f60e64, type: 3}
-  shootingSpeed: 1
+  shootingSpeed: 0.5
   attackStartDelay: 0
+  effectiveRange: 12
+  actionSpeedMultiplier: 1
   arrowsPerShot: 1
   spreadAngle: 20
 --- !u!1 &1849024544870227950

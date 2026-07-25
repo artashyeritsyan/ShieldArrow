@@ -43,6 +43,8 @@ public class ShieldController :
     [SerializeField]
     private float actionSpeedMultiplier = 1f;
 
+    [SerializeField] public bool isEnemyShield;
+
     private GameObject owner;
     private Team ownerTeam;
     private CoreStats ownerStats;
@@ -89,8 +91,13 @@ public class ShieldController :
         }
 
         if (shieldCollider != null)
-        {
+        {   
             shieldCollider.enabled = false;
+
+            if (isEnemyShield)
+            {
+                shieldCollider.enabled = true;
+            }
         }
     }
 
@@ -110,6 +117,8 @@ public class ShieldController :
         if (shieldCollider != null)
         {
             shieldCollider.enabled = false;
+
+            if (isEnemyShield) { shieldCollider.enabled = true; }
         }
     }
 
@@ -204,6 +213,7 @@ public class ShieldController :
         }
 
         shieldCollider.enabled = false;
+        if (isEnemyShield) { shieldCollider.enabled = true; }
         isAttacking = false;
 
         OnShieldAttackFinished?.Invoke();

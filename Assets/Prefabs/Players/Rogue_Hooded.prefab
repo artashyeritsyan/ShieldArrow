@@ -357,6 +357,7 @@ MonoBehaviour:
   aimDistance: 5
   aimSpeed: 3
   combatEquipmentBehaviour: {fileID: 375613608642083225}
+  attackSpeedMultiplier: 1
   animator: {fileID: 8305761038630627824}
   animTransitionTime: 5
   animLayerTransitionTime: 5
@@ -364,7 +365,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 952b1ee16f2eb224094be2164168158d, type: 3}
   isDead: 0
   attackStartDelay: 0.2
-  movementLockTime: 0.3
+  movementLockTime: 0.1
   animationFinishTime: 0.1
 --- !u!114 &273643802093905491
 MonoBehaviour:
