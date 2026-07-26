@@ -705,4 +705,12 @@ public class PlayerController : MonoBehaviour
     {
         UnsubscribeFromEquipmentEvents();
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("PlayerChoosing"))
+        {
+
+        }
+    }
 }
