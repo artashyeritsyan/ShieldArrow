@@ -24,8 +24,8 @@ public class ArrowScript : MonoBehaviour
     private GameObject owner; // ADDED
     private Team ownerTeam; // ADDED
     private DamageData damageData; // ADDED
-    private CoreStats attackerStats; // ADDED
-    private bool isInitialized; // ADDED
+    private CoreStats attackerStats; 
+    private bool isInitialized;
 
     private Coroutine lifetimeCoroutine; // ADDED
 

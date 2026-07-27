@@ -92,12 +92,12 @@ public class ShieldController :
 
         if (shieldCollider != null)
         {   
-            shieldCollider.enabled = false;
+            //shieldCollider.enabled = false;
 
-            if (isEnemyShield)
-            {
-                shieldCollider.enabled = true;
-            }
+            //if (isEnemyShield)
+            //{
+            //}
+            shieldCollider.enabled = true;
         }
     }
 
@@ -116,7 +116,8 @@ public class ShieldController :
 
         if (shieldCollider != null)
         {
-            shieldCollider.enabled = false;
+            //shieldCollider.enabled = false;
+            shieldCollider.enabled = true;
 
             if (isEnemyShield) { shieldCollider.enabled = true; }
         }
@@ -212,8 +213,9 @@ public class ShieldController :
                 scaledActiveTime);
         }
 
-        shieldCollider.enabled = false;
-        if (isEnemyShield) { shieldCollider.enabled = true; }
+        //shieldCollider.enabled = false;
+        shieldCollider.enabled = true;
+        //if (isEnemyShield) { shieldCollider.enabled = true; }
         isAttacking = false;
 
         OnShieldAttackFinished?.Invoke();
