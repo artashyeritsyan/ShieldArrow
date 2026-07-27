@@ -16,7 +16,7 @@ public class InputHandler : MonoBehaviour
     public bool analogMovement;
 
     [Header("Mouse Cursor Settings")]
-    public bool cursorLocked = true;
+    public bool cursorLocked = false;
     public bool cursorInputForLook = true;
 
     [Header("Look Settings")]
@@ -27,8 +27,12 @@ public class InputHandler : MonoBehaviour
     private PlayerInput playerInput;
     private bool isGamepad;
 
+    public bool IsGamepad => isGamepad;
+
+
     private void Awake()
     {
+        cursorLocked = false;
         playerInput = GetComponent<PlayerInput>();
     }
 
@@ -53,14 +57,10 @@ public class InputHandler : MonoBehaviour
 #if ENABLE_INPUT_SYSTEM
     public void OnLook(InputValue value)
     {
-        if (!cursorInputForLook) return;
+        if (!cursorInputForLook)
+            return;
 
-        Vector2 rawInput = value.Get<Vector2>();
-
-        if (isGamepad)
-            look = rawInput * stickSensitivity;
-        else
-            look = rawInput * mouseSensitivity;
+        look = value.Get<Vector2>();
     }
 
 #endif
@@ -113,8 +113,10 @@ public class InputHandler : MonoBehaviour
         SetCursorState(cursorLocked);
     }
 
-    private void SetCursorState(bool newState)
+    private void SetCursorState(bool locked)
     {
-        Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+
+        Cursor.visible = !locked;
     }
 }

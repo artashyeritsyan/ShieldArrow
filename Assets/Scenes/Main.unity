@@ -15627,7 +15627,7 @@ GameObject:
   - component: {fileID: 1732944974}
   - component: {fileID: 1732944973}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: PlayerChoosingStand
   m_TagString: PlayerChoosing
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

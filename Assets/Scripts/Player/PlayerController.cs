@@ -32,47 +32,34 @@ public class PlayerController : MonoBehaviour
     private float speedMultiplier = 3000f;
 
     [Header("Movement")]
-    [SerializeField]
-    private float speedTransitionTime = 10f;
+    [SerializeField] private float speedTransitionTime = 10f;
 
     private Vector3 moveDirection;
     private Vector3 lerpedDirection;
 
     [Header("Rotation")]
-    [SerializeField]
-    private float rotationSpeed = 15f;
-
-    [SerializeField]
-    private float maxAngle = 60f;
-
+    [SerializeField] private float rotationSpeed = 15f;
+    [SerializeField] private float maxAngle = 60f;
     public bool canRotate;
 
     [Header("Aim")]
-    [SerializeField]
-    private Transform aimTarget;
+    [SerializeField] private Transform aimTarget;
+    [SerializeField] private TrajectoryPreview trajectory;
+    [SerializeField] private Color aimColor;
+    [SerializeField] private float aimDistance = 5f;
+    [SerializeField] private float aimSpeed = 3f;
 
-    [SerializeField]
-    private TrajectoryPreview trajectory;
-
-    [SerializeField]
-    private Color aimColor;
-
-    [SerializeField]
-    private float aimDistance = 5f;
-
-    [SerializeField]
-    private float aimSpeed = 3f;
-
+    private Camera mainCamera;
     private AimsManager aimsManager;
     private float currentAimAngle;
+    private Vector3 aimCenterDirection;
 
     [Header("Combat Equipment")]
     [Tooltip(
         "Assign a BowWeapon, CrossbowWeapon, " +
         "ShieldController, or another component " +
         "implementing ICombatEquipment.")]
-    [SerializeField]
-    private MonoBehaviour combatEquipmentBehaviour;
+    [SerializeField] private MonoBehaviour combatEquipmentBehaviour;
 
     [Header("Attack Speed")]
     [Tooltip(
@@ -140,14 +127,8 @@ public class PlayerController : MonoBehaviour
             HandleMovement();
             HandleAttack();
 
-            if (canRotate)
-            {
-                HandleRotation();
-            }
-            else
-            {
-                HandleAim();
-            }
+            HandleAim();
+
         }
 
         HandleAnimation();
@@ -156,6 +137,17 @@ public class PlayerController : MonoBehaviour
 
     private void InitializeStats()
     {
+        mainCamera = Camera.main;
+        aimCenterDirection = transform.forward;
+        aimCenterDirection.y = 0f;
+        aimCenterDirection.Normalize();
+
+        if (mainCamera == null)
+        {
+            Debug.LogError(
+                $"{name}: Main Camera was not found.");
+        }
+
         if (baseProfile == null)
         {
             Debug.LogError(
@@ -447,39 +439,77 @@ public class PlayerController : MonoBehaviour
 
     private void HandleAim()
     {
-        if (input == null)
-            return;
-
-        float inputX =
-            input.look.x;
-
-        currentAimAngle +=
-            inputX * aimSpeed;
-
-        currentAimAngle =
-            Mathf.Clamp(
-                currentAimAngle,
-                -maxAngle,
-                maxAngle);
-
-        Quaternion rotation =
-            Quaternion.Euler(
-                0f,
-                currentAimAngle,
-                0f);
-
-        Vector3 direction =
-            rotation *
-            Vector3.forward;
-
-        if (aimTarget != null)
+        if (input == null ||
+            mainCamera == null ||
+            aimTarget == null)
         {
-            aimTarget.localPosition =
-                Vector3.forward *
-                aimDistance;
+            return;
         }
 
-        RotateCharacter(direction);
+        Ray pointerRay =
+            mainCamera.ScreenPointToRay(input.look);
+
+        Plane aimPlane =
+            new Plane(
+                Vector3.up,
+                transform.position);
+
+        if (!aimPlane.Raycast(
+                pointerRay,
+                out float distance))
+        {
+            return;
+        }
+
+        Vector3 aimPoint =
+            pointerRay.GetPoint(distance);
+
+        // Aim icon always follows the pointer freely.
+        aimTarget.position =
+            aimPoint + Vector3.up * 0.05f;
+
+        Vector3 desiredDirection =
+            aimPoint - transform.position;
+
+        desiredDirection.y = 0f;
+
+        if (desiredDirection.sqrMagnitude <= 0.0001f)
+            return;
+
+        desiredDirection.Normalize();
+
+        if (canRotate)
+        {
+            // Free 360-degree rotation.
+            RotateCharacter(desiredDirection);
+
+            // Save the current facing direction as the
+            // center of the restricted aiming range.
+            aimCenterDirection = transform.forward;
+            aimCenterDirection.y = 0f;
+            aimCenterDirection.Normalize();
+
+            return;
+        }
+
+        // Restricted rotation: -maxAngle to +maxAngle.
+        float angle = Vector3.SignedAngle(
+            aimCenterDirection,
+            desiredDirection,
+            Vector3.up);
+
+        float clampedAngle = Mathf.Clamp(
+            angle,
+            -maxAngle,
+            maxAngle);
+
+        Vector3 clampedDirection =
+            Quaternion.AngleAxis(
+                clampedAngle,
+                Vector3.up) *
+            aimCenterDirection;
+
+        RotateCharacter(clampedDirection);
     }
 
     private void HandleRotation()
@@ -496,20 +526,14 @@ public class PlayerController : MonoBehaviour
             moveDirection.normalized);
     }
 
-    private void RotateCharacter(
-        Vector3 direction)
+    private void RotateCharacter(Vector3 direction)
     {
         direction.y = 0f;
 
-        if (direction.sqrMagnitude <=
-            0.0001f)
-        {
+        if (direction.sqrMagnitude <= 0.0001f)
             return;
-        }
 
-        Quaternion targetRotation =
-            Quaternion.LookRotation(
-                direction.normalized);
+        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
 
         transform.rotation =
             Quaternion.Slerp(

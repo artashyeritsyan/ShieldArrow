@@ -11,6 +11,7 @@ public class TrajectoryPreview : MonoBehaviour
     public float maxDistance = 20f;
     public int maxBounces = 5;
     public LayerMask hitMask;
+    public LayerMask enemyLayer;
 
     [Header("Dots")]
     public GameObject dotPrefab;
@@ -37,35 +38,55 @@ public class TrajectoryPreview : MonoBehaviour
         DrawDots();
     }
 
-    void CalculateTrajectory()
+    private void CalculateTrajectory()
     {
         points.Clear();
 
         Vector3 origin = firePoint.position;
 
         Vector3 direction = aimTarget.position - firePoint.position;
+
         direction.y = 0f;
+
+        if (direction.sqrMagnitude <= 0.0001f)
+            return;
+
         direction.Normalize();
 
         points.Add(origin);
 
         for (int i = 0; i < maxBounces; i++)
         {
-            if (Physics.Raycast(origin, direction, out RaycastHit hit, maxDistance, hitMask))
-            {
-                points.Add(hit.point);
-
-                direction = Vector3.Reflect(direction, hit.normal);
-
-                origin = hit.point + direction * 0.01f;
-            }
-            else
+            if (!Physics.Raycast(origin, direction, out RaycastHit hit, maxDistance, hitMask))
             {
                 points.Add(origin + direction * maxDistance);
+
                 break;
             }
+
+            points.Add(hit.point);
+
+            if (IsInLayerMask(hit.collider.gameObject, enemyLayer))
+            {
+                break;
+            }
+
+            direction =
+                Vector3.Reflect(
+                    direction,
+                    hit.normal).normalized;
+
+            origin =
+                hit.point +
+                direction * 0.01f;
         }
     }
+
+    private static bool IsInLayerMask(GameObject target, LayerMask layerMask)
+    {
+        return (layerMask.value & (1 << target.layer)) != 0;
+    }
+
 
     void DrawDots()
     {
