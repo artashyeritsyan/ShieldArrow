@@ -47,7 +47,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5963250119838019544
 Transform:
   m_ObjectHideFlags: 0
@@ -81,7 +81,10 @@ MonoBehaviour:
   maxBounces: 5
   hitMask:
     serializedVersion: 2
-    m_Bits: 1280
+    m_Bits: 1792
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
   dotPrefab: {fileID: 1862482351801581849, guid: 9d89e20355385df449f5dc77aede5285, type: 3}
   maxDots: 100
   dotsPerUnit: 5

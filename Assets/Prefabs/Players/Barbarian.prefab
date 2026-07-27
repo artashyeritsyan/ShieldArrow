@@ -47,7 +47,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7321418909076830642
 Transform:
   m_ObjectHideFlags: 0
@@ -81,7 +81,10 @@ MonoBehaviour:
   maxBounces: 5
   hitMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 768
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
   dotPrefab: {fileID: 1862482351801581849, guid: f885ccf881cc1684eb5f8aeac2fd9cfb, type: 3}
   maxDots: 100
   dotsPerUnit: 5
@@ -357,6 +360,8 @@ MonoBehaviour:
   aimColor: {r: 0.10980392, g: 0.8039216, b: 0, a: 1}
   aimDistance: 5
   aimSpeed: 3
+  combatEquipmentBehaviour: {fileID: 0}
+  attackSpeedMultiplier: 1
   animator: {fileID: 8293333461215236067}
   animTransitionTime: 5
   animLayerTransitionTime: 5
