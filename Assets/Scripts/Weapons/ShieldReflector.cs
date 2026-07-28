@@ -9,11 +9,11 @@ public class ShieldReflector : MonoBehaviour
         if (projectileTeam == shieldController.GetOwnerTeam())
             return false;
 
-        if (shieldController.isEnemyShield)
-            return true;
-
         if (shieldController == null)
             return false;
+
+        if (shieldController.isEnemyShield)
+            return true;
 
         if (!shieldController.GetIsAttacking())
             return false;

@@ -18,11 +18,16 @@ public class TrajectoryPreview : MonoBehaviour
     public int maxDots = 100;
     public float dotsPerUnit = 5f;
 
+
+
     private List<Vector3> points = new();
     private List<GameObject> dots = new();
 
     void Start()
     {
+        Color playerColor = GetComponentInParent<PlayerController>().GetPlayerColor();
+        dotPrefab.GetComponent<MeshRenderer>().sharedMaterial.color = playerColor;
+        
         // Pre-create dot pool
         for (int i = 0; i < maxDots; i++)
         {

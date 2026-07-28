@@ -1015,14 +1015,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: arrowsPerShot
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: shootingSpeed
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 8765315274566005073, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
       propertyPath: m_Name
       value: Enemy_Archer (1)
@@ -3064,7 +3056,7 @@ MonoBehaviour:
   m_NotificationBehavior: 0
   m_MaxPlayerCount: 2
   m_AllowJoining: 1
-  m_JoinBehavior: 0
+  m_JoinBehavior: 1
   m_PlayerJoinedEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -3072,17 +3064,17 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_JoinAction:
-    m_UseReference: 0
+    m_UseReference: 1
     m_Action:
       m_Name: Join
-      m_Type: 0
-      m_ExpectedControlType: 
+      m_Type: 1
+      m_ExpectedControlType: Button
       m_Id: f7469624-8926-465c-bd77-3fa86d73be2d
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: 0}
+    m_Reference: {fileID: 1318358351}
   m_PlayerPrefab: {fileID: 5473945032332348849, guid: 608a4c5b96534de4ea8ed8654551a765, type: 3}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
@@ -3122,6 +3114,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputManagerController
   playerMaxCount: 0
   playersPrefabs: {fileID: 11400000, guid: 57e0cde3ea9be5a438a06a110800c36f, type: 2}
+  selectableClasses: 0000000001000000020000000300000004000000
+  lobbyActionMap: Lobby
+  gameplayActionMap: Player
+  leaveActionName: Leave
+  changeClassActionName: ChangeClass
 --- !u!1001 &288914064
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8879,14 +8876,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: arrowsPerShot
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: shootingSpeed
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 8765315274566005073, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
       propertyPath: m_Name
       value: Enemy_Archer (5)
@@ -10999,14 +10988,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: arrowsPerShot
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: shootingSpeed
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 8765315274566005073, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
       propertyPath: m_Name
       value: Enemy_Archer (4)
@@ -12373,6 +12354,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 04363e0f0f7c0c24b87a319e6115d9ce, type: 3}
   m_PrefabInstance: {fileID: 833074078}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1318358351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: Menu/Join
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_ActionId: 33116942-23b2-42cd-84c4-ae079929b881
 --- !u!1001 &1326276665
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12488,14 +12483,6 @@ PrefabInstance:
     - target: {fileID: 3207014266345549776, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: arrowsPerShot
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: shootingSpeed
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8765315274566005073, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
       propertyPath: m_Name
@@ -17069,14 +17056,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: arrowsPerShot
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: shootingSpeed
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 8765315274566005073, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
       propertyPath: m_Name
       value: Enemy_Archer (2)
@@ -19391,14 +19370,6 @@ PrefabInstance:
     - target: {fileID: 3207014266345549776, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: arrowsPerShot
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5620006895824191268, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
-      propertyPath: shootingSpeed
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8765315274566005073, guid: 6410315dc9bfef148981a41fa1c958c3, type: 3}
       propertyPath: m_Name

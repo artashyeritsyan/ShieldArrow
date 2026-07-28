@@ -57,6 +57,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   combatType: 0
+  enemyColor: {r: 1, g: 0, b: 0, a: 1}
   rotationSpeed: 4
   coreStats:
     speed: 0
@@ -138,11 +139,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4863358233378362238, guid: 5504f6d569eb97a4190d69ead3563175, type: 3}
       propertyPath: arrowsPerShot
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4863358233378362238, guid: 5504f6d569eb97a4190d69ead3563175, type: 3}
       propertyPath: shootingSpeed
-      value: 1
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5286538941624380721, guid: 5504f6d569eb97a4190d69ead3563175, type: 3}
       propertyPath: m_LocalPosition.x

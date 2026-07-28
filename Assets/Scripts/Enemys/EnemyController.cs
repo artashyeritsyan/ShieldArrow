@@ -12,17 +12,14 @@ public class EnemyController :
     IDamageable
 {
     [Header("Enemy Class")]
-    [SerializeField]
-    private EnemyCombatType combatType =
-        EnemyCombatType.Archer;
+    [SerializeField] private EnemyCombatType combatType = EnemyCombatType.Archer;
+    [SerializeField] private Color enemyColor = Color.red;
 
     [Header("Movement")]
-    [SerializeField]
-    private float rotationSpeed = 5f;
+    [SerializeField] private float rotationSpeed = 5f;
 
     [Header("Stats")]
-    [SerializeField]
-    private CoreStats coreStats;
+    [SerializeField] private CoreStats coreStats;
 
     public CoreStats CoreStats => coreStats;
     public Team Team => Team.Enemy;
@@ -31,40 +28,29 @@ public class EnemyController :
     [Tooltip(
         "Assign BowWeapon, CrossbowWeapon, " +
         "or ShieldController.")]
-    [SerializeField]
-    private MonoBehaviour combatEquipmentBehaviour;
+    [SerializeField] private MonoBehaviour combatEquipmentBehaviour;
 
     [Tooltip(
         "Enemy-specific equipment speed multiplier. " +
         "1 = normal, 1.5 = 50% faster.")]
-    [SerializeField]
-    private float equipmentSpeedMultiplier = 1f;
+    [SerializeField] private float equipmentSpeedMultiplier = 1f;
 
     private ICombatEquipment combatEquipment;
 
     [Header("Animation")]
-    [SerializeField]
-    protected Animator animator;
+    [SerializeField] protected Animator animator;
 
     [Header("Sound Effects")]
-    [SerializeField]
-    private AudioClip[] attackSoundEffects;
-
-    [SerializeField]
-    private AudioClip[] reloadSoundEffects;
-
-    [SerializeField]
-    private AudioClip[] hitSoundEffects;
+    [SerializeField] private AudioClip[] attackSoundEffects;
+    [SerializeField] private AudioClip[] reloadSoundEffects;
+    [SerializeField] private AudioClip[] hitSoundEffects;
 
     [Header("State")]
-    [SerializeField]
-    private bool isDead;
+    [SerializeField] private bool isDead;
 
-    [SerializeField]
-    private bool isInactive;
+    [SerializeField] private bool isInactive;
 
-    [SerializeField]
-    private bool isPaused;
+    [SerializeField] private bool isPaused;
 
     private PlayerController currentTarget;
 
@@ -177,9 +163,7 @@ public class EnemyController :
         if (animator == null)
             return;
 
-        animator.SetInteger(
-            "CombatType",
-            (int)combatType);
+        //animator.SetInteger("CombatType", (int)combatType);
     }
 
     private void InitializeStats()
@@ -407,6 +391,11 @@ public class EnemyController :
     public float GetEquipmentSpeedMultiplier()
     {
         return equipmentSpeedMultiplier;
+    }
+
+    public Color GetEnemyColor()
+    {
+        return enemyColor;
     }
 
     public void TakeDamage(

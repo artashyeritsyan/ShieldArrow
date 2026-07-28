@@ -1,10 +1,23 @@
+using System;
 using UnityEngine;
+
+public enum LevelStates
+{
+    Lobby,
+    Aisle,
+    Room,
+    Boss
+}
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    private void Awake()
+    public LevelStates CurrentLevelState { get; private set; }
+
+    public event Action<LevelStates> OnLevelStateChanged;
+
+    private void Awake() 
     {
         if (Instance != null && Instance != this)
         {
@@ -14,14 +27,22 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        CurrentLevelState = LevelStates.Lobby;
     }
 
-}
+    public void Update()
+    {
+        Debug.Log(CurrentLevelState);
+    }
 
-enum LevelStates
-{
-    Lobby,
-    Aisle,
-    Room,
-    Boss
+    public void SetLevelState(LevelStates newState)
+    {
+        if (CurrentLevelState == newState)
+            return;
+
+        CurrentLevelState = newState;
+        OnLevelStateChanged?.Invoke(CurrentLevelState);
+    }
+
 }

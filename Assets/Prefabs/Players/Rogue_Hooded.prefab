@@ -329,6 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AssasinController
   playerClass: 4
+  playerColor: {r: 0.04705882, g: 1, b: 0, a: 1}
   baseProfile: {fileID: 11400000, guid: 98a9956e26e254e439652c09d8044cbd, type: 2}
   stats:
     core:

@@ -115,6 +115,7 @@ MonoBehaviour:
   showOutline: 0
   outlineColor: {r: 0, g: 0.5849056, b: 0.28614372, a: 1}
   outlineWidth: 1
+  teamsColors: {fileID: 11400000, guid: b65aaccc68c8e1b4099e2ea8c5253c43, type: 2}
 --- !u!65 &6723025866345557165
 BoxCollider:
   m_ObjectHideFlags: 0

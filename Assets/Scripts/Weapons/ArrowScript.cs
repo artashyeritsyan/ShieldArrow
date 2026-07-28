@@ -98,8 +98,7 @@ public class ArrowScript : MonoBehaviour
         if (IsOwnerCollider(hit.collider))
             return true;
 
-        ShieldReflector shield =
-            hit.collider.GetComponentInParent<ShieldReflector>();
+        ShieldReflector shield = hit.collider.GetComponentInParent<ShieldReflector>();
 
         if (shield != null)
         {
@@ -107,8 +106,7 @@ public class ArrowScript : MonoBehaviour
             return true;
         }
 
-        IDamageable target =
-            hit.collider.GetComponentInParent<IDamageable>();
+        IDamageable target = hit.collider.GetComponentInParent<IDamageable>();
 
         if (target != null && target.Team != ownerTeam)
         {
@@ -164,6 +162,8 @@ public class ArrowScript : MonoBehaviour
         owner = newOwner;
         ownerTeam = newOwnerTeam;
         attackerStats = newOwnerStats;
+
+        SetupOutline();
 
         transform.position += direction * 0.02f;
     }
@@ -292,7 +292,18 @@ public class ArrowScript : MonoBehaviour
         }
 
         outline.enabled = true;
-        outline.OutlineColor = outlineColor;
+        if (ownerTeam == Team.Player)
+        {
+            outline.OutlineColor = owner.GetComponent<PlayerController>().GetPlayerColor();
+        }
+        else if (ownerTeam == Team.Enemy)
+        {
+            outline.OutlineColor = owner.GetComponent<EnemyController>().GetEnemyColor();
+        }
+        else {
+            outline.OutlineColor = Color.white;
+        }
+            //outline.OutlineColor = outlineColor;
         outline.OutlineWidth = outlineWidth;
     }
 

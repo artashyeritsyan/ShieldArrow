@@ -330,6 +330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   playerClass: 3
+  playerColor: {r: 0.50980395, g: 0.2509804, b: 0, a: 1}
   baseProfile: {fileID: 11400000, guid: 98a9956e26e254e439652c09d8044cbd, type: 2}
   stats:
     core:
@@ -357,7 +358,7 @@ MonoBehaviour:
   canRotate: 0
   aimTarget: {fileID: 1779078991343781980}
   trajectory: {fileID: 6249007125067108744}
-  aimColor: {r: 0.10980392, g: 0.8039216, b: 0, a: 1}
+  aimColor: {r: 0.509434, g: 0.25255093, b: 0, a: 1}
   aimDistance: 5
   aimSpeed: 3
   combatEquipmentBehaviour: {fileID: 0}

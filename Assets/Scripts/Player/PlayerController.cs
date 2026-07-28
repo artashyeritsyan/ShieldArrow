@@ -19,17 +19,13 @@ public enum Team
 public class PlayerController : MonoBehaviour
 {
     [Header("Stats")]
-    [SerializeField]
-    protected PlayerClass playerClass;
+    [SerializeField] protected PlayerClass playerClass;
+    [SerializeField] protected Color playerColor;
 
-    [SerializeField]
-    private PlayerStatsProfile baseProfile;
+    [SerializeField] private PlayerStatsProfile baseProfile;
+    [SerializeField] protected PlayerStats stats;
 
-    [SerializeField]
-    protected PlayerStats stats;
-
-    [SerializeField]
-    private float speedMultiplier = 3000f;
+    [SerializeField] private float speedMultiplier = 3000f;
 
     [Header("Movement")]
     [SerializeField] private float speedTransitionTime = 10f;
@@ -194,7 +190,7 @@ public class PlayerController : MonoBehaviour
         {
             aimsManager.AddPlayerAim(
                 aimTarget,
-                aimColor);
+                playerColor);
         }
 
         canMove = true;
@@ -661,6 +657,11 @@ public class PlayerController : MonoBehaviour
     public PlayerClass GetPlayerClass()
     {
         return playerClass;
+    }
+
+    public Color GetPlayerColor()
+    {
+        return playerColor;
     }
 
     public PlayerStats GetStats()
