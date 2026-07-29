@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5350024749323619541}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.8800201, y: 1, z: 1.3905153}
+  m_LocalPosition: {x: 0, y: 1, z: 0.41}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrajectoryPreview
   firePoint: {fileID: 2555663982936252628}
-  aimTarget: {fileID: 0}
-  maxDistance: 10
-  maxBounces: 5
+  aimTarget: {fileID: 9094435699238066794}
+  maxDistance: 5
+  maxBounces: 2
   hitMask:
     serializedVersion: 2
     m_Bits: 1792
@@ -114,7 +114,7 @@ Transform:
   m_GameObject: {fileID: 7760984615483488969}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.8800201, y: 1, z: 5.3905163}
+  m_LocalPosition: {x: 0, y: 1, z: 5.522203}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -368,7 +368,7 @@ MonoBehaviour:
   attackSoundEffects:
   - {fileID: 8300000, guid: 952b1ee16f2eb224094be2164168158d, type: 3}
   isDead: 0
-  attackStartDelay: 0.2
+  attackStartDelay: 0
   movementLockTime: 0.1
   animationFinishTime: 0.1
 --- !u!114 &273643802093905491

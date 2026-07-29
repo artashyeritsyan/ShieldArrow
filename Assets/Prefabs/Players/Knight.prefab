@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1178824963249859330}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 1}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrajectoryPreview
   firePoint: {fileID: 1546584115245139898}
   aimTarget: {fileID: 111702127214561881}
-  maxDistance: 4
+  maxDistance: 5
   maxBounces: 2
   hitMask:
     serializedVersion: 2
@@ -55,7 +55,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   dotPrefab: {fileID: 1862482351801581849, guid: f885ccf881cc1684eb5f8aeac2fd9cfb, type: 3}
-  maxDots: 50
+  maxDots: 100
   dotsPerUnit: 5
 --- !u!1 &2023284263076808329
 GameObject:
@@ -82,7 +82,7 @@ Transform:
   m_GameObject: {fileID: 2023284263076808329}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3, y: 1, z: 5}
+  m_LocalPosition: {x: 0, y: 1, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

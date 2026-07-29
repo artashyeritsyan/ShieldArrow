@@ -30,8 +30,7 @@ public class PlayerInputManagerController : MonoBehaviour
     private readonly HashSet<PlayerInput> playersBeingReplaced = new();
 
     [Header("Input Action Maps")]
-    [SerializeField] private string lobbyActionMap = "Lobby";
-    [SerializeField] private string gameplayActionMap = "Player";
+    [SerializeField] private string playerActionMap = "Player";
     [SerializeField] private string leaveActionName = "Leave";
     [SerializeField] private string changeClassActionName = "ChangeClass";
 
@@ -85,37 +84,30 @@ public class PlayerInputManagerController : MonoBehaviour
 
     private void OnPlayerJoined(PlayerInput playerInput)
     {
-        Debug.Log($"Player joined: {playerInput.playerIndex}");
+        if (!isLobbyActive)
+        {
+            Destroy(playerInput.gameObject);
+            return;
+        }
+
+        RegisterLeaveAction(playerInput);
+        RegisterChangeClassAction(playerInput);
 
         PlayerController playerController =
             playerInput.GetComponent<PlayerController>();
 
         if (playerController == null)
         {
-            Debug.LogError("Player prefab has no PlayerController.");
+            Debug.LogError(
+                $"Player prefab '{playerInput.gameObject.name}' " +
+                "does not contain PlayerController."
+            );
+
             Destroy(playerInput.gameObject);
             return;
         }
 
         PlayerManager.Instance.Register(playerController);
-
-        RegisterLeaveAction(playerInput);
-        RegisterChangeClassAction(playerInput);
-
-        if (!selectedClassIndices.ContainsKey(playerInput))
-        {
-            selectedClassIndices[playerInput] = 0;
-        }
-
-        if (isLobbyActive)
-        {
-            SwitchActionMap(playerInput, lobbyActionMap);
-        }
-        else
-        {
-            Destroy(playerInput.gameObject);
-            return;
-        }
 
         UpdateJoiningState();
     }
@@ -123,17 +115,15 @@ public class PlayerInputManagerController : MonoBehaviour
     private void RegisterChangeClassAction(PlayerInput playerInput)
     {
         InputAction changeClassAction = playerInput.actions.FindAction(
-            $"{lobbyActionMap}/{changeClassActionName}",
+            $"{playerActionMap}/{changeClassActionName}",
             false
         );
 
         if (changeClassAction == null)
         {
             Debug.LogError(
-                $"Action '{lobbyActionMap}/{changeClassActionName}' " +
-                $"was not found on '{playerInput.gameObject.name}'."
+                $"Action '{playerActionMap}/{changeClassActionName}' not found."
             );
-
             return;
         }
 
@@ -142,19 +132,17 @@ public class PlayerInputManagerController : MonoBehaviour
     }
 
     private void OnChangeClassPerformed(
-    InputAction.CallbackContext context)
+        InputAction.CallbackContext context)
     {
         if (!isLobbyActive)
             return;
 
-        PlayerInput playerInput =
-            FindPlayerByAction(changeClassActions, context.action);
+        PlayerInput playerInput = FindPlayerByAction(changeClassActions, context.action);
 
-        if (playerInput == null)
+        if (playerInput == null || playersBeingReplaced.Contains(playerInput))
+        {
             return;
-
-        if (playersBeingReplaced.Contains(playerInput))
-            return;
+        }
 
         StartCoroutine(ChangePlayerClassRoutine(playerInput));
     }
@@ -250,7 +238,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
         playersBeingReplaced.Remove(oldPlayerInput);
 
-        SwitchActionMap(newPlayerInput, lobbyActionMap);
+        //SwitchActionMap(newPlayerInput, joinActionMap);
         UpdateJoiningState();
 
         Debug.Log($"Player {playerIndex} changed class to {nextClass}.");
@@ -305,17 +293,15 @@ public class PlayerInputManagerController : MonoBehaviour
     private void RegisterLeaveAction(PlayerInput playerInput)
     {
         InputAction leaveAction = playerInput.actions.FindAction(
-            $"{lobbyActionMap}/{leaveActionName}",
+            $"{playerActionMap}/{leaveActionName}",
             false
         );
 
         if (leaveAction == null)
         {
             Debug.LogError(
-                $"Action '{lobbyActionMap}/{leaveActionName}' was not found " +
-                $"on player '{playerInput.gameObject.name}'."
+                $"Action '{playerActionMap}/{leaveActionName}' not found."
             );
-
             return;
         }
 
@@ -337,46 +323,26 @@ public class PlayerInputManagerController : MonoBehaviour
         if (!isLobbyActive)
             return;
 
-        PlayerInput playerToRemove = null;
+        PlayerInput playerInput = FindPlayerByAction(leaveActions, context.action);
 
-        foreach (KeyValuePair<PlayerInput, InputAction> pair in leaveActions)
+        if (playerInput != null)
         {
-            if (pair.Value == context.action)
-            {
-                playerToRemove = pair.Key;
-                break;
-            }
+            Destroy(playerInput.gameObject);
         }
-
-        if (playerToRemove == null)
-            return;
-
-        Debug.Log($"Removing player {playerToRemove.playerIndex}");
-
-        Destroy(playerToRemove.gameObject);
     }
 
-    private void HandleLevelStateChanged(LevelStates newState)
+    private void HandleLevelStateChanged(LevelStates state)
     {
-        isLobbyActive = newState == LevelStates.Lobby;
+        isLobbyActive = state == LevelStates.Lobby;
 
         UpdateJoiningState();
-
-        foreach (PlayerInput playerInput in PlayerInput.all)
-        {
-            string actionMap = isLobbyActive
-                ? lobbyActionMap
-                : gameplayActionMap;
-
-            SwitchActionMap(playerInput, actionMap);
-        }
     }
 
     private void UpdateJoiningState()
     {
-        bool hasFreePlayerSlot = PlayerInput.all.Count < playerMaxCount;
+        bool canJoin = isLobbyActive && PlayerInput.all.Count < playerMaxCount;
 
-        if (isLobbyActive && hasFreePlayerSlot)
+        if (canJoin)
         {
             inputManager.EnableJoining();
         }
@@ -386,25 +352,24 @@ public class PlayerInputManagerController : MonoBehaviour
         }
     }
 
-    private void SwitchActionMap(
-        PlayerInput playerInput,
-        string actionMapName)
-    {
-        if (playerInput.actions.FindActionMap(actionMapName) == null)
-        {
-            Debug.LogError(
-                $"Action map '{actionMapName}' was not found on " +
-                $"'{playerInput.gameObject.name}'."
-            );
+    //private void SwitchActionMap(
+    //    PlayerInput playerInput,
+    //    string actionMapName)
+    //{
+    //    if (playerInput.actions.FindActionMap(actionMapName) == null)
+    //    {
+    //        Debug.LogError(
+    //            $"Action map '{actionMapName}' was not found on " +
+    //            $"'{playerInput.gameObject.name}'."
+    //        );
 
-            return;
-        }
+    //        return;
+    //    }
 
-        if (playerInput.currentActionMap?.name == actionMapName)
-            return;
+    //    if (playerInput.currentActionMap?.name == actionMapName)
+    //        return;
 
-        playerInput.SwitchCurrentActionMap(actionMapName);
-    }
+    //}
 
 
     public void SetPlayerClass(PlayerClass playerClass)

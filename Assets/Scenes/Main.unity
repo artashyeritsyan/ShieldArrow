@@ -3074,8 +3074,8 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: 1318358351}
-  m_PlayerPrefab: {fileID: 5473945032332348849, guid: 608a4c5b96534de4ea8ed8654551a765, type: 3}
+    m_Reference: {fileID: 1053881892}
+  m_PlayerPrefab: {fileID: 6963048947689508690, guid: 4b4e83e6e684b664a91192921c8bce42, type: 3}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
   m_FixedNumberOfSplitScreens: -1
@@ -3112,11 +3112,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 720c1017d19df31499efc70429c77a9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputManagerController
-  playerMaxCount: 0
+  playerMaxCount: 2
   playersPrefabs: {fileID: 11400000, guid: 57e0cde3ea9be5a438a06a110800c36f, type: 2}
   selectableClasses: 0000000001000000020000000300000004000000
-  lobbyActionMap: Lobby
-  gameplayActionMap: Player
+  playerActionMap: Player
   leaveActionName: Leave
   changeClassActionName: ChangeClass
 --- !u!1001 &288914064
@@ -9467,6 +9466,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9e7db814b24310649b91185c2c95ad3b, type: 3}
   m_PrefabInstance: {fileID: 1345961191}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1053881892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: Join/Join
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_ActionId: 33116942-23b2-42cd-84c4-ae079929b881
 --- !u!1001 &1058183943
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12354,20 +12367,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 04363e0f0f7c0c24b87a319e6115d9ce, type: 3}
   m_PrefabInstance: {fileID: 833074078}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1318358351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
-  m_Name: Menu/Join
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
-  m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  m_ActionId: 33116942-23b2-42cd-84c4-ae079929b881
 --- !u!1001 &1326276665
 PrefabInstance:
   m_ObjectHideFlags: 0

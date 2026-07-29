@@ -77,8 +77,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrajectoryPreview
   firePoint: {fileID: 2712024348735400899}
   aimTarget: {fileID: 894419519161048708}
-  maxDistance: 10
-  maxBounces: 5
+  maxDistance: 5
+  maxBounces: 2
   hitMask:
     serializedVersion: 2
     m_Bits: 1792

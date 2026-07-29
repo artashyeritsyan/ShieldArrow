@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 2096961075062405087}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 5}
+  m_LocalPosition: {x: 0, y: 1, z: 5.522203}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -77,8 +77,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrajectoryPreview
   firePoint: {fileID: 7321418909076830642}
   aimTarget: {fileID: 1779078991343781980}
-  maxDistance: 3
-  maxBounces: 5
+  maxDistance: 5
+  maxBounces: 2
   hitMask:
     serializedVersion: 2
     m_Bits: 768

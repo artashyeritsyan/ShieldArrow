@@ -7,6 +7,24 @@
             "id": "df70fa95-8a34-4494-b137-73ab6b9c7d37",
             "actions": [
                 {
+                    "name": "Leave",
+                    "type": "Button",
+                    "id": "26296964-a935-4efa-b35d-5ea7049a540c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ChangeClass",
+                    "type": "Button",
+                    "id": "a7f66a7f-968b-4f49-972d-dc51944fa070",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Move",
                     "type": "Value",
                     "id": "351f2ccd-1f9f-44bf-9bec-d62ac5c5f408",
@@ -227,6 +245,50 @@
                     "processors": "",
                     "groups": "Joystick",
                     "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cbb46987-e66a-49f8-a15f-ca57e7d752ec",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Leave",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d5f37253-8091-4660-bcb5-4a26dec9f33a",
+                    "path": "<Keyboard>/backspace",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse;Gamepad",
+                    "action": "Leave",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "23940ecc-ac98-4882-a3f6-1d839c91d46d",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "ChangeClass",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7b8523bb-3ceb-4c1c-8081-9b0ff2a9b243",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "ChangeClass",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1024,31 +1086,13 @@
             ]
         },
         {
-            "name": "Menu",
+            "name": "Join",
             "id": "19455985-8576-479f-a8bd-439f2ba77f63",
             "actions": [
                 {
                     "name": "Join",
                     "type": "Button",
                     "id": "33116942-23b2-42cd-84c4-ae079929b881",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Leave",
-                    "type": "Button",
-                    "id": "c7c009be-44e0-4289-b16d-365a0fda42d0",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "ChangeClass",
-                    "type": "Button",
-                    "id": "d3733a82-1233-42c1-90c8-f465fe00645a",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -1070,7 +1114,7 @@
                 {
                     "name": "",
                     "id": "c00d574a-4e67-421f-a7f2-b9ee536845e3",
-                    "path": "<Keyboard>/anyKey",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1086,50 +1130,6 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Join",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9ce67343-cfda-496b-96fd-6ef4cd9aa064",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Leave",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3ca8fffa-5835-402e-8953-e98a244ad0d8",
-                    "path": "<Keyboard>/backspace",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse;Gamepad",
-                    "action": "Leave",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "840af0cc-f8bd-44cb-ac75-eca7361a31f2",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "ChangeClass",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9e92850a-a824-403d-a70e-4247cf63e547",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "ChangeClass",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
