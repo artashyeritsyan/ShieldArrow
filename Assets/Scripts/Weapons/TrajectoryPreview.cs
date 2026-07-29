@@ -6,6 +6,7 @@ public class TrajectoryPreview : MonoBehaviour
     [Header("References")]
     public Transform firePoint;
     public Transform aimTarget;
+    private PlayerController playerController;
 
     [Header("Ray Settings")]
     public float maxDistance = 20f;
@@ -19,16 +20,18 @@ public class TrajectoryPreview : MonoBehaviour
     public float dotsPerUnit = 5f;
 
 
-
     private List<Vector3> points = new();
     private List<GameObject> dots = new();
 
     void Start()
     {
-        Color playerColor = GetComponentInParent<PlayerController>().GetPlayerColor();
+        playerController = GetComponentInParent<PlayerController>();
+
+        Color playerColor = playerController.GetPlayerColor();
+
+        // Prefer a separate material instance for each player.
         dotPrefab.GetComponent<MeshRenderer>().sharedMaterial.color = playerColor;
-        
-        // Pre-create dot pool
+
         for (int i = 0; i < maxDots; i++)
         {
             GameObject dot = Instantiate(dotPrefab, transform);
@@ -49,41 +52,34 @@ public class TrajectoryPreview : MonoBehaviour
 
         Vector3 origin = firePoint.position;
 
-        Vector3 direction = aimTarget.position - firePoint.position;
-
-        direction.y = 0f;
+        Vector3 direction =
+            playerController.GetClampedAimDirection(aimTarget.position);
 
         if (direction.sqrMagnitude <= 0.0001f)
             return;
-
-        direction.Normalize();
 
         points.Add(origin);
 
         for (int i = 0; i < maxBounces; i++)
         {
-            if (!Physics.Raycast(origin, direction, out RaycastHit hit, maxDistance, hitMask))
+            if (!Physics.Raycast(
+                    origin,
+                    direction,
+                    out RaycastHit hit,
+                    maxDistance,
+                    hitMask))
             {
                 points.Add(origin + direction * maxDistance);
-
                 break;
             }
 
             points.Add(hit.point);
 
             if (IsInLayerMask(hit.collider.gameObject, enemyLayer))
-            {
                 break;
-            }
 
-            direction =
-                Vector3.Reflect(
-                    direction,
-                    hit.normal).normalized;
-
-            origin =
-                hit.point +
-                direction * 0.01f;
+            direction = Vector3.Reflect(direction, hit.normal).normalized;
+            origin = hit.point + direction * 0.01f;
         }
     }
 

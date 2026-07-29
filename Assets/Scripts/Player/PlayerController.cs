@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerStatsProfile baseProfile;
     [SerializeField] protected PlayerStats stats;
 
-    [SerializeField] private float speedMultiplier = 3000f;
+    [SerializeField] private float speedMultiplier = 4000f;
 
     [Header("Movement")]
     [SerializeField] private float speedTransitionTime = 10f;
@@ -36,7 +36,9 @@ public class PlayerController : MonoBehaviour
     [Header("Rotation")]
     [SerializeField] private float rotationSpeed = 15f;
     [SerializeField] private float maxAngle = 60f;
-    public bool canRotate;
+    [SerializeField] private  bool canRotate;
+
+    public bool CanRotate => canRotate;
 
     [Header("Aim")]
     [SerializeField] private Transform aimTarget;
@@ -44,6 +46,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Color aimColor;
     [SerializeField] private float aimDistance = 5f;
     [SerializeField] private float aimSpeed = 3f;
+    public float MaxAimAngle => maxAngle;
 
     private Camera mainCamera;
     private AimsManager aimsManager;
@@ -539,10 +542,32 @@ public class PlayerController : MonoBehaviour
                 Time.deltaTime);
     }
 
-    /*
-     * Use this helper in derived controllers for
-     * movement lock and animation timing.
-     */
+    public Vector3 GetClampedAimDirection(Vector3 targetPosition)
+    {
+        Vector3 desiredDirection = targetPosition - transform.position;
+        desiredDirection.y = 0f;
+
+        if (desiredDirection.sqrMagnitude <= 0.0001f)
+            return transform.forward;
+
+        desiredDirection.Normalize();
+
+        if (canRotate)
+            return desiredDirection;
+
+        return Vector3.RotateTowards(
+            transform.forward,
+            desiredDirection,
+            maxAngle * Mathf.Deg2Rad,
+            0f
+        ).normalized;
+    }
+
+    public void SetCanRotate(bool value)
+    {
+        canRotate = value;
+    }
+
     protected float GetScaledEquipmentDuration(
         float baseDuration)
     {

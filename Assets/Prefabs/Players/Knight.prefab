@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1178824963249859330}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0.5}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrajectoryPreview
   firePoint: {fileID: 1546584115245139898}
   aimTarget: {fileID: 111702127214561881}
-  maxDistance: 10
+  maxDistance: 20
   maxBounces: 2
   hitMask:
     serializedVersion: 2
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KnightController
   playerClass: 1
-  playerColor: {r: 1, g: 0.7898935, b: 0, a: 1}
+  playerColor: {r: 1, g: 0.8811702, b: 0, a: 1}
   baseProfile: {fileID: 11400000, guid: 98a9956e26e254e439652c09d8044cbd, type: 2}
   stats:
     core:

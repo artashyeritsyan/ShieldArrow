@@ -6,7 +6,7 @@ public class CrossbowerController :
 {
     [Header("Attack Movement")]
     [SerializeField]
-    private float movementLockTime = 0.3f;
+    private float movementLockTime = 0.1f;
 
     [SerializeField]
     private float animationFinishTime = 0.1f;
@@ -44,7 +44,7 @@ public class CrossbowerController :
             attackAnimationRoutine = null;
         }
 
-        SetCanMove(false);
+        //SetCanMove(false);
         layerTargetWeight = 0f;
     }
 
@@ -61,7 +61,7 @@ public class CrossbowerController :
         layerCurrentWeight = 0.1f;
         layerTargetWeight = 0f;
 
-        SetCanMove(false);
+        //SetCanMove(false);
 
         float scaledMovementLock =
             GetScaledEquipmentDuration(
