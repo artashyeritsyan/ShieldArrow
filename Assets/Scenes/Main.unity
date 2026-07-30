@@ -1714,7 +1714,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   screenCenter: {fileID: 1334775989}
   cameraStartPosition: {x: 0, y: 0, z: -6.2}
-  levelsTransitionDelta: 16
+  lobbyTransitionDelta: 16
+  aisleTransitionDelta: 19
 --- !u!4 &158525616
 Transform:
   m_ObjectHideFlags: 0
@@ -1742,7 +1743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df35da2c31a79b54397f363428a496b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
-  playerSpawnPosition: {x: 0, y: 0, z: -6}
+  playerSpawnPosition: {x: 0, y: 0, z: -10}
 --- !u!1001 &159987879
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18328,6 +18329,59 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 720460446}
   m_SourcePrefab: {fileID: 100100000, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
+--- !u!1 &2013346126
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2013346128}
+  - component: {fileID: 2013346127}
+  m_Layer: 0
+  m_Name: NextLevelStartCollider (1)
+  m_TagString: NextLevel
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &2013346127
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013346126}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &2013346128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013346126}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.007, y: 0.5, z: 19.698}
+  m_LocalScale: {x: 2, y: 1, z: 0.65}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2018515291 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
@@ -19521,6 +19575,7 @@ SceneRoots:
   - {fileID: 158525616}
   - {fileID: 1732944974}
   - {fileID: 734852929}
+  - {fileID: 2013346128}
   - {fileID: 194974065}
   - {fileID: 512125365}
   - {fileID: 468489061}

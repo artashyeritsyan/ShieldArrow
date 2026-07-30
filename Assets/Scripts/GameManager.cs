@@ -24,7 +24,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Positions")]
     [SerializeField] Vector3 cameraStartPosition;
-    [SerializeField] float levelsTransitionDelta = 16;
+    [SerializeField] float lobbyTransitionDelta = 16;
+    [SerializeField] float aisleTransitionDelta = 20;
 
     private void Awake() 
     {
@@ -61,10 +62,16 @@ public class GameManager : MonoBehaviour
         {
             CurrentLevelState = LevelStates.Aisle;
 
-            screenCenter.position += new Vector3(0, 0, levelsTransitionDelta);
+            screenCenter.position += new Vector3(0, 0, lobbyTransitionDelta);
+        }
+        else if (CurrentLevelState == LevelStates.Aisle)
+        {
+            CurrentLevelState = LevelStates.Room;
+
+            screenCenter.position += new Vector3(0, 0, aisleTransitionDelta);
         }
 
-        OnLevelStateChanged?.Invoke(CurrentLevelState);
+            OnLevelStateChanged?.Invoke(CurrentLevelState);
     }
 
 }
