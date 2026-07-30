@@ -1712,6 +1712,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05dff82deed6a47449b1a6770d1f2194, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  screenCenter: {fileID: 1334775989}
+  cameraStartPosition: {x: 0, y: 0, z: -6.2}
+  levelsTransitionDelta: 16
 --- !u!4 &158525616
 Transform:
   m_ObjectHideFlags: 0
@@ -1739,7 +1742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df35da2c31a79b54397f363428a496b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
-  playerSpawnPosition: {x: 0, y: 0, z: 4}
+  playerSpawnPosition: {x: 0, y: 0, z: -6}
 --- !u!1001 &159987879
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7032,6 +7035,59 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1686207166}
   m_SourcePrefab: {fileID: 100100000, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
+--- !u!1 &734852927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 734852929}
+  - component: {fileID: 734852928}
+  m_Layer: 0
+  m_Name: NextLevelStartCollider
+  m_TagString: NextLevel
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &734852928
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734852927}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &734852929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734852927}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.007, y: 0.5, z: 0.536}
+  m_LocalScale: {x: 2, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &742907243 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fe6bd60a779b08047adbfea5d090aa28, type: 3}
@@ -12636,7 +12692,7 @@ Transform:
   m_GameObject: {fileID: 1334775988}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 9.85}
+  m_LocalPosition: {x: 0, y: 0, z: -6.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13560,7 +13616,7 @@ Transform:
   m_GameObject: {fileID: 1431970895}
   serializedVersion: 2
   m_LocalRotation: {x: 0.53729963, y: 0, z: 0, w: 0.8433915}
-  m_LocalPosition: {x: 0, y: 16, z: 2.2500005}
+  m_LocalPosition: {x: 0, y: 14, z: -14.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13584,7 +13640,7 @@ MonoBehaviour:
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
-  FollowOffset: {x: 0, y: 16, z: -7.6}
+  FollowOffset: {x: 0, y: 14, z: -7.6}
 --- !u!4 &1439615061 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1b905546325b9b74e81688994c9bccef, type: 3}
@@ -14983,7 +15039,7 @@ Transform:
   m_GameObject: {fileID: 1624843295}
   serializedVersion: 2
   m_LocalRotation: {x: 0.53729963, y: 0, z: 0, w: 0.8433915}
-  m_LocalPosition: {x: 0, y: 16, z: 2.2500005}
+  m_LocalPosition: {x: 0, y: 14, z: -14.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19111,6 +19167,7 @@ MonoBehaviour:
   cursorInputForLook: 1
   mouseSensitivity: 0.1
   stickSensitivity: 0.5
+  stickCursorSpeed: 800
 --- !u!1001 &2423308942897036441
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19462,6 +19519,8 @@ SceneRoots:
   - {fileID: 288430501}
   - {fileID: 1088452987}
   - {fileID: 158525616}
+  - {fileID: 1732944974}
+  - {fileID: 734852929}
   - {fileID: 194974065}
   - {fileID: 512125365}
   - {fileID: 468489061}
@@ -19522,4 +19581,3 @@ SceneRoots:
   - {fileID: 1794085064}
   - {fileID: 569932864}
   - {fileID: 1078622584}
-  - {fileID: 1732944974}

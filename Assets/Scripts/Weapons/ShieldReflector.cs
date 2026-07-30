@@ -7,7 +7,7 @@ public class ShieldReflector : MonoBehaviour
     public bool CanReflect(Team projectileTeam)
     {
         if (projectileTeam == shieldController.GetOwnerTeam())
-            return false;
+            return true;
 
         if (shieldController == null)
             return false;

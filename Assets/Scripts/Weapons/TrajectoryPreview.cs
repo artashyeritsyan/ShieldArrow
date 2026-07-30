@@ -46,42 +46,48 @@ public class TrajectoryPreview : MonoBehaviour
         DrawDots();
     }
 
-    private void CalculateTrajectory()
+private void CalculateTrajectory()
+{
+    points.Clear();
+
+    Vector3 origin = firePoint.position;
+
+    Vector3 direction =
+        Quaternion.Euler(
+            0f,
+            playerController.GetRotation(),
+            0f
+        ) * Vector3.forward;
+
+    direction.Normalize();
+    points.Add(origin);
+
+    for (int i = 0; i < maxBounces; i++)
     {
-        points.Clear();
-
-        Vector3 origin = firePoint.position;
-
-        Vector3 direction =
-            playerController.GetClampedAimDirection(aimTarget.position);
-
-        if (direction.sqrMagnitude <= 0.0001f)
-            return;
-
-        points.Add(origin);
-
-        for (int i = 0; i < maxBounces; i++)
+        if (!Physics.Raycast(
+                origin,
+                direction,
+                out RaycastHit hit,
+                maxDistance,
+                hitMask))
         {
-            if (!Physics.Raycast(
-                    origin,
-                    direction,
-                    out RaycastHit hit,
-                    maxDistance,
-                    hitMask))
-            {
-                points.Add(origin + direction * maxDistance);
-                break;
-            }
-
-            points.Add(hit.point);
-
-            if (IsInLayerMask(hit.collider.gameObject, enemyLayer))
-                break;
-
-            direction = Vector3.Reflect(direction, hit.normal).normalized;
-            origin = hit.point + direction * 0.01f;
+            points.Add(origin + direction * maxDistance);
+            break;
         }
+
+        points.Add(hit.point);
+
+        if (IsInLayerMask(hit.collider.gameObject, enemyLayer))
+            break;
+
+        direction = Vector3.Reflect(
+            direction,
+            hit.normal
+        ).normalized;
+
+        origin = hit.point + direction * 0.01f;
     }
+}
 
     private static bool IsInLayerMask(GameObject target, LayerMask layerMask)
     {

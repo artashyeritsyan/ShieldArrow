@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Aim")]
     [SerializeField] private Transform aimTarget;
-    [SerializeField] private TrajectoryPreview trajectory;
+    //[SerializeField] private TrajectoryPreview trajectory;
     [SerializeField] private Color aimColor;
     [SerializeField] private float aimDistance = 5f;
     [SerializeField] private float aimSpeed = 3f;
@@ -185,27 +185,24 @@ public class PlayerController : MonoBehaviour
 
     private void InitializeValues()
     {
-        aimsManager =
-            FindFirstObjectByType<AimsManager>();
+        aimsManager = FindFirstObjectByType<AimsManager>();
 
-        if (aimsManager != null &&
-            aimTarget != null)
+        if (aimsManager != null && aimTarget != null)
         {
-            aimsManager.AddPlayerAim(
-                aimTarget,
-                playerColor);
+            aimsManager.AddPlayerAim(aimTarget, playerColor);
         }
 
         canMove = true;
         canAttack = true;
         canRotate = false;
 
-        attackSpeedMultiplier =
-            Mathf.Max(
-                attackSpeedMultiplier,
-                0.01f);
+        attackSpeedMultiplier = Mathf.Max(attackSpeedMultiplier, 0.01f);
     }
 
+    public float GetRotation()
+    {
+        return transform.eulerAngles.y;
+    }
     private void ResolveCombatEquipment()
     {
         if (combatEquipmentBehaviour == null)
@@ -754,6 +751,7 @@ public class PlayerController : MonoBehaviour
     protected virtual void OnDestroy()
     {
         UnsubscribeFromEquipmentEvents();
+        aimsManager.RemovePlayerAim(aimTarget);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -761,6 +759,11 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("PlayerChoosing"))
         {
 
+        }
+
+        if (other.CompareTag("NextLevel"))
+        {
+            GameManager.Instance.NextLevel();
         }
     }
 }

@@ -22,6 +22,10 @@ public class InputHandler : MonoBehaviour
     [Header("Look Settings")]
     public float mouseSensitivity = 0.12f;
     public float stickSensitivity = 0.2f;
+    [SerializeField] private float stickCursorSpeed = 800f;
+
+    private Vector2 rawStickInput;
+    private Vector2 virtualCursorPosition;
 
 #if ENABLE_INPUT_SYSTEM
     private PlayerInput playerInput;
@@ -34,6 +38,38 @@ public class InputHandler : MonoBehaviour
     {
         cursorLocked = false;
         playerInput = GetComponent<PlayerInput>();
+
+        virtualCursorPosition = new Vector2(
+            Screen.width * 0.5f,
+            Screen.height * 0.5f
+        );
+
+        look = virtualCursorPosition;
+    }
+
+    private void Update()
+    {
+        if (!isGamepad)
+            return;
+
+        virtualCursorPosition +=
+            rawStickInput *
+            stickCursorSpeed *
+            Time.deltaTime;
+
+        virtualCursorPosition.x = Mathf.Clamp(
+            virtualCursorPosition.x,
+            0f,
+            Screen.width
+        );
+
+        virtualCursorPosition.y = Mathf.Clamp(
+            virtualCursorPosition.y,
+            0f,
+            Screen.height
+        );
+
+        look = virtualCursorPosition;
     }
 
     private void OnEnable()
@@ -47,6 +83,17 @@ public class InputHandler : MonoBehaviour
     private void OnControlsChanged(PlayerInput input)
     {
         isGamepad = input.currentControlScheme == "Gamepad";
+
+        if (isGamepad)
+        {
+            virtualCursorPosition = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+
+            look = virtualCursorPosition;
+        }
+        else
+        {
+            rawStickInput = Vector2.zero;
+        }
     }
 
     public void OnMove(InputValue value)
@@ -60,7 +107,18 @@ public class InputHandler : MonoBehaviour
         if (!cursorInputForLook)
             return;
 
-        look = value.Get<Vector2>();
+        Vector2 newLookInput = value.Get<Vector2>();
+
+        if (isGamepad)
+        {
+            // Gamepad returns a direction from -1 to 1.
+            rawStickInput = newLookInput;
+        }
+        else
+        {
+            // Mouse returns its screen position in pixels.
+            look = newLookInput;
+        }
     }
 
 #endif

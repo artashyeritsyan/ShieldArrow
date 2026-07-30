@@ -17,11 +17,13 @@ public class PlayerInputManagerController : MonoBehaviour
     {
         PlayerClass.Archer,
         PlayerClass.Knight,
-        PlayerClass.Crossbower,
-        PlayerClass.Barbarian,
-        PlayerClass.Assasin,
+        //PlayerClass.Crossbower,
+        //PlayerClass.Barbarian,
+        //PlayerClass.Assasin,
         //PlayerClass.Mage
     };
+
+    private int nextPlayerClassIndex = 0;
 
 
     private readonly Dictionary<PlayerInput, InputAction> changeClassActions = new();
@@ -48,6 +50,8 @@ public class PlayerInputManagerController : MonoBehaviour
         inputManager.onPlayerJoined += OnPlayerJoined;
         inputManager.onPlayerLeft += OnPlayerLeft;
 
+
+        inputManager.playerPrefab = playersPrefabs.GetPlayerOfClass(selectableClasses[nextPlayerClassIndex]);
     }
 
     private void Start()
@@ -90,6 +94,28 @@ public class PlayerInputManagerController : MonoBehaviour
             return;
         }
 
+        int classIndex = nextPlayerClassIndex;
+        selectedClassIndices[playerInput] = classIndex;
+
+        // Prepare the opposite class for the next player.
+        nextPlayerClassIndex = classIndex == 0 ? 1 : 0;
+
+        inputManager.playerPrefab = playersPrefabs.GetPlayerOfClass(selectableClasses[nextPlayerClassIndex]);
+
+        selectedClassIndices[playerInput] = classIndex;
+
+        // After the first player joins, prepare the second class.
+        if (selectedClassIndices.Count == 1)
+        {
+            int secondClassIndex = classIndex == 0 ? 1 : 0;
+
+            inputManager.playerPrefab =
+                playersPrefabs.GetPlayerOfClass(
+                    selectableClasses[secondClassIndex]
+                );
+        }
+
+
         RegisterLeaveAction(playerInput);
         RegisterChangeClassAction(playerInput);
 
@@ -130,16 +156,19 @@ public class PlayerInputManagerController : MonoBehaviour
         changeClassAction.performed += OnChangeClassPerformed;
         changeClassActions[playerInput] = changeClassAction;
     }
-
-    private void OnChangeClassPerformed(
-        InputAction.CallbackContext context)
+    private void OnChangeClassPerformed(InputAction.CallbackContext context)
     {
         if (!isLobbyActive)
             return;
 
-        PlayerInput playerInput = FindPlayerByAction(changeClassActions, context.action);
+        if (selectedClassIndices.Count >= 2)
+            return;
 
-        if (playerInput == null || playersBeingReplaced.Contains(playerInput))
+        PlayerInput playerInput =
+            FindPlayerByAction(changeClassActions, context.action);
+
+        if (playerInput == null ||
+            playersBeingReplaced.Contains(playerInput))
         {
             return;
         }
@@ -167,8 +196,7 @@ public class PlayerInputManagerController : MonoBehaviour
             currentClassIndex = storedIndex;
         }
 
-        int nextClassIndex =
-            (currentClassIndex + 1) % selectableClasses.Count;
+        int nextClassIndex = (currentClassIndex + 1) % selectableClasses.Count;
 
         PlayerClass nextClass = selectableClasses[nextClassIndex];
 
@@ -194,8 +222,7 @@ public class PlayerInputManagerController : MonoBehaviour
         int splitScreenIndex = oldPlayerInput.splitScreenIndex;
         string controlScheme = oldPlayerInput.currentControlScheme;
 
-        InputDevice[] pairedDevices =
-            new InputDevice[oldPlayerInput.devices.Count];
+        InputDevice[] pairedDevices = new InputDevice[oldPlayerInput.devices.Count];
 
         for (int i = 0; i < oldPlayerInput.devices.Count; i++)
         {
@@ -235,6 +262,13 @@ public class PlayerInputManagerController : MonoBehaviour
         );
 
         selectedClassIndices[newPlayerInput] = nextClassIndex;
+
+        int availableClassIndex = nextClassIndex == 0 ? 1 : 0;
+
+        inputManager.playerPrefab =
+            playersPrefabs.GetPlayerOfClass(
+                selectableClasses[availableClassIndex]
+            );
 
         playersBeingReplaced.Remove(oldPlayerInput);
 
@@ -325,10 +359,18 @@ public class PlayerInputManagerController : MonoBehaviour
 
         PlayerInput playerInput = FindPlayerByAction(leaveActions, context.action);
 
-        if (playerInput != null)
+        if (playerInput == null)
+            return;
+
+        // Make the leaving player's class available again.
+        if (selectedClassIndices.TryGetValue(playerInput, out int leavingClassIndex))
         {
-            Destroy(playerInput.gameObject);
+            nextPlayerClassIndex = leavingClassIndex;
+
+            inputManager.playerPrefab = playersPrefabs.GetPlayerOfClass(selectableClasses[nextPlayerClassIndex]);
         }
+
+        Destroy(playerInput.gameObject);
     }
 
     private void HandleLevelStateChanged(LevelStates state)

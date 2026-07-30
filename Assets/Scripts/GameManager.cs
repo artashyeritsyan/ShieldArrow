@@ -17,6 +17,15 @@ public class GameManager : MonoBehaviour
 
     public event Action<LevelStates> OnLevelStateChanged;
 
+    [Header("Camera")]
+    // This is the camera position
+    [SerializeField] Transform screenCenter;
+
+
+    [Header("Positions")]
+    [SerializeField] Vector3 cameraStartPosition;
+    [SerializeField] float levelsTransitionDelta = 16;
+
     private void Awake() 
     {
         if (Instance != null && Instance != this)
@@ -29,6 +38,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         CurrentLevelState = LevelStates.Lobby;
+        screenCenter.position = cameraStartPosition;
     }
 
     public void Update()
@@ -42,6 +52,18 @@ public class GameManager : MonoBehaviour
             return;
 
         CurrentLevelState = newState;
+        OnLevelStateChanged?.Invoke(CurrentLevelState);
+    }
+
+    public void NextLevel()
+    {
+        if (CurrentLevelState == LevelStates.Lobby)
+        {
+            CurrentLevelState = LevelStates.Aisle;
+
+            screenCenter.position += new Vector3(0, 0, levelsTransitionDelta);
+        }
+
         OnLevelStateChanged?.Invoke(CurrentLevelState);
     }
 

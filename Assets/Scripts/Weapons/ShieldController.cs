@@ -86,8 +86,7 @@ public class ShieldController :
     {
         if (shieldCollider == null)
         {
-            shieldCollider =
-                GetComponent<Collider>();
+            shieldCollider = GetComponent<Collider>();
         }
 
         if (shieldCollider != null)
@@ -203,14 +202,11 @@ public class ShieldController :
          * The active reflection window is also scaled,
          * keeping it synchronized with a faster animation.
          */
-        float scaledActiveTime =
-            GetScaledDuration(
-                activeTime);
+        float scaledActiveTime = GetScaledDuration(activeTime);
 
         if (scaledActiveTime > 0f)
         {
-            yield return new WaitForSeconds(
-                scaledActiveTime);
+            yield return new WaitForSeconds(scaledActiveTime);
         }
 
         //shieldCollider.enabled = false;
@@ -220,14 +216,9 @@ public class ShieldController :
 
         OnShieldAttackFinished?.Invoke();
 
-        float totalAttackInterval =
-            SECOND /
-            EffectiveActionSpeed;
+        float totalAttackInterval = SECOND / EffectiveActionSpeed;
 
-        /*
-         * The start delay and active time are already
-         * included in the complete attack interval.
-         */
+
         float remainingCooldown =
             Mathf.Max(
                 totalAttackInterval -
@@ -237,15 +228,13 @@ public class ShieldController :
 
         if (remainingCooldown > 0f)
         {
-            yield return new WaitForSeconds(
-                remainingCooldown);
+            yield return new WaitForSeconds(remainingCooldown);
         }
 
         canAttack = true;
     }
 
-    private float GetScaledDuration(
-        float baseDuration)
+    private float GetScaledDuration(float baseDuration)
     {
         return Mathf.Max(
             baseDuration /
