@@ -4769,6 +4769,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3245047377962470163, guid: 7c37291ad1572834bbf1ccfd7c4e0d62, type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     - target: {fileID: 5980314168419120999, guid: 7c37291ad1572834bbf1ccfd7c4e0d62, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9733793

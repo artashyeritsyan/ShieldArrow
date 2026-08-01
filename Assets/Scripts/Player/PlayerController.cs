@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Aim")]
     [SerializeField] private Transform aimTarget;
-    //[SerializeField] private TrajectoryPreview trajectory;
+    [SerializeField] private TrajectoryPreview trajectory;
     [SerializeField] private Color aimColor;
     [SerializeField] private float aimDistance = 5f;
     [SerializeField] private float aimSpeed = 3f;
@@ -110,14 +110,17 @@ public class PlayerController : MonoBehaviour
 
     protected virtual void Update()
     {
+
         if (!isPause)
         {
+            HandleAim();
+
             if (!isDead)
             {
                 HandleMovement();
                 HandleAttack();
 
-                HandleAim();
+                //HandleAim();
 
             }
 
@@ -185,8 +188,8 @@ public class PlayerController : MonoBehaviour
         }
 
         canMove = true;
-        canAttack = true;
-        canRotate = false;
+        canAttack = false;
+        canRotate = true;
 
         attackSpeedMultiplier = Mathf.Max(attackSpeedMultiplier, 0.01f);
     }
@@ -468,11 +471,10 @@ public class PlayerController : MonoBehaviour
             // Free 360-degree rotation.
             RotateCharacter(desiredDirection);
 
-            // Save the current facing direction as the
-            // center of the restricted aiming range.
-            aimCenterDirection = transform.forward;
-            aimCenterDirection.y = 0f;
-            aimCenterDirection.Normalize();
+
+            //aimCenterDirection = transform.forward;
+            //aimCenterDirection.y = 0f;
+            //aimCenterDirection.Normalize();
 
             return;
         }
@@ -715,6 +717,7 @@ public class PlayerController : MonoBehaviour
 
             case GameStates.Playing:
                 isPause = false;
+                //canRotate = true;
                 break;
             case GameStates.Pause:
                 isPause = true;
@@ -729,22 +732,22 @@ public class PlayerController : MonoBehaviour
             case LevelStates.Lobby:
                 canAttack = false;
                 canRotate = true;
-                //SetTrajectoryEnable(false);
+                SetTrajectoryEnable(false);
                 break;
             case LevelStates.Aisle: 
                 canAttack = true;
                 canRotate = false;
-                //SetTrajectoryEnable(true);
+                SetTrajectoryEnable(true);
                 break;
             case LevelStates.Room:
                 canAttack = false;
                 canRotate = true;
-                //SetTrajectoryEnable(false);
+                SetTrajectoryEnable(false);
                 break;
             case LevelStates.Boss:
                 canAttack = true;
                 canRotate = false;
-                //SetTrajectoryEnable(true);
+                SetTrajectoryEnable(true);
                 break;
             default:
                 canAttack = false;
@@ -752,10 +755,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //void SetTrajectoryEnable(bool value)
-    //{
-    //    trajectory.gameObject.SetActive(value);
-    //}
+    void SetTrajectoryEnable(bool value)
+    {
+        trajectory.gameObject.SetActive(value);
+    }
     private void SubscribeToEvents()
     {
         if (GameManager.Instance == null)
@@ -804,10 +807,17 @@ public class PlayerController : MonoBehaviour
     protected virtual void OnDestroy()
     {
         UnsubscribeFromEquipmentEvents();
-        aimsManager.RemovePlayerAim(aimTarget);
 
-        GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
-        GameManager.Instance.OnLevelStateChanged -= HandleLevelStateChanged;
+        if (aimsManager != null && aimTarget != null)
+        {
+            aimsManager.RemovePlayerAim(aimTarget);
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+            GameManager.Instance.OnLevelStateChanged -= HandleLevelStateChanged;
+        }
     }
 
     private void OnTriggerEnter(Collider other)

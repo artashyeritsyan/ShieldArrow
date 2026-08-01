@@ -39,10 +39,10 @@ public class UiManager : MonoBehaviour
                 SwitchPanelTo(MenuPanel);
                 break;
             case GameStates.Playing:
-                SwitchPanelTo(PausePanel);
+                SwitchPanelTo(OverlayPanel);
                 break;
             case GameStates.Pause:
-                SwitchPanelTo(OverlayPanel);
+                SwitchPanelTo(PausePanel);
                 break;
             default:
                 SwitchPanelTo(MenuPanel);
