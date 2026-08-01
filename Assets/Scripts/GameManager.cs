@@ -1,6 +1,13 @@
 using System;
 using UnityEngine;
 
+
+public enum GameStates
+{
+    Menu,
+    Playing,
+    Pause
+}
 public enum LevelStates
 {
     Lobby,
@@ -13,9 +20,15 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public LevelStates CurrentLevelState { get; private set; }
+    public GameStates CurrentGameState { get; private set; }
+    public event Action<GameStates> OnGameStateChanged;
 
+    public LevelStates CurrentLevelState { get; private set; }
     public event Action<LevelStates> OnLevelStateChanged;
+
+    [Header("Players Manager")]
+    [SerializeField] PlayerManager playerManager;
+    [SerializeField] float playersPositionOffset = 4;
 
     [Header("Camera")]
     // This is the camera position
@@ -24,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Positions")]
     [SerializeField] Vector3 cameraStartPosition;
-    [SerializeField] float lobbyTransitionDelta = 16;
+    [SerializeField] float roomTransitionDelta = 16;
     [SerializeField] float aisleTransitionDelta = 20;
 
     private void Awake() 
@@ -42,9 +55,14 @@ public class GameManager : MonoBehaviour
         screenCenter.position = cameraStartPosition;
     }
 
-    public void Update()
+
+    public void SetGameState(GameStates newState)
     {
-        Debug.Log(CurrentLevelState);
+        if (CurrentGameState == newState)
+            return;
+
+        CurrentGameState = newState;
+        OnGameStateChanged?.Invoke(CurrentGameState);
     }
 
     public void SetLevelState(LevelStates newState)
@@ -61,17 +79,37 @@ public class GameManager : MonoBehaviour
         if (CurrentLevelState == LevelStates.Lobby)
         {
             CurrentLevelState = LevelStates.Aisle;
+            CurrentGameState = GameStates.Playing;
 
-            screenCenter.position += new Vector3(0, 0, lobbyTransitionDelta);
+            TransitionToNextLevel(roomTransitionDelta);
+        }
+        else if (CurrentLevelState == LevelStates.Room)
+        {
+            CurrentLevelState = LevelStates.Aisle;
+
+            TransitionToNextLevel(roomTransitionDelta);
         }
         else if (CurrentLevelState == LevelStates.Aisle)
         {
             CurrentLevelState = LevelStates.Room;
 
-            screenCenter.position += new Vector3(0, 0, aisleTransitionDelta);
+            TransitionToNextLevel(aisleTransitionDelta);
         }
 
-            OnLevelStateChanged?.Invoke(CurrentLevelState);
+        OnGameStateChanged?.Invoke(CurrentGameState);
+        OnLevelStateChanged?.Invoke(CurrentLevelState);
+    }
+
+    private void TransitionToNextLevel(float transitionDelta)
+    {
+        screenCenter.position += new Vector3(0, 0, transitionDelta);
+
+        for (int i = 0; i < playerManager.GetPlayers().Count; i++) 
+        {
+            // Its for translating them to the next level, with some offset (to not be in center of screen))
+            playerManager.GetPlayers()[i].transform.position = new Vector3(screenCenter.position.x + i, playerManager.GetPlayers()[i].transform.position.y, screenCenter.position.z - playersPositionOffset);
+        }
+        
     }
 
 }

@@ -557,8 +557,9 @@ MonoBehaviour:
   speedTransitionTime: 10
   rotationSpeed: 15
   maxAngle: 60
-  canRotate: 0
+  canRotate: 1
   aimTarget: {fileID: 894419519161048708}
+  trajectory: {fileID: 4776292099807864093}
   aimColor: {r: 0.1254902, g: 0.4156863, b: 0.54509807, a: 1}
   aimDistance: 5
   aimSpeed: 3

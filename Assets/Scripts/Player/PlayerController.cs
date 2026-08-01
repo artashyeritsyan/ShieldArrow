@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum PlayerClass
@@ -36,7 +37,7 @@ public class PlayerController : MonoBehaviour
     [Header("Rotation")]
     [SerializeField] private float rotationSpeed = 15f;
     [SerializeField] private float maxAngle = 60f;
-    [SerializeField] private  bool canRotate;
+    [SerializeField] private  bool canRotate = true;
 
     public bool CanRotate => canRotate;
 
@@ -50,47 +51,34 @@ public class PlayerController : MonoBehaviour
 
     private Camera mainCamera;
     private AimsManager aimsManager;
-    private float currentAimAngle;
+    //private float currentAimAngle;
     private Vector3 aimCenterDirection;
 
     [Header("Combat Equipment")]
-    [Tooltip(
-        "Assign a BowWeapon, CrossbowWeapon, " +
-        "ShieldController, or another component " +
-        "implementing ICombatEquipment.")]
     [SerializeField] private MonoBehaviour combatEquipmentBehaviour;
 
     [Header("Attack Speed")]
-    [Tooltip(
-        "1 = normal speed, 1.2 = 20% faster, " +
-        "2 = twice as fast.")]
-    [SerializeField]
-    private float attackSpeedMultiplier = 1f;
+    [SerializeField] private float attackSpeedMultiplier = 1f;
 
     protected ICombatEquipment combatEquipment;
 
     [Header("Animation")]
-    [SerializeField]
-    protected Animator animator;
+    [SerializeField] protected Animator animator;
 
-    [SerializeField]
-    private float animTransitionTime = 5f;
+    [SerializeField] private float animTransitionTime = 5f;
 
     private float blendValue;
 
-    [SerializeField]
-    private float animLayerTransitionTime = 5f;
+    [SerializeField] private float animLayerTransitionTime = 5f;
 
     protected float layerTargetWeight;
     protected float layerCurrentWeight;
 
     [Header("Sound Effects")]
-    [SerializeField]
-    protected AudioClip[] attackSoundEffects;
+    [SerializeField] protected AudioClip[] attackSoundEffects;
 
     [Header("Main Modifiers")]
-    [SerializeField]
-    protected bool isDead;
+    [SerializeField] protected bool isDead;
 
     protected bool isPause;
     protected bool canMove;
@@ -110,6 +98,7 @@ public class PlayerController : MonoBehaviour
 
     protected virtual void Start()
     {
+        SubscribeToEvents();
         InitializeValues();
         InitializeCombatEquipment();
         SubscribeToEquipmentEvents();
@@ -121,17 +110,20 @@ public class PlayerController : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (!isDead && !isPause)
+        if (!isPause)
         {
-            HandleMovement();
-            HandleAttack();
+            if (!isDead)
+            {
+                HandleMovement();
+                HandleAttack();
 
-            HandleAim();
+                HandleAim();
 
+            }
+
+            HandleAnimation();
+            AfterUpdate();
         }
-
-        HandleAnimation();
-        AfterUpdate();
     }
 
     private void InitializeStats()
@@ -338,10 +330,7 @@ public class PlayerController : MonoBehaviour
 
         if (animator != null)
         {
-            /*
-             * The Animator attack state should use
-             * AttackSpeed as its speed multiplier.
-             */
+
             animator.SetFloat(
                 "AttackSpeed",
                 combatEquipment != null
@@ -508,19 +497,19 @@ public class PlayerController : MonoBehaviour
         RotateCharacter(clampedDirection);
     }
 
-    private void HandleRotation()
-    {
-        if (moveDirection.sqrMagnitude <=
-            0.0001f)
-        {
-            return;
-        }
+    //private void HandleRotation()
+    //{
+    //    if (moveDirection.sqrMagnitude <=
+    //        0.0001f)
+    //    {
+    //        return;
+    //    }
 
-        currentAimAngle = 0f;
+    //    currentAimAngle = 0f;
 
-        RotateCharacter(
-            moveDirection.normalized);
-    }
+    //    RotateCharacter(
+    //        moveDirection.normalized);
+    //}
 
     private void RotateCharacter(Vector3 direction)
     {
@@ -716,6 +705,70 @@ public class PlayerController : MonoBehaviour
         isPause = value;
     }
 
+    void HandleGameStateChanged(GameStates gameState)
+    {
+        switch (gameState)
+        {
+            case GameStates.Menu:
+                isPause = true;
+                break;
+
+            case GameStates.Playing:
+                isPause = false;
+                break;
+            case GameStates.Pause:
+                isPause = true;
+                break;
+        }
+    }
+
+    void HandleLevelStateChanged(LevelStates levelState)
+    {
+        switch (levelState)
+        {
+            case LevelStates.Lobby:
+                canAttack = false;
+                canRotate = true;
+                //SetTrajectoryEnable(false);
+                break;
+            case LevelStates.Aisle: 
+                canAttack = true;
+                canRotate = false;
+                //SetTrajectoryEnable(true);
+                break;
+            case LevelStates.Room:
+                canAttack = false;
+                canRotate = true;
+                //SetTrajectoryEnable(false);
+                break;
+            case LevelStates.Boss:
+                canAttack = true;
+                canRotate = false;
+                //SetTrajectoryEnable(true);
+                break;
+            default:
+                canAttack = false;
+                break;  
+        }
+    }
+
+    //void SetTrajectoryEnable(bool value)
+    //{
+    //    trajectory.gameObject.SetActive(value);
+    //}
+    private void SubscribeToEvents()
+    {
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("GameManager.Instance is null.", this);
+            return;
+        }
+
+        GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+        GameManager.Instance.OnLevelStateChanged += HandleLevelStateChanged;
+
+    }
+
     protected virtual void AfterAwake()
     {
     }
@@ -752,6 +805,9 @@ public class PlayerController : MonoBehaviour
     {
         UnsubscribeFromEquipmentEvents();
         aimsManager.RemovePlayerAim(aimTarget);
+
+        GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+        GameManager.Instance.OnLevelStateChanged -= HandleLevelStateChanged;
     }
 
     private void OnTriggerEnter(Collider other)

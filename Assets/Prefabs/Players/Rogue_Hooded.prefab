@@ -354,7 +354,7 @@ MonoBehaviour:
   speedTransitionTime: 10
   rotationSpeed: 15
   maxAngle: 60
-  canRotate: 0
+  canRotate: 1
   aimTarget: {fileID: 9094435699238066794}
   trajectory: {fileID: 3384549862657485317}
   aimColor: {r: 0.02745098, g: 0.34509805, b: 0.011764706, a: 1}
@@ -450,6 +450,7 @@ MonoBehaviour:
   cursorInputForLook: 1
   mouseSensitivity: 0.1
   stickSensitivity: 0.3
+  stickCursorSpeed: 800
 --- !u!4 &9090280994278868450 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 11993f8b834c6834c94140f708bb2ab9, type: 3}

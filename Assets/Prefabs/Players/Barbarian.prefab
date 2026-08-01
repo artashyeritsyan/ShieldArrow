@@ -555,7 +555,7 @@ MonoBehaviour:
   speedTransitionTime: 10
   rotationSpeed: 15
   maxAngle: 60
-  canRotate: 0
+  canRotate: 1
   aimTarget: {fileID: 1779078991343781980}
   trajectory: {fileID: 6249007125067108744}
   aimColor: {r: 0.509434, g: 0.25255093, b: 0, a: 1}
@@ -648,3 +648,4 @@ MonoBehaviour:
   cursorInputForLook: 1
   mouseSensitivity: 0.1
   stickSensitivity: 0.3
+  stickCursorSpeed: 800

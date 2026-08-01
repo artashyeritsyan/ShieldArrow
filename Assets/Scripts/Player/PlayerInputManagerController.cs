@@ -12,8 +12,7 @@ public class PlayerInputManagerController : MonoBehaviour
     [SerializeField] private PlayersPrefabs playersPrefabs;
 
     [Header("Class Selection")]
-    [SerializeField]
-    private List<PlayerClass> selectableClasses = new()
+    [SerializeField] private List<PlayerClass> selectableClasses = new()
     {
         PlayerClass.Archer,
         PlayerClass.Knight,
@@ -24,7 +23,6 @@ public class PlayerInputManagerController : MonoBehaviour
     };
 
     private int nextPlayerClassIndex = 0;
-
 
     private readonly Dictionary<PlayerInput, InputAction> changeClassActions = new();
     private readonly Dictionary<PlayerInput, int> selectedClassIndices = new();
@@ -382,7 +380,12 @@ public class PlayerInputManagerController : MonoBehaviour
 
     private void UpdateJoiningState()
     {
-        bool canJoin = isLobbyActive && PlayerInput.all.Count < playerMaxCount;
+        bool canJoin = false;
+
+        if (GameManager.Instance.CurrentGameState != GameStates.Menu && GameManager.Instance.CurrentGameState != GameStates.Pause)
+        {
+            canJoin = isLobbyActive && PlayerInput.all.Count < playerMaxCount;
+        }
 
         if (canJoin)
         {
@@ -413,6 +416,12 @@ public class PlayerInputManagerController : MonoBehaviour
 
     //}
 
+    private void HandleGameStateChanged(GameStates  state)
+    {
+        //isLobbyActive = state == GameStates.Lobby;
+
+        UpdateJoiningState();
+    }
 
     public void SetPlayerClass(PlayerClass playerClass)
     {
@@ -438,6 +447,7 @@ public class PlayerInputManagerController : MonoBehaviour
             return;
         }
 
+        GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         GameManager.Instance.OnLevelStateChanged += HandleLevelStateChanged;
     }
 
@@ -445,6 +455,7 @@ public class PlayerInputManagerController : MonoBehaviour
     {
         if (GameManager.Instance != null)
         {
+            GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
             GameManager.Instance.OnLevelStateChanged -= HandleLevelStateChanged;
         }
     }
