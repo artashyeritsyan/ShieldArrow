@@ -1633,7 +1633,7 @@ GameObject:
   - component: {fileID: 5790952510841337974}
   - component: {fileID: 4459752236593904968}
   m_Layer: 0
-  m_Name: PlaneRight
+  m_Name: RightPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2196,7 +2196,7 @@ GameObject:
   - component: {fileID: 2078483624708291148}
   - component: {fileID: 108859476636885675}
   m_Layer: 0
-  m_Name: PlaneLeft
+  m_Name: LeftPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5387,7 +5387,7 @@ GameObject:
   - component: {fileID: 2364087557154706415}
   - component: {fileID: 6028598354614076824}
   m_Layer: 0
-  m_Name: PlaneMiddle
+  m_Name: MiddlePlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
