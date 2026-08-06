@@ -5,6 +5,7 @@ using UnityEngine;
 public class WallDecorator : MonoBehaviour
 {
     private List<GameObject> decorations = new();
+    private List<GameObject> floorTiles = new();
 
     // In future generate the walls as well, so it would be random type of wall
     //[SerializeField] GameObject[] wallSpawnPoints;
@@ -13,15 +14,21 @@ public class WallDecorator : MonoBehaviour
     [SerializeField] Transform leftWallParent;
     [SerializeField] Transform rightWallParent;
 
-    [Header("OnWall Decorations")]
+    [Header("Prefab objects")]
     //[SerializeField] GameObject[] torchs;
-    [SerializeField] GameObject[] onWallDecorationsPrefabs;
+    [SerializeField] EnviromentPrefabs wallPrefabs;
+    [SerializeField] EnviromentPrefabs groundPrefabs;
+    [SerializeField] EnviromentPrefabs wallDecorations;
+    [SerializeField] EnviromentPrefabs groundDecorations;
 
     [SerializeField] int decorationsTypeCount = 2;
 
-    [Header("Chances")]
+    [Header("Wall Decorations Chances")]
     [SerializeField] private float nothingChance = 0.2f;
     [SerializeField] private float torchChance = 0.3f;
+
+    [Header("Ground Chances")]
+    [SerializeField] private float simpleFloor = 0.5f;
 
 
     public void GenerateDecorations()
@@ -36,6 +43,27 @@ public class WallDecorator : MonoBehaviour
 
         GenerateDecorationsFor(leftWallParent);
         GenerateDecorationsFor(rightWallParent);
+        //GenerateFloor();
+    }
+
+    void GenerateFloor()
+    {
+        float chance = Random.value;
+
+        int decorationIndex;
+
+        if (chance < simpleFloor)
+        {
+            decorationIndex = 0;
+        }
+        else
+        {
+            decorationIndex = Random.Range(1, groundPrefabs.Size);
+        }
+
+        GameObject tile = Instantiate(groundPrefabs.Prefabs[decorationIndex], gameObject.transform);
+        tile.transform.localPosition = Vector3.zero;
+        floorTiles.Add(tile);
     }
 
     public void GenerateDecorationsFor(Transform parent)
@@ -45,18 +73,18 @@ public class WallDecorator : MonoBehaviour
         if (chance < nothingChance)
             return;
 
-        int randomDecoration;
+        int decorationIndex;
 
         if (chance < nothingChance + torchChance)
         {
-            randomDecoration = 0;
+            decorationIndex = 0;
         }
         else
         {
-            randomDecoration = Random.Range(1, onWallDecorationsPrefabs.Length);
+            decorationIndex = Random.Range(1, wallDecorations.Size);
         }
 
-        GameObject newDecoration = Instantiate(onWallDecorationsPrefabs[randomDecoration], parent);
+        GameObject newDecoration = Instantiate(wallDecorations.Prefabs[decorationIndex], parent);
         newDecoration.transform.localPosition = Vector3.zero;
         decorations.Add(newDecoration);
     }

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bfa047e6e9189b4fa19a1db2561cfe9, type: 3}
+  m_Name: GroundPrefabs
+  m_EditorClassIdentifier: Assembly-CSharp::EnviromentPrefabs
+  prefabs:
+  - {fileID: 5050850496815942203, guid: 15d78fff974413245bb4c5e1d589d3ed, type: 3}
+  - {fileID: 1359881773735702591, guid: 7d9fcff59e167bb409ec9a330ca25e7a, type: 3}
+  - {fileID: 2714048218651570725, guid: ee58c38c159904c41b76dcfaa480f38b, type: 3}
+  - {fileID: 1928579486226432843, guid: cc87cbe6414e6a1409408c7f92421fdd, type: 3}
+  - {fileID: 845365508407709734, guid: 7c0bf163751243c40a090b196ab886eb, type: 3}
