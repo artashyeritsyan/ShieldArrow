@@ -4,22 +4,19 @@ using UnityEngine;
 
 public class AisleGenerator : MonoBehaviour
 {
-    private List<GameObject> aislePieces = new();
+    private List<GameObject> aisleSegments = new();
 
     [SerializeField] GameObject[] aislePrefabs;
-    [SerializeField] int minLength = 10;
-    [SerializeField] int maxLength = 20;
+    [SerializeField] int minLength = 30;
+    [SerializeField] int maxLength = 60;
+    private int finalLength = 0;
 
     [SerializeField] Vector3 startPosition;
-    [SerializeField] float onePieceSize = 2f;
-
-    [Header("Walls")] 
-    [SerializeField] GameObject[] walls;
-
+    [SerializeField] float oneSegmentSize = 4f;
 
     void Start()
     {
-        GenerateAisle();
+        GenerateAisle(startPosition);
     }
 
     // Update is called once per frame
@@ -28,27 +25,39 @@ public class AisleGenerator : MonoBehaviour
         
     }
 
-    public void GenerateAisle()
+    public void GenerateAisle(Vector3 StartPosition)
     {
-        int randomLength = Random.Range(minLength, maxLength);
+        startPosition = StartPosition;
+        int targetLength = Random.Range(minLength, maxLength);
         Vector3 spawnPosition = startPosition;
 
-        Debug.Log("Length = " + randomLength);
-
-        for (int i = 0; i < randomLength; i++) {
-            // Choose random piece. Now there arew only 1 piece so it useless
+        Debug.Log("Target Length = " + targetLength);
+        finalLength = 0;
+        while (finalLength < targetLength) {
+            // Choose random piece. Now there are only 1 piece so it useless
             //int randomIndex = Random.Range(0, aislePrefabs.Length);
             //GameObject newPiece = Instantiate(aislePrefabs[randomIndex], gameObject.transform);
-            
-            GameObject newPiece = Instantiate(aislePrefabs[0], gameObject.transform);
-            newPiece.transform.position = spawnPosition;
+            int segmentIndex = Random.Range(0, aislePrefabs.Length);
+            int segmentLength = aislePrefabs[segmentIndex].GetComponent<AisleSegmentGenerator>().Length;
 
-            spawnPosition += new Vector3(0, 0, onePieceSize);
+            if (segmentLength + finalLength > targetLength)
+            {
+                break;
+            }
 
-            newPiece.GetComponent<WallDecorator>().GenerateDecorations();
+            GameObject newSegment = Instantiate(aislePrefabs[segmentIndex], gameObject.transform);
+            newSegment.transform.position = spawnPosition;
 
-            aislePieces.Add(newPiece);
+            spawnPosition += new Vector3(0, 0, segmentLength);
+
+            newSegment.GetComponent<AisleSegmentGenerator>().GenerateSegment();
+            aisleSegments.Add(newSegment);
+
+            finalLength += segmentLength;
         }
+
+        Debug.Log("Final Length = " + finalLength);
+
 
     }
 }

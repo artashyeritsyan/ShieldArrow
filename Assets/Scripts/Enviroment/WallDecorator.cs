@@ -4,31 +4,22 @@ using UnityEngine;
 
 public class WallDecorator : MonoBehaviour
 {
-    private List<GameObject> decorations = new();
-    private List<GameObject> floorTiles = new();
-
-    // In future generate the walls as well, so it would be random type of wall
-    //[SerializeField] GameObject[] wallSpawnPoints;
-
-    [Header("Walls")]
-    [SerializeField] Transform leftWallParent;
-    [SerializeField] Transform rightWallParent;
+    [Header("Wall Parameters")]
+    [SerializeField] bool canDecorateWall;
+    [SerializeField] bool canDecorateGround;
 
     [Header("Prefab objects")]
     //[SerializeField] GameObject[] torchs;
-    [SerializeField] EnviromentPrefabs wallPrefabs;
-    [SerializeField] EnviromentPrefabs groundPrefabs;
+
     [SerializeField] EnviromentPrefabs wallDecorations;
     [SerializeField] EnviromentPrefabs groundDecorations;
 
-    [SerializeField] int decorationsTypeCount = 2;
+    //[SerializeField] int decorationsTypeCount = 2;
 
     [Header("Wall Decorations Chances")]
     [SerializeField] private float nothingChance = 0.2f;
     [SerializeField] private float torchChance = 0.3f;
 
-    [Header("Ground Chances")]
-    [SerializeField] private float simpleFloor = 0.5f;
 
 
     public void GenerateDecorations()
@@ -39,34 +30,21 @@ public class WallDecorator : MonoBehaviour
 
         //    decorations.Remove(decoration);
         //}
+        if (canDecorateWall) { 
+            GenerateWallDecoration();
+        }
 
-
-        GenerateDecorationsFor(leftWallParent);
-        GenerateDecorationsFor(rightWallParent);
-        //GenerateFloor();
+        if (canDecorateGround) {
+            GenerateGroundDecoration();
+        }        
     }
 
-    void GenerateFloor()
+    void GenerateGroundDecoration()
     {
-        float chance = Random.value;
 
-        int decorationIndex;
-
-        if (chance < simpleFloor)
-        {
-            decorationIndex = 0;
-        }
-        else
-        {
-            decorationIndex = Random.Range(1, groundPrefabs.Size);
-        }
-
-        GameObject tile = Instantiate(groundPrefabs.Prefabs[decorationIndex], gameObject.transform);
-        tile.transform.localPosition = Vector3.zero;
-        floorTiles.Add(tile);
     }
 
-    public void GenerateDecorationsFor(Transform parent)
+    void GenerateWallDecoration()
     {
         float chance = Random.value;
 
@@ -84,9 +62,8 @@ public class WallDecorator : MonoBehaviour
             decorationIndex = Random.Range(1, wallDecorations.Size);
         }
 
-        GameObject newDecoration = Instantiate(wallDecorations.Prefabs[decorationIndex], parent);
+        GameObject newDecoration = Instantiate(wallDecorations.Prefabs[decorationIndex], transform);
         newDecoration.transform.localPosition = Vector3.zero;
-        decorations.Add(newDecoration);
     }
 
 }
