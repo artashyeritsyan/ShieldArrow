@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     [Header("Camera")]
     // This is the camera position
     [SerializeField] Transform screenCenter;
+    [SerializeField] float cameraSpeed = 1;
 
 
     [Header("Positions")]
@@ -55,7 +56,13 @@ public class GameManager : MonoBehaviour
         screenCenter.position = cameraStartPosition;
     }
 
-
+    private void Update()
+    {
+        if (CurrentGameState == GameStates.Playing && CurrentLevelState == LevelStates.Aisle)
+        {
+            screenCenter.position += Vector3.forward * cameraSpeed * Time.deltaTime;
+        }
+    }
     public void SetGameState(GameStates newState)
     {
         if (CurrentGameState == newState)
