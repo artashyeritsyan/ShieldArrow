@@ -8,16 +8,22 @@ public enum EDirection{
     East,
     West
 }
-
+// Actually not RoomGenerator,  more like RoomController or Constructor
+// TODO: Deside about name RoomConstructor/RoomController
 public class RoomGenerator : MonoBehaviour
 {
-
     [Header("Room Parameters")]
     [SerializeField] EDirection inDirection;
     [SerializeField] EDirection outDirection;
     [SerializeField] Vector3 startPosition;
     //[SerializeField] int outDoorsCount = 3;
     [SerializeField] float plainWallChance = 0.5f;
+
+    [SerializeField] float height;
+    [SerializeField] float width;
+
+    public float Height => height;
+    public float Width => width;
 
     [Header("Walls")]
     [SerializeField] Transform[] cornerParents;
@@ -40,10 +46,9 @@ public class RoomGenerator : MonoBehaviour
     };
 
 
-
     private void Start()
     {
-        GenerateRoom(startPosition);
+        //GenerateRoom(startPosition);
     }
 
     public void GenerateRoom(Vector3 position, EDirection inDir = EDirection.South, EDirection outDir = EDirection.North)
@@ -67,6 +72,8 @@ public class RoomGenerator : MonoBehaviour
                 GenerateSideWalls(GetWallParents(direction));
             }
         }
+
+        transform.position = startPosition;
     }
 
     void GenerateCorners()
