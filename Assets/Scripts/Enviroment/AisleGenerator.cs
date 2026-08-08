@@ -12,7 +12,6 @@ public class AisleGenerator : MonoBehaviour
     private int finalLength = 0;
 
     [SerializeField] Vector3 startPosition;
-    [SerializeField] float oneSegmentSize = 4f;
 
     void Start()
     {

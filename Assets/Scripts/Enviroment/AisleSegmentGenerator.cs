@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class AisleSegmentGenerator : MonoBehaviour
 {
-    private List<GameObject> decorations = new();
-
     private List<GameObject> floorTiles = new();
 
     // In future generate the walls as well, so it would be random type of wall
@@ -14,18 +12,17 @@ public class AisleSegmentGenerator : MonoBehaviour
     [SerializeField] int length = 4;
     public int Length => length;
 
-
     [Header("Walls")]
     [SerializeField] Transform leftWallParent;
     [SerializeField] Transform rightWallParent;
 
     [Header("Prefab objects")]
-    [SerializeField] EnviromentPrefabs wallPrefabs;
+    [SerializeField] WallPrefabs wallPrefabs;
     [SerializeField] EnviromentPrefabs groundPrefabs;
 
 
     [Header("Wall Chances")]
-    [SerializeField] private float simpleWallChance = 0.2f;
+    [SerializeField] private float plainWallChance = 0.5f;
 
     [Header("Ground Chances")]
     [SerializeField] private float simpleFloorChance = 0.5f;
@@ -50,13 +47,16 @@ public class AisleSegmentGenerator : MonoBehaviour
     void GenerateWallFor(Transform parent)
     {
         float chance = Random.value;
+        GameObject wallPref;
 
-        int wallIndex = Random.Range(1, wallPrefabs.Size);
-        if (chance < simpleWallChance) {
-            wallIndex = 0;
+        if (chance < plainWallChance) {
+            wallPref = wallPrefabs.GetRandomPlainWall();
+        }
+        else {
+            wallPref = wallPrefabs.GetRandomWindowedWall();
         }
 
-        GameObject wall = Instantiate(wallPrefabs.Prefabs[wallIndex], parent.transform);
+        GameObject wall = Instantiate(wallPref, parent.transform);
         wall.transform.localPosition = Vector3.zero;
         wall.GetComponent<WallDecorator>().GenerateDecorations();
     }

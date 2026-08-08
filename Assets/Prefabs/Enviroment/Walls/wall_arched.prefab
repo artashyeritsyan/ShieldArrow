@@ -113,9 +113,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed9b4eae796f18c448119951aa99fa44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WallDecorator
-  canDecorateWall: 1
+  canDecorateWall: 0
   canDecorateGround: 1
   wallDecorations: {fileID: 11400000, guid: d55fd272e6607b34fb8a693007478e1b, type: 2}
   groundDecorations: {fileID: 11400000, guid: 025ee3fa91c22804e966f7f70ceda911, type: 2}
-  nothingChance: 0.2
+  nothingChance: 0.5
   torchChance: 0.3

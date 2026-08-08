@@ -344,7 +344,7 @@ Transform:
   m_GameObject: {fileID: 2530997915587019897}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -48, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -372,9 +372,9 @@ MonoBehaviour:
   length: 4
   leftWallParent: {fileID: 1731759590190276596}
   rightWallParent: {fileID: 5277386281365989645}
-  wallPrefabs: {fileID: 11400000, guid: d34af5af604e01045a151ff3baf15c40, type: 2}
+  wallPrefabs: {fileID: 11400000, guid: 70636593dda68a543a272096c9732829, type: 2}
   groundPrefabs: {fileID: 11400000, guid: 04a8871e1df2eae4489b321ef56859b7, type: 2}
-  simpleWallChance: 0.2
+  plainWallChance: 0.8
   simpleFloorChance: 0.5
 --- !u!1 &2815301910626049248
 GameObject:
