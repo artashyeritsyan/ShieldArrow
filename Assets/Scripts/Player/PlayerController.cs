@@ -827,9 +827,9 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        if (other.CompareTag("NextLevel"))
-        {
-            GameManager.Instance.NextLevel();
-        }
+        //if (other.CompareTag("NextLevel"))
+        //{
+        //    GameManager.Instance.NextLevel();
+        //}
     }
 }

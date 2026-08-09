@@ -110,7 +110,7 @@ public class RoomGenerator : MonoBehaviour
         {
             if (i == inWalls.Length / 2)
             {
-                GenerateDoorwayFor(inWalls[i]);
+                GenerateDoorwayFor(inWalls[i], EDoorType.EnterTheRoom);
                 continue;
             }
 
@@ -137,7 +137,7 @@ public class RoomGenerator : MonoBehaviour
 
             if (isDoor)
             {
-                GenerateDoorwayFor(outWalls[i]);
+                GenerateDoorwayFor(outWalls[i], EDoorType.LeaveTheRoom);
             }
             else
             {
@@ -154,10 +154,12 @@ public class RoomGenerator : MonoBehaviour
         }
     }
 
-    void GenerateDoorwayFor(Transform parent)
+    void GenerateDoorwayFor(Transform parent, EDoorType doorType = EDoorType.EnterTheRoom)
     {
-        GameObject wall = Instantiate(wallPrefabs.GetRandomDoorwayWall(), parent.transform);
-        wall.transform.localPosition = Vector3.zero;
+        GameObject door = Instantiate(wallPrefabs.GetRandomDoorwayWall(), parent.transform);
+        door.transform.localPosition = Vector3.zero;
+
+        door.GetComponentInChildren<DoorController>().SetDoorType(doorType);
         //wall.GetComponent<WallDecorator>().GenerateDecorations();
     }
 

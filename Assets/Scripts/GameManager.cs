@@ -23,8 +23,13 @@ public class GameManager : MonoBehaviour
     public GameStates CurrentGameState { get; private set; }
     public event Action<GameStates> OnGameStateChanged;
 
+    [Header("Levels parameters")]
     public LevelStates CurrentLevelState { get; private set; }
     public event Action<LevelStates> OnLevelStateChanged;
+
+    [SerializeField] LevelGenerator LevelGenerator;
+    [SerializeField] int currentRoomIndex = 0;
+
 
     [Header("Players Manager")]
     [SerializeField] PlayerManager playerManager;
@@ -38,8 +43,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Positions")]
     [SerializeField] Vector3 cameraStartPosition;
-    [SerializeField] float roomTransitionDelta = 16;
-    [SerializeField] float aisleTransitionDelta = 20;
+    //[SerializeField] float roomTransitionDelta = 16;
+    //[SerializeField] float aisleTransitionDelta = 20;
 
     private void Awake() 
     {
@@ -52,8 +57,14 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        CurrentGameState = GameStates.Menu;
         CurrentLevelState = LevelStates.Lobby;
         screenCenter.position = cameraStartPosition;
+    }
+
+    private void Start()
+    {
+        LevelGenerator.GenerateLevel();
     }
 
     private void Update()
@@ -77,39 +88,54 @@ public class GameManager : MonoBehaviour
         if (CurrentLevelState == newState)
             return;
 
-        CurrentLevelState = newState;
-        OnLevelStateChanged?.Invoke(CurrentLevelState);
-    }
-
-    public void NextLevel()
-    {
         if (CurrentLevelState == LevelStates.Lobby)
         {
-            CurrentLevelState = LevelStates.Aisle;
-            CurrentGameState = GameStates.Playing;
-
-            TransitionToNextLevel(roomTransitionDelta);
+            currentRoomIndex = 1;
         }
-        else if (CurrentLevelState == LevelStates.Room)
+        else
         {
-            CurrentLevelState = LevelStates.Aisle;
-
-            TransitionToNextLevel(roomTransitionDelta);
-        }
-        else if (CurrentLevelState == LevelStates.Aisle)
-        {
-            CurrentLevelState = LevelStates.Room;
-
-            TransitionToNextLevel(aisleTransitionDelta);
+            currentRoomIndex += 1;
         }
 
-        OnGameStateChanged?.Invoke(CurrentGameState);
+        if (newState == LevelStates.Lobby)
+            currentRoomIndex = 0;
+
+        CurrentLevelState = newState;
+
+        TransitionToNextLevel();
         OnLevelStateChanged?.Invoke(CurrentLevelState);
     }
 
-    private void TransitionToNextLevel(float transitionDelta)
+    //public void NextLevel()
+    //{
+        
+    //    if (CurrentLevelState == LevelStates.Lobby)
+    //    {
+    //        CurrentLevelState = LevelStates.Aisle;
+    //        CurrentGameState = GameStates.Playing;
+
+    //        TransitionToNextLevel(roomTransitionDelta);
+    //    }
+    //    else if (CurrentLevelState == LevelStates.Room)
+    //    {
+    //        CurrentLevelState = LevelStates.Aisle;
+
+    //        TransitionToNextLevel(roomTransitionDelta);
+    //    }
+    //    else if (CurrentLevelState == LevelStates.Aisle)
+    //    {
+    //        CurrentLevelState = LevelStates.Room;
+
+    //        TransitionToNextLevel(aisleTransitionDelta);
+    //    }
+
+    //    OnGameStateChanged?.Invoke(CurrentGameState);
+    //    OnLevelStateChanged?.Invoke(CurrentLevelState);
+    //}
+
+    private void TransitionToNextLevel()
     {
-        screenCenter.position += new Vector3(0, 0, transitionDelta);
+        screenCenter.position = LevelGenerator.GetScreenCenterOf(currentRoomIndex - 1);
 
         for (int i = 0; i < playerManager.GetPlayers().Count; i++) 
         {
