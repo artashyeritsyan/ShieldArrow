@@ -17,7 +17,7 @@ public enum Team
     Enemy
 }
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     [Header("Stats")]
     [SerializeField] protected PlayerClass playerClass;
@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float aimSpeed = 3f;
     public float MaxAimAngle => maxAngle;
 
+    public Team Team => Team.Player;
+
     private Camera mainCamera;
     private AimsManager aimsManager;
     //private float currentAimAngle;
@@ -56,21 +58,18 @@ public class PlayerController : MonoBehaviour
 
     [Header("Combat Equipment")]
     [SerializeField] private MonoBehaviour combatEquipmentBehaviour;
+    protected ICombatEquipment combatEquipment;
 
     [Header("Attack Speed")]
     [SerializeField] private float attackSpeedMultiplier = 1f;
 
-    protected ICombatEquipment combatEquipment;
 
     [Header("Animation")]
     [SerializeField] protected Animator animator;
-
     [SerializeField] private float animTransitionTime = 5f;
-
-    private float blendValue;
-
     [SerializeField] private float animLayerTransitionTime = 5f;
 
+    private float blendValue;
     protected float layerTargetWeight;
     protected float layerCurrentWeight;
 
@@ -180,6 +179,9 @@ public class PlayerController : MonoBehaviour
 
     private void InitializeValues()
     {
+        stats = baseProfile.GetStats();
+
+
         aimsManager = FindFirstObjectByType<AimsManager>();
 
         if (aimsManager != null && aimTarget != null)
@@ -232,7 +234,7 @@ public class PlayerController : MonoBehaviour
 
         combatEquipment.Initialize(
             gameObject,
-            Team.Player,
+            Team,
             stats.core);
 
         /*
@@ -499,19 +501,74 @@ public class PlayerController : MonoBehaviour
         RotateCharacter(clampedDirection);
     }
 
-    //private void HandleRotation()
-    //{
-    //    if (moveDirection.sqrMagnitude <=
-    //        0.0001f)
-    //    {
-    //        return;
-    //    }
+    public void TakeDamage(
+            DamageData damageData,
+            CoreStats attackerStats)
+    {
+        if (isDead || stats == null)
+            return;
 
-    //    currentAimAngle = 0f;
+        DamageSystem.ProcessDamage(
+            damageData,
+            attackerStats,
+            stats.core);
 
-    //    RotateCharacter(
-    //        moveDirection.normalized);
-    //}
+        OnDamageReceived();
+
+        if (stats.core.currentHP <= 0f)
+        {
+            Die();
+        }
+    }
+
+    private void OnDamageReceived()
+    {
+        //TODO: remove this log
+        Debug.Log(
+            $"{name} received damage. " +
+            $"Remaining HP: " +
+            $"{stats.core.currentHP}/" +
+            $"{stats.core.maxHP}");
+
+        // Fix sound 
+        //PlayRandomSound(hitSoundEffects);
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Hit");
+        }
+    }
+
+    private void Die()
+    {
+        if (isDead)
+            return;
+
+        isDead = true;
+
+        UnsubscribeFromEquipmentEvents();
+
+        if (combatEquipmentBehaviour != null)
+        {
+            combatEquipmentBehaviour.enabled =
+                false;
+        }
+
+        if (animator != null)
+        {
+            animator.SetBool(
+                "Reloading",
+                false);
+
+            animator.SetBool(
+                "Dead",
+                true);
+        }
+
+        //DisableEnemyColliders();  // TODO: Implemen this part
+
+        Destroy(gameObject, 2f);
+    }
 
     private void RotateCharacter(Vector3 direction)
     {

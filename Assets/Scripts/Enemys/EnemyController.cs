@@ -7,9 +7,7 @@ public enum EnemyCombatType
     Shieldman
 }
 
-public class EnemyController :
-    MonoBehaviour,
-    IDamageable
+public class EnemyController : MonoBehaviour, IDamageable
 {
     [Header("Enemy Class")]
     [SerializeField] private EnemyCombatType combatType = EnemyCombatType.Archer;
@@ -420,14 +418,14 @@ public class EnemyController :
 
     private void OnDamageReceived()
     {
+        // TODO: Remove this log
         Debug.Log(
             $"{name} received damage. " +
             $"Remaining HP: " +
             $"{coreStats.currentHP}/" +
             $"{coreStats.maxHP}");
 
-        PlayRandomSound(
-            hitSoundEffects);
+        PlayRandomSound(hitSoundEffects);
 
         if (animator != null)
         {

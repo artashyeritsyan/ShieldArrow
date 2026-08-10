@@ -15,9 +15,9 @@ MonoBehaviour:
   stats:
     core:
       speed: 2
-      maxHP: 0
-      currentHP: 0
-      damage: 0
+      maxHP: 10
+      currentHP: 10
+      damage: 2
       attackSpeed: 2
       lifeSteal: 0
       poisonDamage: 0

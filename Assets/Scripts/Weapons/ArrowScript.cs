@@ -49,20 +49,20 @@ public class ArrowScript : MonoBehaviour
         lifetimeCoroutine = StartCoroutine(DestroyArrow()); // CHANGED
     }
 
-    public void Initialize( // ADDED
-        GameObject projectileOwner, // ADDED
-        Team projectileOwnerTeam, // ADDED
-        DamageData projectileDamage, // ADDED
-        CoreStats sourceStats) // ADDED
+    public void Initialize( 
+        GameObject projectileOwner,
+        Team projectileOwnerTeam,
+        DamageData projectileDamage,
+        CoreStats sourceStats) 
     {
-        owner = projectileOwner; // ADDED
-        ownerTeam = projectileOwnerTeam; // ADDED
-        damageData = projectileDamage; // ADDED
-        attackerStats = sourceStats; // ADDED
-        isInitialized = true; // ADDED
+        owner = projectileOwner;
+        ownerTeam = projectileOwnerTeam;
+        damageData = projectileDamage;
+        attackerStats = sourceStats;
+        isInitialized = true;
 
-        direction = transform.forward.normalized; // ADDED
-        ricochetsLeft = maxRicochetCount; // ADDED
+        direction = transform.forward.normalized; 
+        ricochetsLeft = maxRicochetCount;
     }
 
     private void Update()
