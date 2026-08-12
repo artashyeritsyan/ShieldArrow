@@ -137,20 +137,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         if (mainCamera == null)
         {
-            Debug.LogError(
-                $"{name}: Main Camera was not found.");
+            Debug.LogError($"{name}: Main Camera was not found.");
         }
 
         if (baseProfile == null)
         {
-            Debug.LogError(
-                $"{name}: PlayerStatsProfile is not assigned.");
+            Debug.LogError($"{name}: PlayerStatsProfile is not assigned.");
 
             return;
         }
 
-        stats =
-            baseProfile.GetStats().Clone();
+        stats = baseProfile.GetStats().Clone();
     }
 
     private void GetRequiredComponents()
@@ -160,20 +157,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         if (animator == null)
         {
-            animator =
-                GetComponent<Animator>();
+            animator = GetComponent<Animator>();
         }
 
         if (rb == null)
         {
-            Debug.LogError(
-                $"{name}: Rigidbody component is missing.");
+            Debug.LogError($"{name}: Rigidbody component is missing.");
         }
 
         if (input == null)
         {
-            Debug.LogError(
-                $"{name}: InputHandler component is missing.");
+            Debug.LogError($"{name}: InputHandler component is missing.");
         }
     }
 
@@ -181,13 +175,15 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         stats = baseProfile.GetStats();
 
-
         aimsManager = FindFirstObjectByType<AimsManager>();
 
         if (aimsManager != null && aimTarget != null)
         {
             aimsManager.AddPlayerAim(aimTarget, playerColor);
         }
+
+        // just for making sure
+        stats.core.currentHP = stats.core.maxHP;
 
         canMove = true;
         canAttack = false;
@@ -204,15 +200,12 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (combatEquipmentBehaviour == null)
         {
-            Debug.LogWarning(
-                $"{name}: No combat equipment is assigned.");
+            Debug.LogWarning($"{name}: No combat equipment is assigned.");
 
             return;
         }
 
-        combatEquipment =
-            combatEquipmentBehaviour as
-                ICombatEquipment;
+        combatEquipment = combatEquipmentBehaviour as ICombatEquipment;
 
         if (combatEquipment == null)
         {
@@ -226,24 +219,18 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void InitializeCombatEquipment()
     {
-        if (combatEquipment == null ||
-            stats == null)
+        if (combatEquipment == null || stats == null)
         {
             return;
         }
 
-        combatEquipment.Initialize(
-            gameObject,
-            Team,
-            stats.core);
+        combatEquipment.Initialize(gameObject, Team, stats.core);
 
         /*
          * Apply the player's current multiplier
          * to any equipment type.
          */
-        combatEquipment
-            .SetActionSpeedMultiplier(
-                attackSpeedMultiplier);
+        combatEquipment.SetActionSpeedMultiplier(attackSpeedMultiplier);
     }
 
     private void SubscribeToEquipmentEvents()

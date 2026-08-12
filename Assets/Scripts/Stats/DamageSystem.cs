@@ -6,13 +6,14 @@ public static class DamageSystem
     {
         float finalDamage = dmg.baseDamage;
 
-        finalDamage *= attacker.damage;
+        // TODO: Understand why this needed ?!
+        //finalDamage *= attacker.damage;
 
         // 2. Crit
-        if (dmg.canCrit && Random.value < dmg.critChance)
-        {
-            finalDamage *= dmg.critMultiplier;
-        }
+        //if (dmg.canCrit && Random.value < dmg.critChance)
+        //{
+        //    finalDamage *= dmg.critMultiplier;
+        //}
 
         // 3. Armor (placeholder)
         float armor = 0f;
@@ -22,8 +23,10 @@ public static class DamageSystem
         target.TakeDamage(finalDamage);
 
         // 5. Lifesteal
-        float heal = finalDamage * attacker.lifeSteal;
-        attacker.Heal(heal);
+        //float heal = finalDamage * attacker.lifeSteal;
+        //attacker.Heal(heal);
+
+        Debug.Log("FInal Damage = " + finalDamage);
 
         return finalDamage;
     }

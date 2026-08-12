@@ -110,9 +110,8 @@ public class ArrowScript : MonoBehaviour
 
         if (target != null && target.Team != ownerTeam)
         {
-            target.TakeDamage(
-                damageData,
-                attackerStats);
+            Debug.Log("HITTTTT");
+            target.TakeDamage(damageData, attackerStats);
 
             DestroyProjectile();
             return true;
