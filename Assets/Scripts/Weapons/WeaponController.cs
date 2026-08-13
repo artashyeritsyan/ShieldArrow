@@ -156,8 +156,7 @@ public abstract class WeaponController :
 
         if (!isInitialized)
         {
-            Debug.LogError(
-                $"{name}: Weapon is not initialized.");
+            Debug.LogError($"{name}: Weapon is not initialized.");
 
             return false;
         }

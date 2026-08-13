@@ -57,11 +57,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   combatType: 2
+  enemyColor: {r: 1, g: 0, b: 0, a: 1}
   rotationSpeed: 4
   coreStats:
     speed: 0
-    maxHP: 0
-    currentHP: 0
+    maxHP: 8
+    currentHP: 8
     damage: 0
     attackSpeed: 0
     lifeSteal: 0

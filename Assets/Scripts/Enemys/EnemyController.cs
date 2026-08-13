@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public enum EnemyCombatType
@@ -12,6 +13,9 @@ public class EnemyController : MonoBehaviour, IDamageable
     [Header("Enemy Class")]
     [SerializeField] private EnemyCombatType combatType = EnemyCombatType.Archer;
     [SerializeField] private Color enemyColor = Color.red;
+    private Renderer[] renderers;
+    private Color[] originalColors;
+    [SerializeField] private float flashDuration = 0.1f;
 
     [Header("Movement")]
     [SerializeField] private float rotationSpeed = 5f;
@@ -43,6 +47,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     [SerializeField] private AudioClip[] reloadSoundEffects;
     [SerializeField] private AudioClip[] hitSoundEffects;
 
+
     [Header("State")]
     [SerializeField] private bool isDead;
 
@@ -56,10 +61,20 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         ResolveCombatEquipment();
         ConfigureClassAnimation();
+
+        renderers = GetComponentsInChildren<Renderer>();
+
+        originalColors = new Color[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            originalColors[i] = renderers[i].material.color;
+        }
     }
 
     private void Start()
     {
+
         InitializeStats();
         InitializeCombatEquipment();
         SubscribeToEquipmentEvents();
@@ -278,14 +293,12 @@ public class EnemyController : MonoBehaviour, IDamageable
             float sqrDistance =
                 difference.sqrMagnitude;
 
-            if (sqrDistance >=
-                minimumSqrDistance)
+            if (sqrDistance >= minimumSqrDistance)
             {
                 continue;
             }
 
-            minimumSqrDistance =
-                sqrDistance;
+            minimumSqrDistance = sqrDistance;
 
             closestPlayer = player;
         }
@@ -293,17 +306,13 @@ public class EnemyController : MonoBehaviour, IDamageable
         return closestPlayer;
     }
 
-    private void RotateTowards(
-        Vector3 targetPosition)
+    private void RotateTowards(Vector3 targetPosition)
     {
-        Vector3 direction =
-            targetPosition -
-            transform.position;
+        Vector3 direction = targetPosition - transform.position;
 
         direction.y = 0f;
 
-        if (direction.sqrMagnitude <=
-            0.0001f)
+        if (direction.sqrMagnitude <= 0.0001f)
         {
             return;
         }
@@ -330,10 +339,8 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (animator == null)
             return;
 
-        animator.SetFloat(
-            "AttackSpeed",
-            combatEquipment
-                .EffectiveActionSpeed);
+        //animator.SetFloat("AttackSpeed", combatEquipment.EffectiveActionSpeed);
+        animator.SetFloat("AttackSpeed", 1);
 
         animator.SetTrigger("Attack");
     }
@@ -347,8 +354,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         animator.SetBool("Reloading", true);
         animator.SetTrigger("Reload");
 
-        PlayRandomSound(
-            reloadSoundEffects);
+        PlayRandomSound(reloadSoundEffects);
     }
 
     private void HandleReloadFinished()
@@ -356,24 +362,17 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (animator == null)
             return;
 
-        animator.SetBool(
-            "Reloading",
-            false);
+        animator.SetBool("Reloading", false);
     }
 
-    public void SetEquipmentSpeedMultiplier(
-        float multiplier)
+    public void SetEquipmentSpeedMultiplier(float multiplier)
     {
-        equipmentSpeedMultiplier =
-            Mathf.Max(multiplier, 0.01f);
+        equipmentSpeedMultiplier = Mathf.Max(multiplier, 0.01f);
 
-        combatEquipment?
-            .SetActionSpeedMultiplier(
-                equipmentSpeedMultiplier);
+        combatEquipment?.SetActionSpeedMultiplier(equipmentSpeedMultiplier);
     }
 
-    public void UpgradeEquipmentSpeed(
-        float multiplierIncrease)
+    public void UpgradeEquipmentSpeed(float multiplierIncrease)
     {
         equipmentSpeedMultiplier =
             Mathf.Max(
@@ -381,9 +380,27 @@ public class EnemyController : MonoBehaviour, IDamageable
                 multiplierIncrease,
                 0.01f);
 
-        combatEquipment?
-            .SetActionSpeedMultiplier(
-                equipmentSpeedMultiplier);
+        combatEquipment?.SetActionSpeedMultiplier(equipmentSpeedMultiplier);
+    }
+
+    public void DamageFlash()
+    {
+        StartCoroutine(FlashCoroutine());
+    }
+
+    private IEnumerator FlashCoroutine()
+    {
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].material.color = Color.white;
+        }
+
+        yield return new WaitForSeconds(flashDuration);
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].material.color = originalColors[i];
+        }
     }
 
     public float GetEquipmentSpeedMultiplier()
@@ -396,19 +413,16 @@ public class EnemyController : MonoBehaviour, IDamageable
         return enemyColor;
     }
 
-    public void TakeDamage(
-        DamageData damageData,
-        CoreStats attackerStats)
+    public void TakeDamage(DamageData damageData, CoreStats attackerStats)
     {
         if (isDead || coreStats == null)
             return;
 
-        DamageSystem.ProcessDamage(
-            damageData,
-            attackerStats,
-            coreStats);
+        DamageSystem.ProcessDamage(damageData, attackerStats, coreStats);
 
         OnDamageReceived();
+
+        DamageFlash();
 
         if (coreStats.currentHP <= 0f)
         {

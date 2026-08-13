@@ -564,7 +564,7 @@ MonoBehaviour:
   aimDistance: 5
   aimSpeed: 3
   combatEquipmentBehaviour: {fileID: 5601839362905783117}
-  attackSpeedMultiplier: 1
+  attackSpeedMultiplier: 2
   animator: {fileID: 4812885400586429195}
   animTransitionTime: 5
   animLayerTransitionTime: 5

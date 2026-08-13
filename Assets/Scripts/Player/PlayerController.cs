@@ -323,12 +323,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (animator != null)
         {
 
-            animator.SetFloat(
-                "AttackSpeed",
-                combatEquipment != null
-                    ? combatEquipment
-                        .EffectiveActionSpeed
-                    : 1f);
+            animator.SetFloat("AttackSpeed", combatEquipment != null ? combatEquipment.EffectiveActionSpeed: 1f);
 
             animator.SetTrigger("Attack");
         }
@@ -352,9 +347,7 @@ public class PlayerController : MonoBehaviour, IDamageable
                         .ActionSpeedMultiplier
                     : 1f);
 
-            animator.SetBool(
-                "Reloading",
-                true);
+            animator.SetBool("Reloading", true);
 
             animator.SetTrigger("Reload");
         }
@@ -366,9 +359,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (animator != null)
         {
-            animator.SetBool(
-                "Reloading",
-                false);
+            animator.SetBool("Reloading", false);
         }
 
         OnEquipmentReloadFinished();
@@ -379,8 +370,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (animator == null)
             return;
 
-        float movementAmount =
-            moveDirection.magnitude;
+        float movementAmount = moveDirection.magnitude;
 
         blendValue =
             Mathf.Lerp(
@@ -398,18 +388,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         if (animator.layerCount > 1)
         {
-            animator.SetLayerWeight(
-                1,
-                layerCurrentWeight);
+            animator.SetLayerWeight(1, layerCurrentWeight);
         }
 
-        animator.SetFloat(
-            "Blend",
-            blendValue);
+        animator.SetFloat("Blend", blendValue);
 
-        animator.SetBool(
-            "Dead",
-            isDead);
+        animator.SetBool("Dead", isDead);
 
         AdditiveAnimation();
     }
@@ -423,30 +407,24 @@ public class PlayerController : MonoBehaviour, IDamageable
             return;
         }
 
-        Ray pointerRay =
-            mainCamera.ScreenPointToRay(input.look);
+        Ray pointerRay = mainCamera.ScreenPointToRay(input.look);
 
         Plane aimPlane =
             new Plane(
                 Vector3.up,
                 transform.position);
 
-        if (!aimPlane.Raycast(
-                pointerRay,
-                out float distance))
+        if (!aimPlane.Raycast(pointerRay, out float distance))
         {
             return;
         }
 
-        Vector3 aimPoint =
-            pointerRay.GetPoint(distance);
+        Vector3 aimPoint = pointerRay.GetPoint(distance);
 
         // Aim icon always follows the pointer freely.
-        aimTarget.position =
-            aimPoint + Vector3.up * 0.05f;
+        aimTarget.position = aimPoint + Vector3.up * 0.05f;
 
-        Vector3 desiredDirection =
-            aimPoint - transform.position;
+        Vector3 desiredDirection = aimPoint - transform.position;
 
         desiredDirection.y = 0f;
 
@@ -459,8 +437,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             // Free 360-degree rotation.
             RotateCharacter(desiredDirection);
-
-
             //aimCenterDirection = transform.forward;
             //aimCenterDirection.y = 0f;
             //aimCenterDirection.Normalize();
