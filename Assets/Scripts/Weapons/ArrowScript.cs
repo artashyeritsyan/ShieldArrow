@@ -123,6 +123,13 @@ public class ArrowScript : MonoBehaviour
             return true;
         }
 
+        // somnitelno no okay
+        //if (hit.collider.CompareTag("UpperBoard"))
+        //{
+        //    DestroyProjectile();
+        //    return true;
+        //}
+
         return false;
     }
 

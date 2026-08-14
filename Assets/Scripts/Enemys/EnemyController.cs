@@ -21,9 +21,11 @@ public class EnemyController : MonoBehaviour, IDamageable
     [SerializeField] private float rotationSpeed = 5f;
 
     [Header("Stats")]
-    [SerializeField] private CoreStats coreStats;
+    [SerializeField] private EnemyStats baseStats;
+    private CoreStats stats;
 
-    public CoreStats CoreStats => coreStats;
+
+    public CoreStats CoreStats => stats;
     public Team Team => Team.Enemy;
 
     [Header("Combat Equipment")]
@@ -78,6 +80,8 @@ public class EnemyController : MonoBehaviour, IDamageable
         InitializeStats();
         InitializeCombatEquipment();
         SubscribeToEquipmentEvents();
+
+        SetInactive(true);
     }
 
     private void Update()
@@ -96,17 +100,13 @@ public class EnemyController : MonoBehaviour, IDamageable
             return;
         }
 
-        Vector3 targetPosition =
-            currentTarget.transform.position;
+        Vector3 targetPosition = currentTarget.transform.position;
 
         RotateTowards(targetPosition);
 
-        float targetSqrDistance =
-            (targetPosition - transform.position)
-            .sqrMagnitude;
+        float targetSqrDistance = (targetPosition - transform.position).sqrMagnitude;
 
-        if (IsTargetWithinAttackRange(
-                targetSqrDistance))
+        if (IsTargetWithinAttackRange(targetSqrDistance))
         {
             HandleAttack();
         }
@@ -118,15 +118,12 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         if (combatEquipmentBehaviour == null)
         {
-            Debug.LogError(
-                $"{name}: Combat equipment is not assigned.");
+            Debug.LogError($"{name}: Combat equipment is not assigned.");
 
             return;
         }
 
-        combatEquipment =
-            combatEquipmentBehaviour as
-                ICombatEquipment;
+        combatEquipment = combatEquipmentBehaviour as ICombatEquipment;
 
         if (combatEquipment == null)
         {
@@ -144,16 +141,11 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     private void ValidateEquipmentForClass()
     {
-        bool isValid =
-            combatType switch
+        bool isValid = combatType switch
             {
-                EnemyCombatType.Archer =>
-                    combatEquipmentBehaviour
-                        is BowWeapon,
+                EnemyCombatType.Archer => combatEquipmentBehaviour is BowWeapon,
 
-                EnemyCombatType.Crossbower =>
-                    combatEquipmentBehaviour
-                        is CrossbowWeapon,
+                EnemyCombatType.Crossbower => combatEquipmentBehaviour is CrossbowWeapon,
 
                 EnemyCombatType.Shieldman =>
                     combatEquipmentBehaviour
@@ -181,34 +173,27 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     private void InitializeStats()
     {
-        if (coreStats == null)
+        if (baseStats.GetStats() == null)
         {
-            Debug.LogError(
-                $"{name}: CoreStats is not assigned.");
+            Debug.LogError($"{name}: CoreStats is not assigned.");
 
             return;
         }
-
-        coreStats.currentHP =
-            coreStats.maxHP;
+        stats = baseStats.GetStats();
+        stats.currentHP = stats.maxHP;
+        Debug.Log(stats.currentHP);
     }
 
     private void InitializeCombatEquipment()
     {
-        if (combatEquipment == null ||
-            coreStats == null)
+        if (combatEquipment == null || stats == null)
         {
             return;
         }
 
-        combatEquipment.Initialize(
-            gameObject,
-            Team.Enemy,
-            coreStats);
+        combatEquipment.Initialize(gameObject, Team.Enemy, stats);
 
-        combatEquipment
-            .SetActionSpeedMultiplier(
-                equipmentSpeedMultiplier);
+        combatEquipment.SetActionSpeedMultiplier(equipmentSpeedMultiplier);
     }
 
     private void SubscribeToEquipmentEvents()
@@ -216,14 +201,11 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (combatEquipment == null)
             return;
 
-        combatEquipment.OnAttack +=
-            HandleAttackEvent;
+        combatEquipment.OnAttack += HandleAttackEvent;
 
-        combatEquipment.OnReloadStarted +=
-            HandleReloadStarted;
+        combatEquipment.OnReloadStarted += HandleReloadStarted;
 
-        combatEquipment.OnReloadFinished +=
-            HandleReloadFinished;
+        combatEquipment.OnReloadFinished += HandleReloadFinished;
     }
 
     private void UnsubscribeFromEquipmentEvents()
@@ -231,36 +213,26 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (combatEquipment == null)
             return;
 
-        combatEquipment.OnAttack -=
-            HandleAttackEvent;
+        combatEquipment.OnAttack -= HandleAttackEvent;
 
-        combatEquipment.OnReloadStarted -=
-            HandleReloadStarted;
+        combatEquipment.OnReloadStarted -= HandleReloadStarted;
 
-        combatEquipment.OnReloadFinished -=
-            HandleReloadFinished;
+        combatEquipment.OnReloadFinished -= HandleReloadFinished;
     }
 
     private bool CanAct()
     {
-        return
-            !isDead &&
-            !isInactive &&
-            !isPaused &&
-            combatEquipment != null;
+        return !isDead && !isInactive && !isPaused && combatEquipment != null;
     }
 
-    private bool IsTargetWithinAttackRange(
-        float targetSqrDistance)
+    private bool IsTargetWithinAttackRange(float targetSqrDistance)
     {
         if (combatEquipment == null)
             return false;
 
-        float attackRange =
-            combatEquipment.EffectiveRange;
+        float attackRange = combatEquipment.EffectiveRange;
 
-        return targetSqrDistance <=
-               attackRange * attackRange;
+        return targetSqrDistance <= attackRange * attackRange;
     }
 
     private void HandleAttack()
@@ -273,11 +245,9 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (PlayerManager.Instance == null)
             return null;
 
-        float minimumSqrDistance =
-            float.MaxValue;
+        float minimumSqrDistance = float.MaxValue;
 
-        PlayerController closestPlayer =
-            null;
+        PlayerController closestPlayer = null;
 
         foreach (
             PlayerController player in
@@ -286,12 +256,9 @@ public class EnemyController : MonoBehaviour, IDamageable
             if (player == null)
                 continue;
 
-            Vector3 difference =
-                player.transform.position -
-                transform.position;
+            Vector3 difference = player.transform.position - transform.position;
 
-            float sqrDistance =
-                difference.sqrMagnitude;
+            float sqrDistance = difference.sqrMagnitude;
 
             if (sqrDistance >= minimumSqrDistance)
             {
@@ -415,16 +382,16 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     public void TakeDamage(DamageData damageData, CoreStats attackerStats)
     {
-        if (isDead || coreStats == null)
+        if (isDead || stats == null)
             return;
 
-        DamageSystem.ProcessDamage(damageData, attackerStats, coreStats);
+        DamageSystem.ProcessDamage(damageData, attackerStats, stats);
 
         OnDamageReceived();
 
         DamageFlash();
 
-        if (coreStats.currentHP <= 0f)
+        if (stats.currentHP <= 0f)
         {
             Die();
         }
@@ -436,8 +403,8 @@ public class EnemyController : MonoBehaviour, IDamageable
         Debug.Log(
             $"{name} received damage. " +
             $"Remaining HP: " +
-            $"{coreStats.currentHP}/" +
-            $"{coreStats.maxHP}");
+            $"{stats.currentHP}/" +
+            $"{stats.maxHP}");
 
         PlayRandomSound(hitSoundEffects);
 
@@ -498,9 +465,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         animator.SetFloat("Blend", 0f);
         animator.SetBool("Dead", isDead);
-        animator.SetBool(
-            "Inactive",
-            isInactive);
+        animator.SetBool("Inactive", isInactive);
     }
 
     private void PlayAttackSound()
@@ -545,9 +510,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         if (animator != null)
         {
-            animator.SetBool(
-                "Inactive",
-                isInactive);
+            animator.SetBool("Inactive", isInactive);
         }
     }
 
@@ -560,4 +523,17 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         UnsubscribeFromEquipmentEvents();
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Enter" +  other.name);
+        if (other.CompareTag("UpperBorder"))
+        {
+            SetInactive(false);
+
+            Debug.Log("Enemy" + gameObject.name + "Activates");
+        }
+    }
+
+
 }

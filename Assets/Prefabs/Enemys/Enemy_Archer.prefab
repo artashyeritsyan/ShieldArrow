@@ -60,17 +60,7 @@ MonoBehaviour:
   enemyColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 1
   rotationSpeed: 4
-  coreStats:
-    speed: 0
-    maxHP: 6
-    currentHP: 6
-    damage: 2
-    attackSpeed: 0
-    lifeSteal: 0
-    poisonDamage: 0
-    fireDamage: 0
-    iceDamage: 0
-    lightningDamage: 0
+  baseStats: {fileID: 11400000, guid: 74d5fc7640bbefa4c9fe89d0a5b311a7, type: 2}
   combatEquipmentBehaviour: {fileID: 5620006895824191268}
   equipmentSpeedMultiplier: 1
   animator: {fileID: 1067172571039549162}

@@ -10,6 +10,7 @@ TagManager:
   - Enemy
   - PlayerChoosing
   - NextLevel
+  - UpperBorder
   layers:
   - Default
   - TransparentFX

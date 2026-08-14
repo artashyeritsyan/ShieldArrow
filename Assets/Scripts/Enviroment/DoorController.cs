@@ -59,6 +59,20 @@ public class DoorController : MonoBehaviour
 
             Debug.Log("Player enter the door collider" + doorType);
         }
+
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("UpperBorder"))
+        {
+            if (GameManager.Instance.CurrentGameState == GameStates.Playing &&
+                GameManager.Instance.CurrentLevelState == LevelStates.Aisle && GameManager.Instance.CameraMoving)
+            {
+                GameManager.Instance.SetCameraMoving(false);
+            }
+        }
     }
 
     private void CallDoorEvent()

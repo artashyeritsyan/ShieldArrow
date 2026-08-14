@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
     // This is the camera position
     [SerializeField] Transform screenCenter;
     [SerializeField] float cameraSpeed = 1;
+    private bool cameraMoving = false;
+    public bool CameraMoving => cameraMoving;
 
 
     [Header("Positions")]
@@ -69,10 +71,11 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (CurrentGameState == GameStates.Playing && CurrentLevelState == LevelStates.Aisle)
+        if (cameraMoving)
         {
             screenCenter.position += Vector3.forward * cameraSpeed * Time.deltaTime;
         }
+        
     }
     public void SetGameState(GameStates newState)
     {
@@ -81,7 +84,10 @@ public class GameManager : MonoBehaviour
 
         CurrentGameState = newState;
         OnGameStateChanged?.Invoke(CurrentGameState);
+        CheckCameraMoving();
     }
+
+
 
     public void SetLevelState(LevelStates newState)
     {
@@ -104,11 +110,25 @@ public class GameManager : MonoBehaviour
 
         TransitionToNextLevel();
         OnLevelStateChanged?.Invoke(CurrentLevelState);
+
+        CheckCameraMoving();
+    }
+
+    void CheckCameraMoving()
+    {
+        if (CurrentGameState == GameStates.Playing && CurrentLevelState == LevelStates.Aisle)
+        {
+            cameraMoving = true;
+        }
+        else
+        {
+            cameraMoving = false;
+        }
     }
 
     //public void NextLevel()
     //{
-        
+
     //    if (CurrentLevelState == LevelStates.Lobby)
     //    {
     //        CurrentLevelState = LevelStates.Aisle;
@@ -132,6 +152,11 @@ public class GameManager : MonoBehaviour
     //    OnGameStateChanged?.Invoke(CurrentGameState);
     //    OnLevelStateChanged?.Invoke(CurrentLevelState);
     //}
+
+    public void SetCameraMoving(bool moving)
+    {
+        cameraMoving = moving;
+    }
 
     private void TransitionToNextLevel()
     {

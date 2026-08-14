@@ -288,7 +288,7 @@ MonoBehaviour:
   speedMultiplier: 4000
   speedTransitionTime: 10
   rotationSpeed: 15
-  maxAngle: 60
+  maxAngle: 70
   canRotate: 1
   aimTarget: {fileID: 111702127214561881}
   trajectory: {fileID: 8423653584270636840}

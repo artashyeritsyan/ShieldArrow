@@ -349,7 +349,7 @@ MonoBehaviour:
   speedMultiplier: 4000
   speedTransitionTime: 10
   rotationSpeed: 15
-  maxAngle: 60
+  maxAngle: 70
   canRotate: 1
   aimTarget: {fileID: 5146158420358092166}
   trajectory: {fileID: 3159937125279948819}
@@ -445,3 +445,4 @@ MonoBehaviour:
   cursorInputForLook: 1
   mouseSensitivity: 0.1
   stickSensitivity: 0.3
+  stickCursorSpeed: 800

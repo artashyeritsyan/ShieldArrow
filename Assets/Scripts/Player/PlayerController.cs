@@ -840,6 +840,14 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
     }
 
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Enemy"))
+    //    {
+    //        TakeDamage(collision.gameObject.GetComponent<EnemyController>().CoreStats);)
+    //    }
+    //}
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("PlayerChoosing"))
