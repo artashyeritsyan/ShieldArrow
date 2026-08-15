@@ -179,7 +179,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
             return;
         }
-        stats = baseStats.GetStats();
+        stats = baseStats.GetStats().Clone();
         stats.currentHP = stats.maxHP;
         Debug.Log(stats.currentHP);
     }
