@@ -124,11 +124,10 @@ public class ArrowScript : MonoBehaviour
         }
 
         // somnitelno no okay
-        //if (hit.collider.CompareTag("UpperBoard"))
-        //{
-        //    DestroyProjectile();
-        //    return true;
-        //}
+        if (hit.collider.CompareTag("UpperBorder"))
+        {
+            DestroyProjectile();
+        }
 
         return false;
     }
@@ -333,4 +332,12 @@ public class ArrowScript : MonoBehaviour
     {
         return maxRicochetCount;
     }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("UpperBorder"))
+    //    {
+    //        DestroyProjectile();
+    //    }
+    //}
 }

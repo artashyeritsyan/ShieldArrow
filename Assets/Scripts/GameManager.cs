@@ -50,6 +50,9 @@ public class GameManager : MonoBehaviour
 
     private void Awake() 
     {
+        Application.targetFrameRate = 120;
+
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);

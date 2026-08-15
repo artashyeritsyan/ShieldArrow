@@ -532,7 +532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArcherController
   playerClass: 0
-  playerColor: {r: 0, g: 0.6413665, b: 1, a: 1}
+  playerColor: {r: 0.1415093, g: 0.7352315, b: 1, a: 1}
   baseProfile: {fileID: 11400000, guid: 98a9956e26e254e439652c09d8044cbd, type: 2}
   stats:
     core:
@@ -564,7 +564,7 @@ MonoBehaviour:
   aimDistance: 5
   aimSpeed: 3
   combatEquipmentBehaviour: {fileID: 5601839362905783117}
-  attackSpeedMultiplier: 2
+  attackSpeedMultiplier: 1.6
   animator: {fileID: 4812885400586429195}
   animTransitionTime: 5
   animLayerTransitionTime: 5
