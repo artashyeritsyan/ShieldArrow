@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayersPrefabs", menuName = "Scriptable Objects/PlayersPrefabs")]
