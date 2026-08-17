@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     [Header("Rotation")]
     [SerializeField] private float rotationSpeed = 15f;
     [SerializeField] private float maxAngle = 60f;
-    [SerializeField] private  bool canRotate = true;
+    [SerializeField] private bool canRotate = true;
 
     public bool CanRotate => canRotate;
 
@@ -148,6 +148,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
 
         stats = baseProfile.GetStats().Clone();
+        stats.core.currentHP = stats.core.maxHP;
+
     }
 
     private void GetRequiredComponents()
@@ -173,9 +175,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void InitializeValues()
     {
-        stats = baseProfile.GetStats();
-
         aimsManager = FindFirstObjectByType<AimsManager>();
+        EnableCollider();
 
         if (aimsManager != null && aimTarget != null)
         {
@@ -183,7 +184,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
 
         // just for making sure
-        stats.core.currentHP = stats.core.maxHP;
 
         canMove = true;
         canAttack = false;
@@ -323,7 +323,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (animator != null)
         {
 
-            animator.SetFloat("AttackSpeed", combatEquipment != null ? combatEquipment.EffectiveActionSpeed: 1f);
+            animator.SetFloat("AttackSpeed", combatEquipment != null ? combatEquipment.EffectiveActionSpeed : 1f);
 
             animator.SetTrigger("Attack");
         }
@@ -530,7 +530,20 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         //DisableEnemyColliders();  // TODO: Implemen this part
 
-        Destroy(gameObject, 2f);
+        //Destroy(gameObject, 2f);
+        //gameObject.SetActive(false);
+
+        DisableColliders();
+    }
+
+    void DisableColliders()
+    {
+        gameObject.GetComponent<Collider>().enabled = false;
+    }
+
+    void EnableCollider()
+    {
+        gameObject.GetComponent<Collider>().enabled = true;
     }
 
     private void RotateCharacter(Vector3 direction)

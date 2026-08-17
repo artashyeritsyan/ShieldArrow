@@ -18,7 +18,7 @@ MonoBehaviour:
       maxHP: 20
       currentHP: 20
       damage: 2
-      attackSpeed: 0.5
+      attackSpeed: 1
       lifeSteal: 0
       poisonDamage: 0
       fireDamage: 0
