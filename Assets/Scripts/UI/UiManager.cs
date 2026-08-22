@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class UiManager : MonoBehaviour
 {
@@ -16,8 +17,13 @@ public class UiManager : MonoBehaviour
 
     [SerializeField] float hpBarTransitionTime = 5f;
 
-
+    [Header("Screen Fade")]
+    [SerializeField] Image screenFade;
+    [SerializeField] float screenFadeTime = 0.4f;
+    [SerializeField] float screenFadeOutTime = 0.1f;
     [SerializeField] TextMeshProUGUI fps;
+
+
 
 
     private int playersCount;
@@ -25,6 +31,9 @@ public class UiManager : MonoBehaviour
     {
         SwitchPanelTo(MenuPanel);
         SubscribeToEvents();
+
+        Color color = screenFade.color;
+        color.a = 0;
 
         // Add the second player logic as well
         playersHP[0].SetActive(false);
@@ -118,9 +127,20 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    void LevelStateChanged(LevelStates levelState)
+    void ScreenFade()
     {
 
+        Sequence fadeSequence = DOTween.Sequence();
+
+        fadeSequence
+            .Append(screenFade.DOFade(1f, screenFadeOutTime))
+            .AppendInterval(screenFadeTime)
+            .Append(screenFade.DOFade(0f, screenFadeOutTime));
+    }
+
+    void LevelStateChanged(LevelStates levelState)
+    {
+        ScreenFade();
     }
 
     private void SubscribeToEvents()
