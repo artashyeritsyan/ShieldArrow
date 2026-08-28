@@ -11,6 +11,7 @@ public class InputHandler : MonoBehaviour
     public bool attack;
     public bool jump;
     public bool sprint;
+    public bool interact;
 
     [Header("Movement Settings")]
     public bool analogMovement;
@@ -138,6 +139,12 @@ public class InputHandler : MonoBehaviour
     {
         SprintInput(value.isPressed);
     }
+
+    public void OnInteract(InputValue value)
+    {
+
+    }
+
 #endif
 
     public void MoveInput(Vector2 newMoveDirection)
@@ -159,6 +166,11 @@ public class InputHandler : MonoBehaviour
     public void JumpInput(bool newJumpState)
     {
         jump = newJumpState;
+    }
+
+    public void InteractInput(bool newInteractState)
+    {
+        interact = newInteractState;
     }
 
     public void SprintInput(bool newSprintState)

@@ -48629,7 +48629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineFollow
   TrackerSettings:
     BindingMode: 4
-    PositionDamping: {x: 1, y: 1, z: 1}
+    PositionDamping: {x: 0.1, y: 0.1, z: 0.1}
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
@@ -59916,8 +59916,9 @@ MonoBehaviour:
   - {fileID: 650047121}
   hpBarTransitionTime: 5
   screenFade: {fileID: 1425581471}
-  screenFadeTime: 0.25
-  screenFadeOutTime: 0.1
+  screenFadeTime: 0.3
+  screenFadeInTime: 0.05
+  screenFadeOutTime: 0.5
   fps: {fileID: 1859018411}
 --- !u!4 &1827595421
 Transform:
@@ -71004,6 +71005,7 @@ MonoBehaviour:
   attack: 0
   jump: 0
   sprint: 0
+  interact: 0
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1

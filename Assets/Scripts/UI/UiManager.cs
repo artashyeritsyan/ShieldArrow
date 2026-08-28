@@ -20,11 +20,9 @@ public class UiManager : MonoBehaviour
     [Header("Screen Fade")]
     [SerializeField] Image screenFade;
     [SerializeField] float screenFadeTime = 0.4f;
-    [SerializeField] float screenFadeOutTime = 0.1f;
+    [SerializeField] float screenFadeInTime = 0.1f;
+    [SerializeField] float screenFadeOutTime = 0.2f;
     [SerializeField] TextMeshProUGUI fps;
-
-
-
 
     private int playersCount;
     void Start()
@@ -91,7 +89,6 @@ public class UiManager : MonoBehaviour
         
     }
 
-
     void SwitchPanelTo(GameObject panel)
     {
         MenuPanel.SetActive(false);
@@ -133,11 +130,11 @@ public class UiManager : MonoBehaviour
         Sequence fadeSequence = DOTween.Sequence();
 
         fadeSequence
-            .Append(screenFade.DOFade(1f, screenFadeOutTime))
+            .Append(screenFade.DOFade(1f, screenFadeInTime))
             .AppendInterval(screenFadeTime)
             .Append(screenFade.DOFade(0f, screenFadeOutTime));
     }
-
+     
     void LevelStateChanged(LevelStates levelState)
     {
         ScreenFade();

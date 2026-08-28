@@ -90,8 +90,6 @@ public class GameManager : MonoBehaviour
         CheckCameraMoving();
     }
 
-
-
     public void SetLevelState(LevelStates newState)
     {
         if (CurrentLevelState == newState)
