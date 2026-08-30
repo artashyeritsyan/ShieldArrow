@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum EDoorType
 {
@@ -11,10 +13,15 @@ public enum EDoorType
 public class DoorController : MonoBehaviour
 {
     [SerializeField] EDoorType doorType;
+    [SerializeField] GameObject doorCanvas;
+    [SerializeField] TextMeshProUGUI interactionText;
 
     private void Start()
     {
         GetComponent<Collider>().enabled = true;
+
+        doorCanvas.SetActive(false);
+
     }
 
     public void SetDoorType(EDoorType doorType)
@@ -50,21 +57,53 @@ public class DoorController : MonoBehaviour
     //    }
     //}
 
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && GameManager.Instance.CurrentGameState != GameStates.Pause)
-        {
-            CallDoorEvent();
-            //GameManager.Instance.NextLevel();
+        if (!other.CompareTag("Player") ||
+            GameManager.Instance.CurrentGameState == GameStates.Pause)
+            return;
 
-            Debug.Log("Player enter the door collider" + doorType);
+        PlayerInput playerInput = other.GetComponent<PlayerInput>();
+
+        if (playerInput == null)
+            return;
+
+        InputAction interactAction = playerInput.actions["Interact"];
+
+        if (interactAction == null)
+        {
+            Debug.LogWarning("Interact action not found.");
+            return;
         }
 
+        string binding = interactAction.GetBindingDisplayString(
+            InputBinding.DisplayStringOptions.DontIncludeInteractions,
+            playerInput.currentControlScheme
+        );
 
+        interactionText.text = $"Press {binding} to start";
+
+        doorCanvas.SetActive(true);
+
+        doorCanvas.transform.LookAt(
+            doorCanvas.transform.position + Camera.main.transform.rotation * Vector3.forward,
+            Camera.main.transform.rotation * Vector3.up);
+
+        //CallDoorEvent();
+
+
+        Debug.Log("Player entered the door collider " + doorType);
     }
+
 
     private void OnTriggerExit(Collider other)
     {
+
+        if (other.CompareTag("Player")) {
+            doorCanvas.SetActive(false);
+        }
+
         if (other.CompareTag("UpperBorder"))
         {
             if (GameManager.Instance.CurrentGameState == GameStates.Playing &&
