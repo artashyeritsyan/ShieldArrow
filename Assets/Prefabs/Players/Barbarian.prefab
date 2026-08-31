@@ -558,7 +558,7 @@ MonoBehaviour:
   canRotate: 1
   aimTarget: {fileID: 1779078991343781980}
   trajectory: {fileID: 6249007125067108744}
-  aimColor: {r: 0.509434, g: 0.25255093, b: 0, a: 1}
+  aimColor: {r: 1, g: 0.39210737, b: 0, a: 1}
   aimDistance: 5
   aimSpeed: 3
   combatEquipmentBehaviour: {fileID: 8177081077825079338}
@@ -643,6 +643,7 @@ MonoBehaviour:
   attack: 0
   jump: 0
   sprint: 0
+  interact: 0
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1

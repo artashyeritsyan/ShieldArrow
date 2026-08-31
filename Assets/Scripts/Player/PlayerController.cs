@@ -95,6 +95,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     protected InputHandler input;
 
     public InteractionType CurrentInteraction { get; private set; }
+    public GameObject CurrentInteractionObject { get; private set; }
 
 
     protected virtual void Awake()

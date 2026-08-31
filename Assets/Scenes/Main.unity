@@ -13966,7 +13966,7 @@ MonoBehaviour:
   selectableClasses: 0000000001000000020000000300000004000000
   playerActionMap: Player
   leaveActionName: Leave
-  changeClassActionName: ChangeClass
+  interactActionName: Interact
 --- !u!1001 &288914064
 PrefabInstance:
   m_ObjectHideFlags: 0

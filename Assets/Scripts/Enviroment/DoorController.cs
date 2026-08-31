@@ -60,8 +60,7 @@ public class DoorController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player") ||
-            GameManager.Instance.CurrentGameState == GameStates.Pause)
+        if (!other.CompareTag("Player") || GameManager.Instance.CurrentGameState == GameStates.Pause)
             return;
 
         PlayerInput playerInput = other.GetComponent<PlayerInput>();
@@ -92,6 +91,12 @@ public class DoorController : MonoBehaviour
 
         //CallDoorEvent();
 
+        PlayerController player = other.GetComponent<PlayerController>();
+
+        if (player != null)
+        {
+            player.SetInteraction(InteractionType.Door);
+        }
 
         Debug.Log("Player entered the door collider " + doorType);
     }
@@ -102,6 +107,13 @@ public class DoorController : MonoBehaviour
 
         if (other.CompareTag("Player")) {
             doorCanvas.SetActive(false);
+
+            PlayerController player = other.GetComponent<PlayerController>();
+
+            if (player != null)
+            {
+                player.ClearInteraction(InteractionType.Door);
+            }
         }
 
         if (other.CompareTag("UpperBorder"))
@@ -112,6 +124,11 @@ public class DoorController : MonoBehaviour
                 GameManager.Instance.SetCameraMoving(false);
             }
         }
+    }
+
+    public void Interact(PlayerController player)
+    {
+        CallDoorEvent();
     }
 
     private void CallDoorEvent()

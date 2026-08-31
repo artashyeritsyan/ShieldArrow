@@ -48,7 +48,11 @@ public class ClassChangeScript : MonoBehaviour
         canvas.SetActive(true);
 
         PlayerController player = other.GetComponent<PlayerController>();
-        player.SetInteraction(InteractionType.ClassChange);
+        if (player != null)
+        {
+            player.SetInteraction(InteractionType.ClassChange);
+        }
+
 
         //canvas.transform.LookAt(
         //    canvas.transform.position + Camera.main.transform.rotation * Vector3.forward,

@@ -24,7 +24,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
     private int nextPlayerClassIndex = 0;
 
-    private readonly Dictionary<PlayerInput, InputAction> changeClassActions = new();
+    private readonly Dictionary<PlayerInput, InputAction> interactActions = new();
     private readonly Dictionary<PlayerInput, int> selectedClassIndices = new();
 
     private readonly HashSet<PlayerInput> playersBeingReplaced = new();
@@ -32,7 +32,8 @@ public class PlayerInputManagerController : MonoBehaviour
     [Header("Input Action Maps")]
     [SerializeField] private string playerActionMap = "Player";
     [SerializeField] private string leaveActionName = "Leave";
-    [SerializeField] private string changeClassActionName = "ChangeClass";
+    //[SerializeField] private string changeClassActionName = "ChangeClass";
+    [SerializeField] private string interactActionName = "Interact";
 
     private PlayerInputManager inputManager;
 
@@ -74,13 +75,13 @@ public class PlayerInputManagerController : MonoBehaviour
             action.performed -= OnLeavePerformed;
         }
 
-        foreach (InputAction action in changeClassActions.Values)
+        foreach (InputAction action in interactActions.Values)
         {
-            action.performed -= OnChangeClassPerformed;
+            action.performed -= OnInteractPerformed;
         }
 
         leaveActions.Clear();
-        changeClassActions.Clear();
+        interactActions.Clear();
         selectedClassIndices.Clear();
     }
 
@@ -115,10 +116,9 @@ public class PlayerInputManagerController : MonoBehaviour
 
 
         RegisterLeaveAction(playerInput);
-        RegisterChangeClassAction(playerInput);
+        RegisterInteractAction(playerInput);
 
-        PlayerController playerController =
-            playerInput.GetComponent<PlayerController>();
+        PlayerController playerController = playerInput.GetComponent<PlayerController>();
 
         if (playerController == null)
         {
@@ -136,25 +136,76 @@ public class PlayerInputManagerController : MonoBehaviour
         UpdateJoiningState();
     }
 
-    private void RegisterChangeClassAction(PlayerInput playerInput)
+    private void RegisterInteractAction(PlayerInput playerInput)
     {
-        InputAction changeClassAction = playerInput.actions.FindAction(
-            $"{playerActionMap}/{changeClassActionName}",
+        InputAction interactAction = playerInput.actions.FindAction(
+            $"{playerActionMap}/{interactActionName}",
             false
         );
 
-        if (changeClassAction == null)
+        if (interactAction == null)
         {
             Debug.LogError(
-                $"Action '{playerActionMap}/{changeClassActionName}' not found."
+                $"Action '{playerActionMap}/{interactActionName}' not found."
             );
             return;
         }
 
-        changeClassAction.performed += OnChangeClassPerformed;
-        changeClassActions[playerInput] = changeClassAction;
+        interactAction.performed += OnInteractPerformed;
+        interactActions[playerInput] = interactAction;
     }
-    private void OnChangeClassPerformed(InputAction.CallbackContext context)
+
+    private void OnInteractPerformed(InputAction.CallbackContext context)
+    {
+        PlayerInput playerInput =
+            FindPlayerByAction(interactActions, context.action);
+
+        if (playerInput == null)
+            return;
+
+        PlayerController playerController =
+            playerInput.GetComponent<PlayerController>();
+
+        if (playerController == null)
+            return;
+
+        switch (playerController.CurrentInteraction)
+        {
+            case InteractionType.Door:
+                HandleDoorInteraction(playerController);
+                break;
+
+            //case InteractionType.Shop:
+            //    HandleShopInteraction(playerController);
+            //    break;
+
+            case InteractionType.ClassChange:
+                HandleClassChangeInteraction(playerInput);
+                break;
+
+            case InteractionType.None:
+            default:
+                break;
+        }
+    }
+
+    private void HandleDoorInteraction(PlayerController player)
+    {
+        GameObject interactionObject = player.CurrentInteractionObject;
+
+        if (interactionObject == null)
+            return;
+
+        DoorController door =
+            interactionObject.GetComponent<DoorController>();
+
+        if (door == null)
+            return;
+
+        door.Interact(player);
+    }
+
+    private void HandleClassChangeInteraction(PlayerInput playerInput)
     {
         if (!isLobbyActive)
             return;
@@ -162,19 +213,7 @@ public class PlayerInputManagerController : MonoBehaviour
         if (selectedClassIndices.Count >= 2)
             return;
 
-        PlayerInput playerInput = FindPlayerByAction(changeClassActions, context.action);
-
-        if (playerInput == null || playersBeingReplaced.Contains(playerInput))
-        {
-            return;
-        }
-
-        PlayerController playerController = playerInput.GetComponent<PlayerController>();
-        if (playerController == null)
-            return;
-
-        // Check for class change
-        if (!playerController.CanInteractWith(InteractionType.ClassChange))
+        if (playersBeingReplaced.Contains(playerInput))
             return;
 
         StartCoroutine(ChangePlayerClassRoutine(playerInput));
@@ -233,7 +272,7 @@ public class PlayerInputManagerController : MonoBehaviour
             pairedDevices[i] = oldPlayerInput.devices[i];
         }
 
-        UnregisterChangeClassAction(oldPlayerInput);
+        UnregisterInteractAction(oldPlayerInput);
         UnregisterLeaveAction(oldPlayerInput);
 
         selectedClassIndices.Remove(oldPlayerInput);
@@ -265,6 +304,9 @@ public class PlayerInputManagerController : MonoBehaviour
             spawnRotation
         );
 
+        RegisterLeaveAction(newPlayerInput);
+        RegisterInteractAction(newPlayerInput);
+
         selectedClassIndices[newPlayerInput] = nextClassIndex;
 
         int availableClassIndex = nextClassIndex == 0 ? 1 : 0;
@@ -282,16 +324,14 @@ public class PlayerInputManagerController : MonoBehaviour
         Debug.Log($"Player {playerIndex} changed class to {nextClass}.");
     }
 
-    private void UnregisterChangeClassAction(
-    PlayerInput playerInput)
+    private void UnregisterInteractAction(PlayerInput playerInput)
     {
-        if (!changeClassActions.TryGetValue(playerInput, out InputAction action))
-        {
+        if (!interactActions.TryGetValue(playerInput, out InputAction action))
             return;
-        }
 
-        action.performed -= OnChangeClassPerformed;
-        changeClassActions.Remove(playerInput);
+        action.performed -= OnInteractPerformed;
+
+        interactActions.Remove(playerInput);
     }
 
     private static PlayerInput FindPlayerByAction(
@@ -313,8 +353,8 @@ public class PlayerInputManagerController : MonoBehaviour
     {
         Debug.Log($"Player left: {playerInput.playerIndex}");
 
+        UnregisterInteractAction(playerInput);
         UnregisterLeaveAction(playerInput);
-        UnregisterChangeClassAction(playerInput);
 
         selectedClassIndices.Remove(playerInput);
 
