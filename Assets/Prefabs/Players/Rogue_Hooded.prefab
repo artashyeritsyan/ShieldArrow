@@ -234,6 +234,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rogue_Hooded
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 11993f8b834c6834c94140f708bb2ab9, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -445,6 +449,7 @@ MonoBehaviour:
   attack: 0
   jump: 0
   sprint: 0
+  interact: 0
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1

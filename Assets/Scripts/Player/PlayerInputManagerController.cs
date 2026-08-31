@@ -162,14 +162,20 @@ public class PlayerInputManagerController : MonoBehaviour
         if (selectedClassIndices.Count >= 2)
             return;
 
-        PlayerInput playerInput =
-            FindPlayerByAction(changeClassActions, context.action);
+        PlayerInput playerInput = FindPlayerByAction(changeClassActions, context.action);
 
-        if (playerInput == null ||
-            playersBeingReplaced.Contains(playerInput))
+        if (playerInput == null || playersBeingReplaced.Contains(playerInput))
         {
             return;
         }
+
+        PlayerController playerController = playerInput.GetComponent<PlayerController>();
+        if (playerController == null)
+            return;
+
+        // Check for class change
+        if (!playerController.CanInteractWith(InteractionType.ClassChange))
+            return;
 
         StartCoroutine(ChangePlayerClassRoutine(playerInput));
     }

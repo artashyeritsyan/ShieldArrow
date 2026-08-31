@@ -17,6 +17,14 @@ public enum Team
     Enemy
 }
 
+public enum InteractionType
+{
+    None,
+    ClassChange,
+    Door,
+    Shop
+}
+
 public class PlayerController : MonoBehaviour, IDamageable
 {
     [Header("Stats")]
@@ -85,6 +93,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     protected Rigidbody rb;
     protected InputHandler input;
+
+    public InteractionType CurrentInteraction { get; private set; }
+
 
     protected virtual void Awake()
     {
@@ -699,6 +710,24 @@ public class PlayerController : MonoBehaviour, IDamageable
             randomVolume,
             randomPitch);
     }
+
+
+    public void SetInteraction(InteractionType interaction)
+    {
+        CurrentInteraction = interaction;
+    }
+
+    public void ClearInteraction(InteractionType interaction)
+    {
+        if (CurrentInteraction == interaction)
+            CurrentInteraction = InteractionType.None;
+    }
+
+    public bool CanInteractWith(InteractionType interaction)
+    {
+        return CurrentInteraction == interaction;
+    }
+
 
     public PlayerClass GetPlayerClass()
     {

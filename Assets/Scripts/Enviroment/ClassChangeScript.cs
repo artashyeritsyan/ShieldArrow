@@ -8,6 +8,7 @@ public class ClassChangeScript : MonoBehaviour
     [SerializeField] GameObject canvas;
     [SerializeField] TextMeshProUGUI interactionText;
 
+
     private void Start()
     {
         GetComponent<Collider>().enabled = true;
@@ -46,6 +47,9 @@ public class ClassChangeScript : MonoBehaviour
 
         canvas.SetActive(true);
 
+        PlayerController player = other.GetComponent<PlayerController>();
+        player.SetInteraction(InteractionType.ClassChange);
+
         //canvas.transform.LookAt(
         //    canvas.transform.position + Camera.main.transform.rotation * Vector3.forward,
         //    Camera.main.transform.rotation * Vector3.up);
@@ -59,6 +63,9 @@ public class ClassChangeScript : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             canvas.SetActive(false);
+
+            PlayerController player = other.GetComponent<PlayerController>();
+            player.ClearInteraction(InteractionType.ClassChange);
         }
     }
 
