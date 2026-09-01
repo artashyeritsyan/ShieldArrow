@@ -24,7 +24,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
     private int nextPlayerClassIndex = 0;
 
-    private readonly Dictionary<PlayerInput, InputAction> interactActions = new();
+    //private readonly Dictionary<PlayerInput, InputAction> interactActions = new();
     private readonly Dictionary<PlayerInput, int> selectedClassIndices = new();
 
     private readonly HashSet<PlayerInput> playersBeingReplaced = new();
@@ -33,7 +33,7 @@ public class PlayerInputManagerController : MonoBehaviour
     [SerializeField] private string playerActionMap = "Player";
     [SerializeField] private string leaveActionName = "Leave";
     //[SerializeField] private string changeClassActionName = "ChangeClass";
-    [SerializeField] private string interactActionName = "Interact";
+    //[SerializeField] private string interactActionName = "Interact";
 
     private PlayerInputManager inputManager;
 
@@ -75,13 +75,13 @@ public class PlayerInputManagerController : MonoBehaviour
             action.performed -= OnLeavePerformed;
         }
 
-        foreach (InputAction action in interactActions.Values)
-        {
-            action.performed -= OnInteractPerformed;
-        }
+        //foreach (InputAction action in interactActions.Values)
+        //{
+        //    action.performed -= OnInteractPerformed;
+        //}
 
+        //interactActions.Clear();
         leaveActions.Clear();
-        interactActions.Clear();
         selectedClassIndices.Clear();
     }
 
@@ -116,7 +116,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
 
         RegisterLeaveAction(playerInput);
-        RegisterInteractAction(playerInput);
+        //RegisterInteractAction(playerInput);
 
         PlayerController playerController = playerInput.GetComponent<PlayerController>();
 
@@ -131,82 +131,105 @@ public class PlayerInputManagerController : MonoBehaviour
             return;
         }
 
+        playerController.SetInputManager(this);
+
         PlayerManager.Instance.Register(playerController);
 
         UpdateJoiningState();
     }
 
-    private void RegisterInteractAction(PlayerInput playerInput)
+    //private void RegisterInteractAction(PlayerInput playerInput)
+    //{
+    //    Debug.Log("INTERACTT");
+
+    //    InputAction interactAction = playerInput.actions.FindAction(
+    //        $"{playerActionMap}/{interactActionName}",
+    //        false
+    //    );
+
+    //    if (interactAction == null)
+    //    {
+    //        Debug.LogError(
+    //            $"Action '{playerActionMap}/{interactActionName}' not found."
+    //        );
+    //        return;
+    //    }
+
+    //    interactAction.performed += OnInteractPerformed;
+    //    interactActions[playerInput] = interactAction;
+    //}
+
+    //private void OnInteractPerformed(InputAction.CallbackContext context)
+    //{
+    //    PlayerInput playerInput =
+    //        FindPlayerByAction(interactActions, context.action);
+
+    //    if (playerInput == null)
+    //        return;
+
+    //    PlayerController playerController =
+    //        playerInput.GetComponent<PlayerController>();
+
+    //    if (playerController == null)
+    //        return;
+
+    //    switch (playerController.CurrentInteraction)
+    //    {
+    //        case InteractionType.Door:
+    //            HandleDoorInteraction(playerController);
+    //            break;
+
+    //        //case InteractionType.Shop:
+    //        //    HandleShopInteraction(playerController);
+    //        //    break;
+
+    //        case InteractionType.ClassChange:
+    //            HandleClassChangeInteraction(playerInput);
+    //            break;
+
+    //        case InteractionType.None:
+    //        default:
+    //            break;
+    //    }
+    //}
+
+    //private void HandleDoorInteraction(PlayerController player)
+    //{
+    //    GameObject interactionObject = player.CurrentInteractionObject;
+
+    //    if (interactionObject == null)
+    //        return;
+
+    //    DoorController door =
+    //        interactionObject.GetComponent<DoorController>();
+
+    //    if (door == null)
+    //        return;
+
+    //    door.Interact(player);
+    //}
+
+    //private void HandleClassChangeInteraction(PlayerInput playerInput)
+    //{
+    //    if (!isLobbyActive)
+    //        return;
+
+    //    if (selectedClassIndices.Count >= 2)
+    //        return;
+
+    //    if (playersBeingReplaced.Contains(playerInput))
+    //        return;
+
+    //    StartCoroutine(ChangePlayerClassRoutine(playerInput));
+    //}
+
+    public void TryChangeClass(PlayerController playerController)
     {
-        InputAction interactAction = playerInput.actions.FindAction(
-            $"{playerActionMap}/{interactActionName}",
-            false
-        );
-
-        if (interactAction == null)
-        {
-            Debug.LogError(
-                $"Action '{playerActionMap}/{interactActionName}' not found."
-            );
-            return;
-        }
-
-        interactAction.performed += OnInteractPerformed;
-        interactActions[playerInput] = interactAction;
-    }
-
-    private void OnInteractPerformed(InputAction.CallbackContext context)
-    {
-        PlayerInput playerInput =
-            FindPlayerByAction(interactActions, context.action);
+        PlayerInput playerInput = playerController.GetComponent<PlayerInput>();
 
         if (playerInput == null)
             return;
 
-        PlayerController playerController =
-            playerInput.GetComponent<PlayerController>();
-
-        if (playerController == null)
-            return;
-
-        switch (playerController.CurrentInteraction)
-        {
-            case InteractionType.Door:
-                HandleDoorInteraction(playerController);
-                break;
-
-            //case InteractionType.Shop:
-            //    HandleShopInteraction(playerController);
-            //    break;
-
-            case InteractionType.ClassChange:
-                HandleClassChangeInteraction(playerInput);
-                break;
-
-            case InteractionType.None:
-            default:
-                break;
-        }
-    }
-
-    private void HandleDoorInteraction(PlayerController player)
-    {
-        GameObject interactionObject = player.CurrentInteractionObject;
-
-        if (interactionObject == null)
-            return;
-
-        DoorController door =
-            interactionObject.GetComponent<DoorController>();
-
-        if (door == null)
-            return;
-
-        door.Interact(player);
-    }
-
-    private void HandleClassChangeInteraction(PlayerInput playerInput)
-    {
         if (!isLobbyActive)
             return;
 
@@ -218,6 +241,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
         StartCoroutine(ChangePlayerClassRoutine(playerInput));
     }
+
 
     private IEnumerator ChangePlayerClassRoutine(
     PlayerInput oldPlayerInput)
@@ -272,7 +296,7 @@ public class PlayerInputManagerController : MonoBehaviour
             pairedDevices[i] = oldPlayerInput.devices[i];
         }
 
-        UnregisterInteractAction(oldPlayerInput);
+        //UnregisterInteractAction(oldPlayerInput);
         UnregisterLeaveAction(oldPlayerInput);
 
         selectedClassIndices.Remove(oldPlayerInput);
@@ -305,7 +329,7 @@ public class PlayerInputManagerController : MonoBehaviour
         );
 
         RegisterLeaveAction(newPlayerInput);
-        RegisterInteractAction(newPlayerInput);
+        //RegisterInteractAction(newPlayerInput);
 
         selectedClassIndices[newPlayerInput] = nextClassIndex;
 
@@ -324,15 +348,15 @@ public class PlayerInputManagerController : MonoBehaviour
         Debug.Log($"Player {playerIndex} changed class to {nextClass}.");
     }
 
-    private void UnregisterInteractAction(PlayerInput playerInput)
-    {
-        if (!interactActions.TryGetValue(playerInput, out InputAction action))
-            return;
+    //private void UnregisterInteractAction(PlayerInput playerInput)
+    //{
+    //    if (!interactActions.TryGetValue(playerInput, out InputAction action))
+    //        return;
 
-        action.performed -= OnInteractPerformed;
+    //    action.performed -= OnInteractPerformed;
 
-        interactActions.Remove(playerInput);
-    }
+    //    interactActions.Remove(playerInput);
+    //}
 
     private static PlayerInput FindPlayerByAction(
     Dictionary<PlayerInput, InputAction> actions,
@@ -353,7 +377,7 @@ public class PlayerInputManagerController : MonoBehaviour
     {
         Debug.Log($"Player left: {playerInput.playerIndex}");
 
-        UnregisterInteractAction(playerInput);
+        //UnregisterInteractAction(playerInput);
         UnregisterLeaveAction(playerInput);
 
         selectedClassIndices.Remove(playerInput);

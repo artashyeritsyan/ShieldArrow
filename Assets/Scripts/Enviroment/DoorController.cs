@@ -95,7 +95,7 @@ public class DoorController : MonoBehaviour
 
         if (player != null)
         {
-            player.SetInteraction(InteractionType.Door);
+            player.SetInteraction(InteractionType.Door, gameObject);
         }
 
         Debug.Log("Player entered the door collider " + doorType);
@@ -126,7 +126,7 @@ public class DoorController : MonoBehaviour
         }
     }
 
-    public void Interact(PlayerController player)
+    public void Interact()
     {
         CallDoorEvent();
     }

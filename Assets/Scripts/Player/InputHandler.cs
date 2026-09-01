@@ -12,6 +12,8 @@ public class InputHandler : MonoBehaviour
     public bool jump;
     public bool sprint;
     public bool interact;
+    private bool interactPressed;
+
 
     [Header("Movement Settings")]
     public bool analogMovement;
@@ -140,10 +142,23 @@ public class InputHandler : MonoBehaviour
         SprintInput(value.isPressed);
     }
 
+
     public void OnInteract(InputValue value)
     {
-
+        if (value.isPressed)
+            interactPressed = true;
     }
+
+    public bool ConsumeInteract()
+    {
+        if (!interactPressed)
+            return false;
+
+        interactPressed = false;
+        return true;
+    }
+
+
 
 #endif
 
@@ -168,10 +183,10 @@ public class InputHandler : MonoBehaviour
         jump = newJumpState;
     }
 
-    public void InteractInput(bool newInteractState)
-    {
-        interact = newInteractState;
-    }
+    //public void InteractInput(bool newInteractState)
+    //{
+    //    interact = newInteractState;
+    //}
 
     public void SprintInput(bool newSprintState)
     {

@@ -94,9 +94,11 @@ public class PlayerController : MonoBehaviour, IDamageable
     protected Rigidbody rb;
     protected InputHandler input;
 
+
     public InteractionType CurrentInteraction { get; private set; }
     public GameObject CurrentInteractionObject { get; private set; }
 
+    private PlayerInputManagerController playerInputManagerController;
 
     protected virtual void Awake()
     {
@@ -132,7 +134,7 @@ public class PlayerController : MonoBehaviour, IDamageable
                 HandleAttack();
 
                 //HandleAim();
-
+                HandleInteraction();
             }
 
             HandleAnimation();
@@ -476,6 +478,44 @@ public class PlayerController : MonoBehaviour, IDamageable
         RotateCharacter(clampedDirection);
     }
 
+    private void HandleInteraction()
+    {
+        if (input.ConsumeInteract())
+        {
+            switch (CurrentInteraction)
+            {
+                case InteractionType.None:
+                    return;
+
+                case InteractionType.ClassChange:
+
+                    playerInputManagerController?.TryChangeClass(this);
+
+                    break;
+                case InteractionType.Door:
+                    if (CurrentInteractionObject == null) return;
+                    DoorController door = CurrentInteractionObject.GetComponent<DoorController>();
+
+                    if (door == null) return;
+
+                    Debug.Log("DOOOR");
+                    door.Interact();
+
+                    break;
+                case InteractionType.Shop:
+                    break;
+
+                default:
+                    return;
+            }
+        }
+    }
+
+    public void SetInputManager(PlayerInputManagerController manager)
+    {
+        playerInputManagerController = manager;
+    }
+
     public void TakeDamage(
             DamageData damageData,
             CoreStats attackerStats)
@@ -547,6 +587,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         DisableColliders();
     }
+
 
     void DisableColliders()
     {
@@ -713,9 +754,11 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
 
 
-    public void SetInteraction(InteractionType interaction)
+    public void SetInteraction(InteractionType interaction, GameObject interactable = null)
     {
+        Debug.Log("SET DOOR: " + gameObject.name);
         CurrentInteraction = interaction;
+        CurrentInteractionObject = interactable;
     }
 
     public void ClearInteraction(InteractionType interaction)
