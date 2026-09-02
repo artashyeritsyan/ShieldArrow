@@ -7,6 +7,7 @@ public class ClassChangeScript : MonoBehaviour
 {
     [SerializeField] GameObject canvas;
     [SerializeField] TextMeshProUGUI interactionText;
+    [SerializeField] ChestScript chest;
 
 
     private void Start()
@@ -45,6 +46,7 @@ public class ClassChangeScript : MonoBehaviour
         interactionText.text = $"Press {binding} to change class";
 
         canvas.SetActive(true);
+        chest.OpenChest();
 
         PlayerController player = other.GetComponent<PlayerController>();
         //Debug.Log(player.name);
@@ -67,6 +69,7 @@ public class ClassChangeScript : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             canvas.SetActive(false);
+            chest.CloseChest();
 
             PlayerController player = other.GetComponent<PlayerController>();
             player.ClearInteraction(InteractionType.ClassChange);
