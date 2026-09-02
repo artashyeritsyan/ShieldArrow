@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         InitializeValues();
         InitializeCombatEquipment();
         SubscribeToEquipmentEvents();
-
+        SetTrajectoryEnable(false);
         layerTargetWeight = 1f;
 
         AfterStart();

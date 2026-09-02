@@ -17,8 +17,7 @@ public class BowWeapon : WeaponController
         if (!CanShoot())
             return false;
 
-        StartCoroutine(
-            ShootSpread());
+        StartCoroutine(ShootSpread());
 
         return true;
     }
@@ -36,9 +35,7 @@ public class BowWeapon : WeaponController
          * The release delay becomes shorter when
          * the action-speed multiplier increases.
          */
-        float scaledAttackStartDelay =
-            GetScaledDuration(
-                attackStartDelay);
+        float scaledAttackStartDelay = GetScaledDuration(attackStartDelay);
 
         if (scaledAttackStartDelay > 0f)
         {
@@ -53,26 +50,16 @@ public class BowWeapon : WeaponController
 
         if (arrowCount == 1)
         {
-            CreateProjectile(
-                shootPoint.rotation);
+            CreateProjectile(shootPoint.rotation);
         }
         else
         {
-            float angleStep =
-                spreadAngle /
-                (arrowCount - 1);
+            float angleStep = spreadAngle / (arrowCount - 1);
 
-            float startingAngle =
-                -spreadAngle * 0.5f;
+            float startingAngle = -spreadAngle * 0.5f;
 
-            for (
-                int i = 0;
-                i < arrowCount;
-                i++)
-            {
-                float currentAngle =
-                    startingAngle +
-                    angleStep * i;
+            for (int i = 0; i < arrowCount; i++) {
+                float currentAngle = startingAngle + angleStep * i;
 
                 Quaternion rotation =
                     shootPoint.rotation *
@@ -91,9 +78,7 @@ public class BowWeapon : WeaponController
          * shootingSpeed
          * actionSpeedMultiplier
          */
-        float totalAttackInterval =
-            SECOND /
-            EffectiveActionSpeed;
+        float totalAttackInterval = SECOND / EffectiveActionSpeed;
 
         /*
          * The attack-start delay is already part
