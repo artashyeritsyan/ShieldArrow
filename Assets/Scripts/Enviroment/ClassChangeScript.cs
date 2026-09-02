@@ -24,25 +24,25 @@ public class ClassChangeScript : MonoBehaviour
         if (!other.CompareTag("Player") || GameManager.Instance.CurrentGameState == GameStates.Pause)
             return;
 
-        //PlayerInput playerInput = other.GetComponent<PlayerInput>();
+        PlayerInput playerInput = other.GetComponent<PlayerInput>();
 
-        //if (playerInput == null)
-        //    return;
+        if (playerInput == null)
+            return;
 
-        //InputAction interactAction = playerInput.actions["Interact"];
+        InputAction interactAction = playerInput.actions["Interact"];
 
-        //if (interactAction == null)
-        //{
-        //    Debug.LogWarning("Interact action not found.");
-        //    return;
-        //}
+        if (interactAction == null)
+        {
+            Debug.LogWarning("Interact action not found.");
+            return;
+        }
 
-        //string binding = interactAction.GetBindingDisplayString(
-        //    InputBinding.DisplayStringOptions.DontIncludeInteractions,
-        //    playerInput.currentControlScheme
-        //);
+        string binding = interactAction.GetBindingDisplayString(
+            InputBinding.DisplayStringOptions.DontIncludeInteractions,
+            playerInput.currentControlScheme
+        );
 
-        //interactionText.text = $"Press {binding} to change class";
+        interactionText.text = $"Press {binding} to change class";
 
         canvas.SetActive(true);
 

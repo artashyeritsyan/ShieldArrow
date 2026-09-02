@@ -57,7 +57,6 @@ MonoBehaviour:
   showOutline: 1
   outlineColor: {r: 0.021586215, g: 0.8490566, b: 0, a: 1}
   outlineWidth: 2
-  teamsColors: {fileID: 11400000, guid: b65aaccc68c8e1b4099e2ea8c5253c43, type: 2}
 --- !u!65 &1468777422044821819
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -161,19 +160,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d799cdf4dcb8ffb438d5c76904a0c178, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.70674765
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d799cdf4dcb8ffb438d5c76904a0c178, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.70674735
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d799cdf4dcb8ffb438d5c76904a0c178, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.022539485
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d799cdf4dcb8ffb438d5c76904a0c178, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.022537425
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d799cdf4dcb8ffb438d5c76904a0c178, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -185,7 +184,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d799cdf4dcb8ffb438d5c76904a0c178, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 3.653
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d799cdf4dcb8ffb438d5c76904a0c178, type: 3}
       propertyPath: m_ConstrainProportionsScale
