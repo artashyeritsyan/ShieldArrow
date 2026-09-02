@@ -46,10 +46,12 @@ public class ClassChangeScript : MonoBehaviour
         interactionText.text = $"Press {binding} to change class";
 
         canvas.SetActive(true);
-        chest.OpenChest();
+        if (!chest.IsOpen)
+        {
+            chest.OpenChest();
+        }
 
         PlayerController player = other.GetComponent<PlayerController>();
-        //Debug.Log(player.name);
         if (player != null)
         {
             player.SetInteraction(InteractionType.ClassChange);
