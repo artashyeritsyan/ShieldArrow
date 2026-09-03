@@ -16,23 +16,35 @@ public class ItemScript : MonoBehaviour
     {
         if (GameManager.Instance.CurrentGameState != GameStates.Pause)
         {
-            transform.DOMoveY(transform.position.y + bouncingMaxOffset, bouncingTime).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
-
-            transform.DORotate(new Vector3(0f, 360f, 0f), rotationPeriod, RotateMode.FastBeyond360)
-                .SetEase(Ease.Linear).SetLoops(-1, LoopType.Restart);
+            StartTweening();
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+
+    public virtual void OnSpawn() 
     {
-        Collected();
+        StartTweening();
+    }
+    public virtual void OnDespawn() 
+    {
+        transform.DOKill();
     }
 
-    void Collected()
+
+    
+
+    public virtual void Collected()
     {
-        // TODO: MAke the Object pool for collectable items` Coins.
-        Destroy(gameObject);
+        // TODO: MAke the Object pool for collectable items` Coins and etc.
+        //Destroy(gameObject);
         PlaySound();
+
+        ReturnToPool();
+    }
+
+    protected virtual void ReturnToPool()
+    {
+        gameObject.SetActive(false);
     }
 
     protected virtual void PlaySound() {
@@ -42,6 +54,23 @@ public class ItemScript : MonoBehaviour
         float pitch = Random.Range(0.8f, 1.2f);
 
         AudioManager.Play(CollectSoundEffects[soundIndex], volume, pitch);
+    }
+
+    private void StartTweening()
+    {
+        transform.DOMoveY(transform.position.y + bouncingMaxOffset, bouncingTime).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+
+        transform.DORotate(new Vector3(0f, 360f, 0f), rotationPeriod, RotateMode.FastBeyond360)
+            .SetEase(Ease.Linear).SetLoops(-1, LoopType.Restart);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Collected();
+        }
+
     }
 
 }
