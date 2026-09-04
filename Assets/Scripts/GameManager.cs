@@ -48,6 +48,10 @@ public class GameManager : MonoBehaviour
     //[SerializeField] float roomTransitionDelta = 16;
     //[SerializeField] float aisleTransitionDelta = 20;
 
+    [Header("Object Pools")]
+    [SerializeField] private Coin coinPrefab;
+    //[SerializeField] private Diamond diamondPrefab;
+
     private void Awake() 
     {
         Application.targetFrameRate = 120;
@@ -65,6 +69,11 @@ public class GameManager : MonoBehaviour
         CurrentGameState = GameStates.Menu;
         CurrentLevelState = LevelStates.Lobby;
         screenCenter.position = cameraStartPosition;
+
+
+        // Initialise pools
+        ObjectPoolManager.Instance.CreatePool(coinPrefab, 10);
+        //ObjectPoolManager.Instance.CreatePool(diamondPrefab, 10);
     }
 
     private void Start()

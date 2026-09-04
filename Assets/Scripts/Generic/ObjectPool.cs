@@ -7,7 +7,7 @@ public class ObjectPool<T> where T : Component
 {
     private readonly T prefab;
     private readonly Transform parent;
-    private readonly Queue<T> availableObjects = new();
+    private readonly Queue<T> objects = new();
 
     public ObjectPool(T prefab, int initialSize, Transform parent = null)
     {
@@ -17,7 +17,7 @@ public class ObjectPool<T> where T : Component
         for (int i = 0; i < initialSize; i++)
         {
             T obj = CreateObject();
-            availableObjects.Enqueue(obj);
+            objects.Enqueue(obj);
         }
 
     } 
@@ -34,9 +34,9 @@ public class ObjectPool<T> where T : Component
     {
         T obj;
 
-        if (availableObjects.Count > 0)
+        if (objects.Count > 0)
         {
-            obj = availableObjects.Dequeue();
+            obj = objects.Dequeue();
         }
         else
         {
@@ -52,7 +52,7 @@ public class ObjectPool<T> where T : Component
     public void Return(T obj)
     {
         obj.gameObject.SetActive(false);
-        availableObjects.Enqueue(obj);
+        objects.Enqueue(obj);
     }
 
 }

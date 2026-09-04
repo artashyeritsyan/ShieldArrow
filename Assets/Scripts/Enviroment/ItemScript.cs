@@ -31,20 +31,18 @@ public class ItemScript : MonoBehaviour
     }
 
 
-    
-
-    public virtual void Collected()
+    public virtual void Collected(PlayerController player)
     {
         // TODO: MAke the Object pool for collectable items` Coins and etc.
         //Destroy(gameObject);
         PlaySound();
 
-        ReturnToPool();
+        
     }
 
     protected virtual void ReturnToPool()
     {
-        gameObject.SetActive(false);
+        ObjectPoolManager.Instance.Return(this);
     }
 
     protected virtual void PlaySound() {
@@ -68,7 +66,7 @@ public class ItemScript : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Collected();
+            Collected(other.GetComponent<PlayerController>());
         }
 
     }

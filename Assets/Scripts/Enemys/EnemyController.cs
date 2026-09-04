@@ -442,6 +442,8 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         DisableEnemyColliders();
 
+        SpawnCoin();
+
         Destroy(gameObject, 2f);
     }
 
@@ -466,6 +468,11 @@ public class EnemyController : MonoBehaviour, IDamageable
         animator.SetFloat("Blend", 0f);
         animator.SetBool("Dead", isDead);
         animator.SetBool("Inactive", isInactive);
+    }
+
+    private void SpawnCoin()
+    {
+        ObjectPoolManager.Instance.Spawn<Coin>(transform.position, Quaternion.identity);
     }
 
     private void PlayAttackSound()

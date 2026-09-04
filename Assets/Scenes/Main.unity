@@ -5138,6 +5138,7 @@ GameObject:
   - component: {fileID: 158525616}
   - component: {fileID: 158525615}
   - component: {fileID: 158525617}
+  - component: {fileID: 158525618}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5164,6 +5165,7 @@ MonoBehaviour:
   screenCenter: {fileID: 1334775989}
   cameraSpeed: 0.3
   cameraStartPosition: {x: 0, y: 0, z: -6.2}
+  coinPrefab: {fileID: 7871636596010262339, guid: 586a190b9e72148478a62dc6b4bcd965, type: 3}
 --- !u!4 &158525616
 Transform:
   m_ObjectHideFlags: 0
@@ -5192,6 +5194,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
   playerSpawnPosition: {x: 0, y: 0, z: -10}
+--- !u!114 &158525618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158525614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8561d00899aaaa448ba382598208afe0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPoolManager
 --- !u!1 &159689076
 GameObject:
   m_ObjectHideFlags: 0
@@ -72556,6 +72570,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e7db814b24310649b91185c2c95ad3b, type: 3}
+--- !u!1 &2122123236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2122123237}
+  m_Layer: 0
+  m_Name: ObjectPoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2122123237
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122123236}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.58743, y: 10.60933, z: -12.82457}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2122364894 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b80959f71dacd2e43b0c2dcef7d7bd6e, type: 3}
@@ -74021,6 +74066,7 @@ SceneRoots:
   - {fileID: 1519178411}
   - {fileID: 1732944974}
   - {fileID: 734852929}
+  - {fileID: 2122123237}
   - {fileID: 512125365}
   - {fileID: 1118155944}
   - {fileID: 468489061}
