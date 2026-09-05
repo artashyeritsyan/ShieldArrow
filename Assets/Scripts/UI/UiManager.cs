@@ -24,6 +24,10 @@ public class UiManager : MonoBehaviour
     [SerializeField] float screenFadeOutTime = 0.2f;
     [SerializeField] TextMeshProUGUI fps;
 
+    [Header("Coins")]
+    [SerializeField] TextMeshProUGUI coinsText;
+
+
     private int playersCount;
     void Start()
     {
@@ -66,11 +70,15 @@ public class UiManager : MonoBehaviour
                     playersHP[1].SetActive(false);
                     break;
             }
+
         }
 
         //if (playersCount > 0)
-            UpdatePlayersHP();
-        
+        UpdatePlayersHP();
+
+        coinsText.text = GameManager.Instance.GetCoins().ToString();
+
+
     }
 
     void UpdatePlayersHP()

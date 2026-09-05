@@ -40,10 +40,7 @@ public class ItemScript : MonoBehaviour
         
     }
 
-    protected virtual void ReturnToPool()
-    {
-        ObjectPoolManager.Instance.Return(this);
-    }
+
 
     protected virtual void PlaySound() {
         int soundIndex = Random.Range(0, CollectSoundEffects.Length);

@@ -121,5 +121,5 @@ MonoBehaviour:
   canDecorateGround: 1
   wallDecorations: {fileID: 11400000, guid: d55fd272e6607b34fb8a693007478e1b, type: 2}
   groundDecorations: {fileID: 11400000, guid: 025ee3fa91c22804e966f7f70ceda911, type: 2}
-  nothingChance: 0.5
-  torchChance: 0.3
+  nothingChance: 0.4
+  torchChance: 0.4

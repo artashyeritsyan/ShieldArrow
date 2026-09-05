@@ -52,6 +52,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Coin coinPrefab;
     //[SerializeField] private Diamond diamondPrefab;
 
+    [Header("Coins")]
+    [SerializeField] int coins;
+
     private void Awake() 
     {
         Application.targetFrameRate = 120;
@@ -72,13 +75,15 @@ public class GameManager : MonoBehaviour
 
 
         // Initialise pools
-        ObjectPoolManager.Instance.CreatePool(coinPrefab, 10);
         //ObjectPoolManager.Instance.CreatePool(diamondPrefab, 10);
     }
 
     private void Start()
     {
         LevelGenerator.GenerateLevel();
+
+        ObjectPoolManager.Instance.CreatePool(coinPrefab, 10);
+
     }
 
     private void Update()
@@ -166,6 +171,21 @@ public class GameManager : MonoBehaviour
     public void SetCameraMoving(bool moving)
     {
         cameraMoving = moving;
+    }
+
+    public void AddCoins(int amount)
+    {
+        coins += amount;
+    }
+
+    public int GetCoins()
+    {
+        return coins;
+    }
+
+    public void SetCoins(int value)
+    {
+        coins = value;
     }
 
     private void TransitionToNextLevel()

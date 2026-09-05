@@ -12,6 +12,8 @@ public class Coin : ItemScript
 
         ObjectPoolManager.Instance.Return(this);
 
+
+        GameManager.Instance.AddCoins(value);
     }
 
 }
