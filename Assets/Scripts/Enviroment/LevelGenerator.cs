@@ -16,21 +16,17 @@ public class LevelGenerator : MonoBehaviour
         // Only mooving in axis Z
         level = new List<GameObject>();
         //roomsScreenCenters = new List<Vector3>();
-
-
     }
 
     public void GenerateLevel()
     {
-
-        Debug.Log("LEvel generated" );
 
         //List<GameObject> level = new();
 
         for (int i = 0; i < levelLength; i++)
         {
             level.Add(aisleGenerator.GenerateAisle(startPosition));
-            // 15f is the delta from aisle startposition
+            // 15f is the delta from aisle startpositiond
             roomsScreenCenters.Add(startPosition + new Vector3(0, 0, 8f));
 
             GameObject room = Instantiate(RoomPrefab, transform);
@@ -48,8 +44,6 @@ public class LevelGenerator : MonoBehaviour
 
             startPosition += new Vector3(0, 0, roomGenerator.Height / 2);
         }
-
-
     }
 
     public List<GameObject> GetLevel()

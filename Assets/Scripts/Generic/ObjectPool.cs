@@ -1,13 +1,19 @@
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
-public class ObjectPool<T> where T : Component
+
+public interface IObjectPool
+{
+    PooledObject Get();
+    void Return(PooledObject obj);
+}
+
+public class ObjectPool<T> : IObjectPool where T : PooledObject
 {
     private readonly T prefab;
     private readonly Transform parent;
-    private readonly Queue<T> objects = new();
+
+    private readonly Queue<T> availableObjects = new();
 
     public ObjectPool(T prefab, int initialSize, Transform parent = null)
     {
@@ -17,26 +23,28 @@ public class ObjectPool<T> where T : Component
         for (int i = 0; i < initialSize; i++)
         {
             T obj = CreateObject();
-            objects.Enqueue(obj);
+            availableObjects.Enqueue(obj);
         }
-
-    } 
+    }
 
     private T CreateObject()
     {
         T obj = Object.Instantiate(prefab, parent);
+
+        obj.SetPoolPrefab(prefab.gameObject);
+
         obj.gameObject.SetActive(false);
 
         return obj;
     }
 
-    public T Get()
+    public T GetTyped()
     {
         T obj;
 
-        if (objects.Count > 0)
+        if (availableObjects.Count > 0)
         {
-            obj = objects.Dequeue();
+            obj = availableObjects.Dequeue();
         }
         else
         {
@@ -48,11 +56,20 @@ public class ObjectPool<T> where T : Component
         return obj;
     }
 
-
-    public void Return(T obj)
+    public void ReturnTyped(T obj)
     {
         obj.gameObject.SetActive(false);
-        objects.Enqueue(obj);
+
+        availableObjects.Enqueue(obj);
     }
 
+    PooledObject IObjectPool.Get()
+    {
+        return GetTyped();
+    }
+
+    void IObjectPool.Return(PooledObject obj)
+    {
+        ReturnTyped((T)obj);
+    }
 }

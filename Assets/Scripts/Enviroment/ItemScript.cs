@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-public class ItemScript : MonoBehaviour
+public class ItemScript : PooledObject
 {
     [Header("DOTween parameters")]
     [SerializeField] float rotationPeriod = 2f;
@@ -19,6 +19,12 @@ public class ItemScript : MonoBehaviour
             StartTweening();
         }
     }
+
+
+    //protected void ReturnToPool()
+    //{
+    //    ObjectPoolManager.Instance.Return(this);
+    //}
 
 
     public virtual void OnSpawn() 
@@ -39,8 +45,6 @@ public class ItemScript : MonoBehaviour
 
         
     }
-
-
 
     protected virtual void PlaySound() {
         int soundIndex = Random.Range(0, CollectSoundEffects.Length);

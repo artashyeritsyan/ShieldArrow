@@ -29,14 +29,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     public Team Team => Team.Enemy;
 
     [Header("Combat Equipment")]
-    [Tooltip(
-        "Assign BowWeapon, CrossbowWeapon, " +
-        "or ShieldController.")]
     [SerializeField] private MonoBehaviour combatEquipmentBehaviour;
 
-    [Tooltip(
-        "Enemy-specific equipment speed multiplier. " +
-        "1 = normal, 1.5 = 50% faster.")]
     [SerializeField] private float equipmentSpeedMultiplier = 1f;
 
     private ICombatEquipment combatEquipment;
@@ -58,6 +52,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     [SerializeField] private bool isPaused;
 
     private PlayerController currentTarget;
+
+    [SerializeField] private Coin coinPrefab;
 
     private void Awake()
     {
@@ -472,13 +468,12 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     private void SpawnCoin()
     {
-        ObjectPoolManager.Instance.Spawn<Coin>(transform.position, Quaternion.identity);
+        ObjectPoolManager.Instance.Spawn(coinPrefab, transform.position, Quaternion.identity);
     }
 
     private void PlayAttackSound()
     {
-        PlayRandomSound(
-            attackSoundEffects);
+        PlayRandomSound(attackSoundEffects);
     }
 
     private void PlayRandomSound(

@@ -8,12 +8,12 @@ public class Coin : ItemScript
     {
         // TODO: add here some logic 
         // e.g AddCoins(value);
-        base.Collected(player);
+        Debug.Log($"Collected {value} coins");
 
-        ObjectPoolManager.Instance.Return(this);
-
-
+        //ObjectPoolManager.Instance.Return(this);
         GameManager.Instance.AddCoins(value);
+
+        ReturnToPool();
     }
 
 }

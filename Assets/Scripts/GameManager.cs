@@ -50,6 +50,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Object Pools")]
     [SerializeField] private Coin coinPrefab;
+    [SerializeField] private Coin coinsPrefab;
+
     //[SerializeField] private Diamond diamondPrefab;
 
     [Header("Coins")]
@@ -82,8 +84,7 @@ public class GameManager : MonoBehaviour
     {
         LevelGenerator.GenerateLevel();
 
-        ObjectPoolManager.Instance.CreatePool(coinPrefab, 10);
-
+        InitializePools();
     }
 
     private void Update()
@@ -94,6 +95,13 @@ public class GameManager : MonoBehaviour
         }
         
     }
+
+    void InitializePools()
+    {
+        ObjectPoolManager.Instance.CreatePool(coinPrefab, 10);
+        ObjectPoolManager.Instance.CreatePool(coinsPrefab, 10);
+    }
+
     public void SetGameState(GameStates newState)
     {
         if (CurrentGameState == newState)
@@ -123,10 +131,21 @@ public class GameManager : MonoBehaviour
 
         CurrentLevelState = newState;
 
-        TransitionToNextLevel();
         OnLevelStateChanged?.Invoke(CurrentLevelState);
+        TransitionToNextLevel();
+
+        if (CurrentLevelState == LevelStates.Aisle)
+            //SpawnEnemies();
 
         CheckCameraMoving();
+    }
+
+    void SpawnEnemies()
+    {
+        // Have some bugs here. Out of range
+        GameObject aisle = LevelGenerator.GetLevel()[currentRoomIndex - 1];
+        //aisle.
+        Vector3 position = LevelGenerator.GetScreenCenterOf(currentRoomIndex - 1);
     }
 
     void CheckCameraMoving()
@@ -192,7 +211,7 @@ public class GameManager : MonoBehaviour
     {
         screenCenter.position = LevelGenerator.GetScreenCenterOf(currentRoomIndex - 1);
 
-        for (int i = 0; i < playerManager.GetPlayers().Count; i++) 
+        for (int i = 0; i < playerManager.GetPlayers().Count; i++)
         {
             // Its for translating them to the next level, with some offset (to not be in center of screen))
             playerManager.GetPlayers()[i].transform.position = new Vector3(screenCenter.position.x + i, playerManager.GetPlayers()[i].transform.position.y, screenCenter.position.z - playersPositionOffset);

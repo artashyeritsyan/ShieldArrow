@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9222671401749536072}
   - component: {fileID: 3022729668764280257}
   - component: {fileID: 5603312887126849167}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 586260882619437488}
   - component: {fileID: 3184423310333370141}
   - component: {fileID: 7951380370819888961}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: DoorTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 1617422478647577387}
   - component: {fileID: 7684087622333796699}
   - component: {fileID: 554601567496935649}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

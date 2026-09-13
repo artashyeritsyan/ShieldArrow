@@ -1,66 +1,96 @@
 using System.Collections.Generic;
-using System;
-using UnityEditor;
 using UnityEngine;
 
 public class ObjectPoolManager : MonoBehaviour
 {
-    public static ObjectPoolManager Instance;
+    public static ObjectPoolManager Instance { get; private set; }
 
-    private Dictionary<Type, object> pools = new();
+    private readonly Dictionary<GameObject, IObjectPool> pools = new();
 
     private void Awake()
     {
-        Instance = this;
-    }
-
-    public void CreatePool<T>(T prefab, int size) where T : Component
-    {
-        var type = typeof(T);
-
-        if (pools.ContainsKey(type))
+        if (Instance != null && Instance != this)
         {
-             Debug.LogWarning($"Pool for type {type} already exists.");
+            Destroy(gameObject);
             return;
         }
 
-        var pool = new ObjectPool<T>(prefab, size, transform);
-        pools.Add(type, pool);
+        Instance = this;
     }
 
-    public T Spawn<T>(Vector3 position, Quaternion rotation) where T : Component
+    public void CreatePool<T>(T prefab, int initialSize)
+        where T : PooledObject
     {
-        var type = typeof(T);
+        GameObject key = prefab.gameObject;
 
-        if (!pools.ContainsKey(type))
+        if (pools.ContainsKey(key))
         {
-            Debug.LogError($"No pool for {type}! Create it first.");
+            Debug.LogWarning(
+                $"Pool already exists for prefab: {key.name}"
+            );
+
+            return;
+        }
+
+        ObjectPool<T> pool =
+            new ObjectPool<T>(
+                prefab,
+                initialSize,
+                transform
+            );
+
+        pools.Add(key, pool);
+    }
+
+    public T Spawn<T>(
+        T prefab,
+        Vector3 position,
+        Quaternion rotation)
+        where T : PooledObject
+    {
+        GameObject key = prefab.gameObject;
+
+        if (!pools.TryGetValue(key, out IObjectPool pool))
+        {
+            Debug.LogError(
+                $"No pool exists for prefab: {key.name}"
+            );
+
             return null;
         }
 
-        var pool = (ObjectPool<T>)pools[type];
-        var obj = pool.Get();
+        T obj = (T)pool.Get();
 
-        obj.transform.position = position;
-        obj.transform.rotation = rotation;
+        obj.transform.SetPositionAndRotation(
+            position,
+            rotation
+        );
 
         return obj;
     }
 
-    public void Return<T>(T obj) where T : Component
+    public void Return(PooledObject obj)
     {
-        var type = typeof(T);
+        GameObject key = obj.PoolPrefab;
 
-        if (!pools.ContainsKey(type))
+        if (key == null)
         {
-            Debug.LogError($"No pool for {type}!");
+            Debug.LogError(
+                $"{obj.name} has no PoolPrefab assigned!"
+            );
+
             return;
         }
 
-        var pool = (ObjectPool<T>)pools[type];
+        if (!pools.TryGetValue(key, out IObjectPool pool))
+        {
+            Debug.LogError(
+                $"No pool exists for prefab: {key.name}"
+            );
+
+            return;
+        }
+
         pool.Return(obj);
     }
-}
-
-
-
+}    

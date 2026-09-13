@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5631261368787117011}
-  - component: {fileID: 8011412205489657508}
   - component: {fileID: 2141995581523246334}
+  - component: {fileID: 28213469385002384}
   m_Layer: 0
   m_Name: Golds
   m_TagString: Untagged
@@ -34,23 +34,6 @@ Transform:
   - {fileID: 4407235610475390374}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8011412205489657508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1719649406917638974}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9b89f0ba41147e49888d030cc9c14d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  rotationPeriod: 8
-  bouncingTime: 1
-  bouncingMaxOffset: 0.2
-  CollectSoundEffects:
-  - {fileID: 8300000, guid: 0d18a144dbce1ed4da5a7d26dfb54c3b, type: 3}
 --- !u!65 &2141995581523246334
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -72,6 +55,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.71665025, y: 0.4327837, z: 0.73686165}
   m_Center: {x: -0.054833453, y: 0.06139177, z: 0.015214562}
+--- !u!114 &28213469385002384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1719649406917638974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 258ef7238c833144e8e95b5256413126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Coin
+  rotationPeriod: 8
+  bouncingTime: 1
+  bouncingMaxOffset: 0.2
+  CollectSoundEffects:
+  - {fileID: 8300000, guid: 0d18a144dbce1ed4da5a7d26dfb54c3b, type: 3}
+  value: 1
 --- !u!1001 &4225251741545464397
 PrefabInstance:
   m_ObjectHideFlags: 0
