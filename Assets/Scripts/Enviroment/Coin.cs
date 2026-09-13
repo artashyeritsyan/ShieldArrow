@@ -6,6 +6,7 @@ public class Coin : ItemScript
 
     public override void Collected(PlayerController player)
     {
+        base.Collected(player);
         // TODO: add here some logic 
         // e.g AddCoins(value);
         Debug.Log($"Collected {value} coins");
