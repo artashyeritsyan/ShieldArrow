@@ -70,6 +70,7 @@ MonoBehaviour:
   isDead: 0
   isInactive: 0
   isPaused: 0
+  coinPrefab: {fileID: 7871636596010262339, guid: 586a190b9e72148478a62dc6b4bcd965, type: 3}
 --- !u!95 &2637319741189370297
 Animator:
   serializedVersion: 7

@@ -452,7 +452,7 @@ public class PlayerInputManagerController : MonoBehaviour
     {
         bool canJoin = false;
 
-        if (GameManager.Instance.CurrentGameState != GameStates.Menu && GameManager.Instance.CurrentGameState != GameStates.Pause)
+        if (GameManager.Instance.CurrentGameState == GameStates.Playing)
         {
             canJoin = isLobbyActive && PlayerInput.all.Count < playerMaxCount;
         }

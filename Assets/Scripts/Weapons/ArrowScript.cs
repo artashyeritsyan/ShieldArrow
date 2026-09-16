@@ -21,32 +21,32 @@ public class ArrowScript : MonoBehaviour
     private int ricochetsLeft; // CHANGED: float -> int
     private Vector3 direction;
 
-    private GameObject owner; // ADDED
-    private Team ownerTeam; // ADDED
-    private DamageData damageData; // ADDED
+    private GameObject owner;
+    private Team ownerTeam;
+    private DamageData damageData;
     private CoreStats attackerStats; 
     private bool isInitialized;
 
-    private Coroutine lifetimeCoroutine; // ADDED
+    private Coroutine lifetimeCoroutine;
 
     private void Start()
     {
-        SetupProjectile(); // CHANGED
+        SetupProjectile();
     }
 
-    private void SetupProjectile() // ADDED
+    private void SetupProjectile()
     {
-        direction = transform.forward.normalized; // CHANGED
+        direction = transform.forward.normalized;
         ricochetsLeft = maxRicochetCount;
 
-        SetupOutline(); // ADDED
+        SetupOutline();
 
-        if (lifetimeCoroutine != null) // ADDED
+        if (lifetimeCoroutine != null)
         {
-            StopCoroutine(lifetimeCoroutine); // ADDED
+            StopCoroutine(lifetimeCoroutine);
         }
 
-        lifetimeCoroutine = StartCoroutine(DestroyArrow()); // CHANGED
+        lifetimeCoroutine = StartCoroutine(DestroyArrow());
     }
 
     public void Initialize( 
@@ -175,17 +175,17 @@ public class ArrowScript : MonoBehaviour
 
 
 
-    private void HandleRicochet(RaycastHit hit) // ADDED
+    private void HandleRicochet(RaycastHit hit)
     {
         if (ricochetsLeft <= 0)
         {
-            DestroyProjectile(); // CHANGED
+            DestroyProjectile();
             return;
         }
 
         direction = Vector3
             .Reflect(direction, hit.normal)
-            .normalized; // CHANGED
+            .normalized;
 
         transform.forward = direction;
 
@@ -244,7 +244,7 @@ public class ArrowScript : MonoBehaviour
     //    TryDamageTarget(other);
     //}
 
-    private bool IsOwnerCollider(Collider other) // ADDED
+    private bool IsOwnerCollider(Collider other)
     {
         if (owner == null)
         {
@@ -263,21 +263,21 @@ public class ArrowScript : MonoBehaviour
     {
         yield return new WaitForSeconds(lifeTime);
 
-        DestroyProjectile(); // CHANGED
+        DestroyProjectile();
     }
 
-    private void DestroyProjectile() // ADDED
+    private void DestroyProjectile()
     {
-        if (lifetimeCoroutine != null) // ADDED
+        if (lifetimeCoroutine != null)
         {
-            StopCoroutine(lifetimeCoroutine); // ADDED
-            lifetimeCoroutine = null; // ADDED
+            StopCoroutine(lifetimeCoroutine);
+            lifetimeCoroutine = null;
         }
 
         Destroy(gameObject);
     }
 
-    private void SetupOutline() // ADDED
+    private void SetupOutline()
     {
         Outline outline = GetComponent<Outline>();
 
@@ -325,7 +325,7 @@ public class ArrowScript : MonoBehaviour
     public void SetMaxRicochetCount(int count)
     {
         maxRicochetCount = count;
-        ricochetsLeft = count; // ADDED
+        ricochetsLeft = count;
     }
 
     public int GetMaxRicochetCount()
