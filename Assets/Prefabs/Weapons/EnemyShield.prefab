@@ -71,6 +71,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShieldController
   shieldCollider: {fileID: 3761441582647141346}
+  attackPoint: {fileID: 6738647882331736773}
+  attackSize: {x: 1.5, y: 1, z: 1.5}
+  attackLayer:
+    serializedVersion: 2
+    m_Bits: 64
   attackSpeed: 1
   attackStartDelay: 0
   activeTime: 0.25
@@ -159,7 +164,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6738647882331736773}
   m_Layer: 10
-  m_Name: ShootPoint
+  m_Name: AttackPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

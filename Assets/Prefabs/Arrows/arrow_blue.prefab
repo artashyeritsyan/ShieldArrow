@@ -272,6 +272,8 @@ MonoBehaviour:
   lifeTime: 10
   speed: 10
   maxRicochetCount: 2
+  sphereCastRadius: 0.05
+  castExtraDistance: 0.1
   hitMask:
     serializedVersion: 2
     m_Bits: 1856

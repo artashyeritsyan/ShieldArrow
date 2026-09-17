@@ -62,34 +62,17 @@ public abstract class WeaponController :
     [SerializeField]
     protected Transform shootPoint;
 
-    [SerializeField]
-    protected GameObject projectilePrefab;
+    [SerializeField] protected GameObject projectilePrefab;
 
     [Header("Parameters")]
-    [Tooltip(
-        "Base attacks per second before applying " +
-        "the action-speed multiplier.")]
-    [SerializeField]
-    protected float shootingSpeed = 2f;
+    [SerializeField] protected float shootingSpeed = 2f;
 
-    [Tooltip(
-        "Time between starting the attack animation " +
-        "and performing the actual attack.")]
-    [SerializeField]
     protected float attackStartDelay = 0f;
 
-    [Tooltip(
-        "Maximum distance from which an enemy can " +
-        "use this weapon.")]
-    [SerializeField]
-    protected float effectiveRange = 12f;
+    [SerializeField] protected float effectiveRange = 12f;
 
     [Header("Runtime Speed Modifier")]
-    [Tooltip(
-        "1 = normal speed, 1.5 = 50% faster, " +
-        "2 = twice as fast.")]
-    [SerializeField]
-    protected float actionSpeedMultiplier = 1f;
+    [SerializeField] protected float actionSpeedMultiplier = 1f;
 
     protected GameObject owner;
     protected Team ownerTeam;
@@ -197,8 +180,7 @@ public abstract class WeaponController :
                 shootPoint.position,
                 rotation);
 
-        ArrowScript arrow =
-            projectileObject.GetComponent<ArrowScript>();
+        ArrowScript arrow = projectileObject.GetComponent<ArrowScript>();
 
         if (arrow == null)
         {
@@ -210,7 +192,7 @@ public abstract class WeaponController :
             return;
         }
 
-        DamageData damageData =
+        DamageData damageData = 
             new DamageData
             {
                 baseDamage = ownerStats.damage,

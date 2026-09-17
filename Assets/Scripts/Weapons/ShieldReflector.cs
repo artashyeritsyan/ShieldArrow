@@ -4,6 +4,8 @@ public class ShieldReflector : MonoBehaviour
 {
     [SerializeField] private ShieldController shieldController;
 
+
+    // Currently it can reflect in every case, except the same team arrow 
     public bool CanReflect(Team projectileTeam)
     {
         if (projectileTeam == shieldController.GetOwnerTeam())

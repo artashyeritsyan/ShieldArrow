@@ -1,44 +1,37 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class ShieldController :
-    MonoBehaviour,
-    ICombatEquipment
+    MonoBehaviour, ICombatEquipment
 {
     private const float SECOND = 1f;
 
     [Header("Shield")]
     [SerializeField] private Collider shieldCollider;
+    [SerializeField] private Transform attackPoint;
+    [SerializeField]private Vector3 attackSize = new Vector3(1.5f, 1f, 1.5f);
+
+    [SerializeField] private LayerMask attackLayer;
+
 
     [Header("Attack")]
-    [Tooltip("Base shield attacks per second before " +
-        "applying the action-speed multiplier.")]
     [SerializeField] private float attackSpeed = 1f;
-
-    [Tooltip("Time between starting the animation and " +
-        "activating the shield collider.")]
     [SerializeField] private float attackStartDelay = 0f;
-
-    [Tooltip("How long the shield collider remains active.")]
     [SerializeField] private float activeTime = 0.25f;
-
-    [Tooltip("Maximum distance from which an enemy can " +
-        "start a shield attack.")]
-    [SerializeField]private float effectiveRange = 2f;
+    [SerializeField] private float effectiveRange = 2f;
 
     [Header("Runtime Speed Modifier")]
-    [Tooltip(
-        "1 = normal speed, 1.5 = 50% faster, " +
-        "2 = twice as fast.")]
-    [SerializeField]
-    private float actionSpeedMultiplier = 1f;
+    [SerializeField] private float actionSpeedMultiplier = 1f;
 
     [SerializeField] public bool isEnemyShield;
 
     private GameObject owner;
     private Team ownerTeam;
     private CoreStats ownerStats;
+    private DamageData damageData;
 
     private bool canAttack = true;
     private bool isAttacking;
@@ -91,6 +84,19 @@ public class ShieldController :
         }
     }
 
+    private void Start()
+    {
+        // no crit for now
+        //damageData = new DamageData {
+        //baseDamage = ownerStats.damage,
+        //canCrit = true,
+        //critChance = 0f,
+        //critMultiplier = 1f };
+
+        // LAter add here damage
+        Initialize(gameObject, ownerTeam, ownerStats);
+    }
+
     public void Initialize(
         GameObject shieldOwner,
         Team team,
@@ -98,6 +104,7 @@ public class ShieldController :
     {
         owner = shieldOwner;
         ownerTeam = team;
+        //damageData = shieldDamage;
         ownerStats = stats;
 
         isInitialized = true;
@@ -106,10 +113,7 @@ public class ShieldController :
 
         if (shieldCollider != null)
         {
-            //shieldCollider.enabled = false;
             shieldCollider.enabled = true;
-
-            if (isEnemyShield) { shieldCollider.enabled = true; }
         }
     }
 
@@ -123,12 +127,41 @@ public class ShieldController :
         if (!CanAttack())
             return false;
 
-        StartCoroutine(
-            ShieldAttackRoutine());
+        StartCoroutine(ShieldAttackRoutine());
 
         return true;
     }
 
+    private void PerformAttackHit()
+    {
+        if (attackPoint == null)
+        {
+            Debug.LogError($"{name}: Attack point is missing.");
+
+            return;
+        }
+
+        Collider[] hits = Physics.OverlapBox(
+            attackPoint.position,
+            attackSize * 0.5f,
+            attackPoint.rotation,
+            attackLayer,
+            QueryTriggerInteraction.Ignore
+        );
+
+        foreach (Collider hit in hits)
+        {
+            IDamageable target = hit.GetComponentInParent<IDamageable>();
+
+            if (target == null)
+                continue;
+
+            if (target.Team == ownerTeam)
+                continue;
+
+            target.TakeDamage(damageData, ownerStats);
+        }
+    }
     private bool CanAttack()
     {
         if (!canAttack ||
@@ -164,6 +197,22 @@ public class ShieldController :
         return true;
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+
+        Gizmos.matrix = Matrix4x4.TRS(
+            attackPoint.position,
+            attackPoint.rotation,
+            Vector3.one
+        );
+
+        Gizmos.DrawWireCube(
+            Vector3.zero,
+            attackSize
+        );
+    }
     private IEnumerator ShieldAttackRoutine()
     {
         canAttack = false;
@@ -188,6 +237,7 @@ public class ShieldController :
         shieldCollider.enabled = true;
 
         OnShieldAttackStarted?.Invoke();
+        PerformAttackHit();
 
         /*
          * The active reflection window is also scaled,
