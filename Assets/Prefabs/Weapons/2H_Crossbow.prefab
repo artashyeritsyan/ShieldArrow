@@ -79,11 +79,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CrossbowWeapon
   shootPoint: {fileID: 2754187627423734102}
   projectilePrefab: {fileID: 919132149155446097, guid: 1c683a2040324c84ebb215e9507c590b, type: 3}
-  shootingSpeed: 2
+  shootingSpeed: 1
   attackStartDelay: 0
+  effectiveRange: 12
+  actionSpeedMultiplier: 1
   shotsInRow: 3
   delayBetweenShots: 0.3
-  reloadTime: 1.2
+  reloadTime: 3
 --- !u!1 &7906205414524941098
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,9 @@ public class ArrowScript : MonoBehaviour
     // and is destroyed on collision N+1.
     [SerializeField] private int maxRicochetCount = 2;
 
+    [SerializeField] private float sphereCastRadius = 0.05f;
+    [SerializeField] private float castExtraDistance = 0.05f;
+
     [SerializeField] private LayerMask hitMask;
 
     [Header("Visuals")]
@@ -27,10 +30,13 @@ public class ArrowScript : MonoBehaviour
     private CoreStats attackerStats; 
     private bool isInitialized;
 
+    private Rigidbody rb;
+
     private Coroutine lifetimeCoroutine;
 
     private void Start()
     {
+        rb = GetComponent<Rigidbody>();
         SetupProjectile();
     }
 
@@ -65,32 +71,49 @@ public class ArrowScript : MonoBehaviour
         ricochetsLeft = maxRicochetCount;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!isInitialized)
         {
             return;
         }
 
-        float moveDistance = speed * Time.deltaTime;
+        //float moveDistance = speed;
+        float moveDistance = speed * Time.fixedDeltaTime;
 
-        if (Physics.Raycast(
+        float castDistance = moveDistance + castExtraDistance;
+
+        if (Physics.SphereCast(
                 transform.position,
+                sphereCastRadius,
                 direction,
                 out RaycastHit hit,
-                moveDistance,
+                castDistance,
                 hitMask,
-                QueryTriggerInteraction.Ignore))
+                QueryTriggerInteraction.Collide))
         {
-            if (!OnHit(hit))
-            {
-                transform.position += direction * moveDistance;
-            }
+            if (OnHit(hit)) return;
         }
-        else
-        {
-            transform.position += direction * moveDistance;
-        }
+
+        //transform.position += direction * moveDistance;
+        rb.MovePosition(rb.position + direction * moveDistance);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying)
+            return;
+
+        float moveDistance = speed * Time.fixedDeltaTime;
+        float castDistance = moveDistance + castExtraDistance;
+
+        Vector3 start = transform.position;
+        Vector3 end = start + direction.normalized * castDistance * 2f;
+
+        Gizmos.DrawLine(start, end);
+
+        Gizmos.DrawWireSphere(start, sphereCastRadius);
+        Gizmos.DrawWireSphere(end, sphereCastRadius);
     }
 
     private bool OnHit(RaycastHit hit)

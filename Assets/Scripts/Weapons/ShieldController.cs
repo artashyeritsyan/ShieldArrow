@@ -9,32 +9,23 @@ public class ShieldController :
     private const float SECOND = 1f;
 
     [Header("Shield")]
-    [SerializeField]
-    private Collider shieldCollider;
+    [SerializeField] private Collider shieldCollider;
 
     [Header("Attack")]
-    [Tooltip(
-        "Base shield attacks per second before " +
+    [Tooltip("Base shield attacks per second before " +
         "applying the action-speed multiplier.")]
-    [SerializeField]
-    private float attackSpeed = 1f;
+    [SerializeField] private float attackSpeed = 1f;
 
-    [Tooltip(
-        "Time between starting the animation and " +
+    [Tooltip("Time between starting the animation and " +
         "activating the shield collider.")]
-    [SerializeField]
-    private float attackStartDelay = 0f;
+    [SerializeField] private float attackStartDelay = 0f;
 
-    [Tooltip(
-        "How long the shield collider remains active.")]
-    [SerializeField]
-    private float activeTime = 0.25f;
+    [Tooltip("How long the shield collider remains active.")]
+    [SerializeField] private float activeTime = 0.25f;
 
-    [Tooltip(
-        "Maximum distance from which an enemy can " +
+    [Tooltip("Maximum distance from which an enemy can " +
         "start a shield attack.")]
-    [SerializeField]
-    private float effectiveRange = 2f;
+    [SerializeField]private float effectiveRange = 2f;
 
     [Header("Runtime Speed Modifier")]
     [Tooltip(
@@ -264,9 +255,8 @@ public class ShieldController :
     public bool CanReflectProjectile(
         Team projectileTeam)
     {
-        return
-            isAttacking &&
-            projectileTeam != ownerTeam;
+        return isAttacking && projectileTeam != ownerTeam;
+        //return projectileTeam != ownerTeam;
     }
 
     public void NotifyProjectileReflected()

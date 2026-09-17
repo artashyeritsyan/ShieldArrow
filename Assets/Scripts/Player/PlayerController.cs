@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -586,8 +587,18 @@ public class PlayerController : MonoBehaviour, IDamageable
         //gameObject.SetActive(false);
 
         DisableColliders();
+
+        StartCoroutine(DeactivatePlayer());
     }
 
+    float playerDeactivateTime = 2.6f;
+    IEnumerator DeactivatePlayer()
+    {
+        yield return new WaitForSeconds(playerDeactivateTime);
+        //gameObject.SetActive(false);
+        // teleports out of screen
+        transform.position = new Vector3(0, -100, 0); 
+    }
 
     void DisableColliders()
     {
