@@ -87,14 +87,17 @@ public class ShieldController :
     private void Start()
     {
         // no crit for now
-        //damageData = new DamageData {
-        //baseDamage = ownerStats.damage,
-        //canCrit = true,
-        //critChance = 0f,
-        //critMultiplier = 1f };
+        //damageData = new DamageData
+        //{
+        //    baseDamage = ownerStats.damage,
+        //    canCrit = false,
+        //    critChance = 0f,
+        //    critMultiplier = 1f
+        //};
 
         // LAter add here damage
-        Initialize(gameObject, ownerTeam, ownerStats);
+        //Initialize(owner, ownerTeam, ownerStats);
+
     }
 
     public void Initialize(
@@ -104,7 +107,6 @@ public class ShieldController :
     {
         owner = shieldOwner;
         ownerTeam = team;
-        //damageData = shieldDamage;
         ownerStats = stats;
 
         isInitialized = true;
@@ -115,6 +117,14 @@ public class ShieldController :
         {
             shieldCollider.enabled = true;
         }
+
+        damageData = new DamageData
+        {
+            baseDamage = ownerStats.damage,
+            canCrit = false,
+            critChance = 0f,
+            critMultiplier = 1f
+        };
     }
 
     public bool Use()
@@ -148,16 +158,18 @@ public class ShieldController :
             attackLayer,
             QueryTriggerInteraction.Ignore
         );
-
+        Debug.Log(hits);
         foreach (Collider hit in hits)
         {
             IDamageable target = hit.GetComponentInParent<IDamageable>();
+            Debug.Log("Attacking " + hit.name);
 
             if (target == null)
                 continue;
 
             if (target.Team == ownerTeam)
                 continue;
+            // ????? TODO THIS PART
 
             target.TakeDamage(damageData, ownerStats);
         }
@@ -197,7 +209,7 @@ public class ShieldController :
         return true;
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         if (attackPoint == null)
             return;
@@ -217,20 +229,14 @@ public class ShieldController :
     {
         canAttack = false;
 
-        /*
-         * Start the player's or enemy's shield
-         * attack animation.
-         */
         OnAttack?.Invoke();
 
-        float scaledAttackStartDelay =
-            GetScaledDuration(
-                attackStartDelay);
+        float scaledAttackStartDelay = GetScaledDuration(attackStartDelay);
 
         if (scaledAttackStartDelay > 0f)
         {
-            yield return new WaitForSeconds(
-                scaledAttackStartDelay);
+            //Debug.LogWarning("Waiting to Attack");
+            yield return new WaitForSeconds(scaledAttackStartDelay);
         }
 
         isAttacking = true;
@@ -239,10 +245,6 @@ public class ShieldController :
         OnShieldAttackStarted?.Invoke();
         PerformAttackHit();
 
-        /*
-         * The active reflection window is also scaled,
-         * keeping it synchronized with a faster animation.
-         */
         float scaledActiveTime = GetScaledDuration(activeTime);
 
         if (scaledActiveTime > 0f)

@@ -78,7 +78,7 @@ MonoBehaviour:
     m_Bits: 64
   attackSpeed: 1
   attackStartDelay: 0
-  activeTime: 0.25
+  activeTime: 0.2
   effectiveRange: 10
   actionSpeedMultiplier: 1
   isEnemyShield: 1

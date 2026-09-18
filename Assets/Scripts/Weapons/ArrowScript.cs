@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Linq.Expressions;
 
 public class ArrowScript : MonoBehaviour
 {
@@ -90,7 +91,7 @@ public class ArrowScript : MonoBehaviour
                 out RaycastHit hit,
                 castDistance,
                 hitMask,
-                QueryTriggerInteraction.Collide))
+                QueryTriggerInteraction.Ignore))
         {
             if (OnHit(hit)) return;
         }
@@ -189,8 +190,8 @@ public class ArrowScript : MonoBehaviour
 
         owner = newOwner;
         ownerTeam = newOwnerTeam;
+        Debug.Log("OWNER TEAM = " + newOwnerTeam);
         attackerStats = newOwnerStats;
-
         SetupOutline();
 
         transform.position += direction * 0.02f;
@@ -313,7 +314,6 @@ public class ArrowScript : MonoBehaviour
 
             return;
         }
-
         if (outline == null)
         {
             outline = gameObject.AddComponent<Outline>();

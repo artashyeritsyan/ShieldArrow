@@ -37,11 +37,7 @@ public class KnightController : PlayerController
         //        critMultiplier = 2f
         //    };
 
-        //shieldController.Initialize(
-        //    gameObject,
-        //    Team,
-        //    damageData,
-        //    stats.core);
+        shieldController.Initialize(gameObject, Team, stats.core);
     }
 
     protected override void OnEquipmentAttack()
