@@ -306,8 +306,8 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (animator == null)
             return;
 
-        animator.SetFloat("AttackSpeed", combatEquipment.EffectiveActionSpeed);
-        //animator.SetFloat("AttackSpeed", 1);
+        //animator.SetFloat("AttackSpeed", combatEquipment.EffectiveActionSpeed);
+        animator.SetFloat("AttackSpeed", 1);
 
         animator.SetTrigger("Attack");
     }
@@ -432,13 +432,9 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         if (animator != null)
         {
-            animator.SetBool(
-                "Reloading",
-                false);
+            animator.SetBool("Reloading", false);
 
-            animator.SetBool(
-                "Dead",
-                true);
+            animator.SetBool("Dead", true);
         }
 
         DisableEnemyColliders();
@@ -491,8 +487,8 @@ public class EnemyController : MonoBehaviour, IDamageable
         }
 
         int randomIndex = Random.Range(0, sounds.Length);
-        float randomVolume = Random.Range(0.7f, 0.9f);
-        float randomPitch = Random.Range(0.8f, 1.2f);
+        float randomVolume = Random.Range(0.5f, 0.6f);
+        float randomPitch = Random.Range(0.9f, 1.1f);
 
         AudioManager.Play(sounds[randomIndex], randomVolume, randomPitch);
     }

@@ -278,17 +278,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1856
   wallHitSoundEffects:
-  - {fileID: 8300000, guid: ef6777420e916fe48b86cd6dbfdae6d8, type: 3}
-  - {fileID: 8300000, guid: e4b96098ba066df4ab4c13305afee56d, type: 3}
-  - {fileID: 8300000, guid: dde3b765d3625804c93855cc854e9fc5, type: 3}
-  - {fileID: 8300000, guid: a619d81387b199a4caf62c1ba5daef4c, type: 3}
-  - {fileID: 8300000, guid: 40f0c9bf95ac4cc4a98679aa1f2e35e0, type: 3}
+  - {fileID: 8300000, guid: e27318e23eecff9409ec9a8ea9a3b6b1, type: 3}
+  - {fileID: 8300000, guid: 3dacdfab5a708a04b8520780cc4c9c8d, type: 3}
+  - {fileID: 8300000, guid: 03a6a39e8659a1a47a9fccfca5675a87, type: 3}
+  - {fileID: 8300000, guid: 7b25e06ddc1dc8546ab0809ee408d319, type: 3}
   shieldHitSoundEffects:
-  - {fileID: 8300000, guid: 1afaccfb8cbf2cc488b9afa113dae24f, type: 3}
-  - {fileID: 8300000, guid: c4c59369b505f0f4e8856c71c0a8d8c7, type: 3}
-  - {fileID: 8300000, guid: 3056ad2d59e270042ace3c409b92664a, type: 3}
-  - {fileID: 8300000, guid: 6c56b85be794ca14fa861677e172f6ad, type: 3}
-  - {fileID: 8300000, guid: 77d2f492d70720f4ca66fa1840ad4b3f, type: 3}
+  - {fileID: 8300000, guid: a709c1c748eb4f446b3d269b68b15ef7, type: 3}
+  - {fileID: 8300000, guid: b0b8721472b06b642a5ef4d253ed7856, type: 3}
   showOutline: 1
   outlineColor: {r: 1, g: 0, b: 0, a: 1}
   outlineWidth: 1

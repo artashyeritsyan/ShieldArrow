@@ -68,12 +68,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7f066f2cb31fb8d4cb3bd4ffc12f60b4, type: 3}
   reloadSoundEffects: []
   hitSoundEffects:
-  - {fileID: 8300000, guid: 31c9d01e48ca6644bb906afb6eeb7582, type: 3}
-  - {fileID: 8300000, guid: 3f8c129af5b3c86428b12ec19eb2e590, type: 3}
-  - {fileID: 8300000, guid: 9c51119f5a5fe0d44babca1ae55afd6f, type: 3}
-  - {fileID: 8300000, guid: 01e68f6d1c9a198449463151abe5ca26, type: 3}
+  - {fileID: 8300000, guid: 5f62489aac68d8d4d907f678b1ca4c4f, type: 3}
+  - {fileID: 8300000, guid: 0f6643b98bc18b144a08083e3d214520, type: 3}
+  - {fileID: 8300000, guid: 5c4e753613272ae438299f6a5f40d821, type: 3}
+  - {fileID: 8300000, guid: 39f493eeb334af8419ebf1ba1c5206ae, type: 3}
   deadSoundEffects:
-  - {fileID: 8300000, guid: 841b73c61954c47479da57549b9b7dd2, type: 3}
+  - {fileID: 8300000, guid: a6f16a2289c20de4eb44367865f74148, type: 3}
   isDead: 0
   isInactive: 0
   isPaused: 1

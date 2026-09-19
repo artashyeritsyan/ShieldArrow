@@ -10,33 +10,14 @@ public interface ICombatEquipment
     event Action OnReloadStarted;
     event Action OnReloadFinished;
 
-    /*
-     * Base equipment speed configured in the Inspector.
-     *
-     * WeaponController:
-     * shootingSpeed
-     *
-     * ShieldController:
-     * attackSpeed
-     */
+
     float BaseActionSpeed { get; }
 
-    /*
-     * Runtime multiplier used for upgrades,
-     * buffs and debuffs.
-     */
+
     float ActionSpeedMultiplier { get; }
 
-    /*
-     * Final speed used by animation and equipment logic.
-     *
-     * BaseActionSpeed * ActionSpeedMultiplier
-     */
     float EffectiveActionSpeed { get; }
 
-    /*
-     * Distance at which an enemy may use this equipment.
-     */
     float EffectiveRange { get; }
 
     void Initialize(
@@ -65,7 +46,7 @@ public abstract class WeaponController :
     [SerializeField] protected GameObject projectilePrefab;
 
     [Header("Parameters")]
-    [SerializeField] protected float shootingSpeed = 2f;
+    [SerializeField] protected float shootingSpeed = 1f;
 
     protected float attackStartDelay = 0f;
 
@@ -85,15 +66,9 @@ public abstract class WeaponController :
     public event Action OnReloadStarted;
     public event Action OnReloadFinished;
 
-    public float BaseActionSpeed =>
-        Mathf.Max(
-            shootingSpeed,
-            0.01f);
+    public float BaseActionSpeed => Mathf.Max(shootingSpeed, 0.01f);
 
-    public float ActionSpeedMultiplier =>
-        Mathf.Max(
-            actionSpeedMultiplier,
-            0.01f);
+    public float ActionSpeedMultiplier => Mathf.Max(actionSpeedMultiplier, 0.01f);
 
     public float EffectiveActionSpeed =>
         Mathf.Max(
@@ -119,12 +94,6 @@ public abstract class WeaponController :
         canShoot = true;
     }
 
-    /*
-     * PlayerController and EnemyController call Use().
-     *
-     * The derived weapon still controls its actual
-     * attack implementation through Shoot().
-     */
     public virtual bool Use()
     {
         return Shoot();

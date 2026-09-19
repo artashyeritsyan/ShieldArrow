@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum PlayerClass
@@ -39,6 +38,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     [Header("Movement")]
     [SerializeField] private float speedTransitionTime = 10f;
+
+
 
     private Vector3 moveDirection;
     private Vector3 lerpedDirection;
@@ -84,6 +85,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     [Header("Sound Effects")]
     [SerializeField] protected AudioClip[] attackSoundEffects;
+    [SerializeField] protected Vector2 volumeRange = new Vector2(0.8f, 1f); 
+    [SerializeField] protected Vector2 pitchRange = new Vector2(0.9f, 1.1f);
+
+    [SerializeField] protected AudioClip[] walkingSoundEffects;
+    // This part for walking sound effect
+    [SerializeField] protected float minStepInterval = 0.25f;
+    [SerializeField] protected float maxStepInterval = 0.55f;
+    [SerializeField] protected float minMovementSpeed = 0.1f;
+
+
+    private float stepTimer;
 
     [Header("Main Modifiers")]
     [SerializeField] protected bool isDead;
@@ -265,59 +277,37 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (combatEquipment == null)
             return;
 
-        combatEquipment.OnAttack -=
-            HandleEquipmentAttack;
-
-        combatEquipment.OnReloadStarted -=
-            HandleReloadStarted;
-
-        combatEquipment.OnReloadFinished -=
-            HandleReloadFinished;
+        combatEquipment.OnAttack -= HandleEquipmentAttack;
+        combatEquipment.OnReloadStarted -= HandleReloadStarted;
+        combatEquipment.OnReloadFinished -= HandleReloadFinished;
     }
 
     private void HandleMovement()
     {
-        if (rb == null ||
-            input == null ||
-            stats == null)
+        if (rb == null || input == null || stats == null)
         {
             return;
         }
 
         if (canMove)
         {
-            moveDirection =
-                new Vector3(
-                    input.move.x,
-                    0f,
-                    input.move.y);
+            moveDirection = new Vector3(input.move.x, 0f, input.move.y);
         }
         else
         {
-            moveDirection =
-                Vector3.zero;
+            moveDirection = Vector3.zero;
         }
 
-        lerpedDirection =
-            Vector3.Lerp(
-                lerpedDirection,
-                moveDirection,
-                Time.deltaTime *
-                speedTransitionTime);
+        lerpedDirection = Vector3.Lerp(lerpedDirection, moveDirection,
+                Time.deltaTime * speedTransitionTime);
 
-        rb.AddForce(
-            stats.core.speed *
-            speedMultiplier *
-            Time.deltaTime *
-            lerpedDirection);
+        rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * lerpedDirection);
+        
     }
 
     private void HandleAttack()
     {
-        if (input == null ||
-            !input.attack ||
-            !canAttack ||
-            combatEquipment == null)
+        if (input == null || !input.attack || !canAttack || combatEquipment == null)
         {
             return;
         }
@@ -449,29 +439,17 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             // Free 360-degree rotation.
             RotateCharacter(desiredDirection);
-            //aimCenterDirection = transform.forward;
-            //aimCenterDirection.y = 0f;
-            //aimCenterDirection.Normalize();
 
             return;
         }
 
         // Restricted rotation: -maxAngle to +maxAngle.
-        float angle = Vector3.SignedAngle(
-            aimCenterDirection,
-            desiredDirection,
-            Vector3.up);
+        float angle = Vector3.SignedAngle(aimCenterDirection, desiredDirection, Vector3.up);
 
-        float clampedAngle = Mathf.Clamp(
-            angle,
-            -maxAngle,
-            maxAngle);
+        float clampedAngle = Mathf.Clamp(angle, -maxAngle, maxAngle);
 
-        Vector3 clampedDirection =
-            Quaternion.AngleAxis(
-                clampedAngle,
-                Vector3.up) *
-            aimCenterDirection;
+        Vector3 clampedDirection = Quaternion.AngleAxis(clampedAngle, Vector3.up)
+            * aimCenterDirection;
 
         RotateCharacter(clampedDirection);
     }
@@ -482,10 +460,9 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             switch (CurrentInteraction)
             {
-                case InteractionType.None:
-                    return;
+                case InteractionType.None: return;
 
-                case InteractionType.ClassChange:
+                case InteractionType.ClassChange: 
 
                     playerInputManagerController?.TryChangeClass(this);
 
@@ -514,17 +491,12 @@ public class PlayerController : MonoBehaviour, IDamageable
         playerInputManagerController = manager;
     }
 
-    public void TakeDamage(
-            DamageData damageData,
-            CoreStats attackerStats)
+    public void TakeDamage(DamageData damageData, CoreStats attackerStats)
     {
         if (isDead || stats == null)
             return;
 
-        DamageSystem.ProcessDamage(
-            damageData,
-            attackerStats,
-            stats.core);
+        DamageSystem.ProcessDamage(damageData, attackerStats, stats.core);
 
         OnDamageReceived();
 
@@ -563,19 +535,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         if (combatEquipmentBehaviour != null)
         {
-            combatEquipmentBehaviour.enabled =
-                false;
+            combatEquipmentBehaviour.enabled = false;
         }
 
         if (animator != null)
         {
-            animator.SetBool(
-                "Reloading",
-                false);
-
-            animator.SetBool(
-                "Dead",
-                true);
+            animator.SetBool("Reloading", false);
+            animator.SetBool("Dead", true);
         }
 
         //DisableEnemyColliders();  // TODO: Implemen this part
@@ -592,8 +558,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     IEnumerator DeactivatePlayer()
     {
         yield return new WaitForSeconds(playerDeactivateTime);
-        //gameObject.SetActive(false);
-        // teleports out of screen
+
         transform.position = new Vector3(0, -100, 0); 
     }
 
@@ -609,6 +574,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void RotateCharacter(Vector3 direction)
     {
+        if(isDead) return;
+
         direction.y = 0f;
 
         if (direction.sqrMagnitude <= 0.0001f)
@@ -650,8 +617,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         canRotate = value;
     }
 
-    protected float GetScaledEquipmentDuration(
-        float baseDuration)
+    protected float GetScaledEquipmentDuration(float baseDuration)
     {
         float multiplier =
             combatEquipment != null
@@ -659,44 +625,26 @@ public class PlayerController : MonoBehaviour, IDamageable
                     .ActionSpeedMultiplier
                 : attackSpeedMultiplier;
 
-        return Mathf.Max(
-            baseDuration /
-            Mathf.Max(multiplier, 0.01f),
-            0f);
+        return Mathf.Max(baseDuration / Mathf.Max(multiplier, 0.01f), 0f);
     }
 
-    public void SetAttackSpeedMultiplier(
-        float multiplier)
+    public void SetAttackSpeedMultiplier(float multiplier)
     {
-        attackSpeedMultiplier =
-            Mathf.Max(
-                multiplier,
-                0.01f);
+        attackSpeedMultiplier = Mathf.Max(multiplier, 0.01f);
 
-        combatEquipment?
-            .SetActionSpeedMultiplier(
-                attackSpeedMultiplier);
+        combatEquipment?.SetActionSpeedMultiplier(attackSpeedMultiplier);
     }
 
-    public void AddAttackSpeedMultiplier(
-        float amount)
+    public void AddAttackSpeedMultiplier(float amount)
     {
-        attackSpeedMultiplier =
-            Mathf.Max(
-                attackSpeedMultiplier +
-                amount,
-                0.01f);
+        attackSpeedMultiplier = Mathf.Max(attackSpeedMultiplier + amount, 0.01f);
 
-        combatEquipment?
-            .SetActionSpeedMultiplier(
-                attackSpeedMultiplier);
+        combatEquipment?.SetActionSpeedMultiplier(attackSpeedMultiplier);
     }
 
-    public void UpgradeAttackSpeed(
-        float amount)
+    public void UpgradeAttackSpeed(float amount)
     {
-        AddAttackSpeedMultiplier(
-            amount);
+        AddAttackSpeedMultiplier(amount);
     }
 
     public float GetAttackSpeedMultiplier()
@@ -706,10 +654,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public float GetEffectiveAttackSpeed()
     {
-        return combatEquipment != null
-            ? combatEquipment
-                .EffectiveActionSpeed
-            : 0f;
+        return combatEquipment != null ? combatEquipment.EffectiveActionSpeed : 0f;
     }
 
     public ICombatEquipment GetCombatEquipment()
@@ -730,6 +675,28 @@ public class PlayerController : MonoBehaviour, IDamageable
         PlayRandomSound(attackSoundEffects);
     }
 
+    protected void PlayWalkingSound()
+    {
+        float currentSpeed = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z).magnitude;
+
+        if (currentSpeed < minMovementSpeed)
+        {
+            stepTimer = 0f;
+            return;
+        }
+
+        stepTimer -= Time.deltaTime;
+
+        if (stepTimer > 0f)
+            return;
+
+        PlayRandomSound(walkingSoundEffects);
+
+        float normalizedSpeed = Mathf.Clamp01(currentSpeed / stats.core.speed);
+
+        stepTimer = Mathf.Lerp(maxStepInterval, minStepInterval, normalizedSpeed);
+    }
+
     protected void PlayRandomSound(AudioClip[] sounds)
     {
         if (sounds == null ||
@@ -738,25 +705,13 @@ public class PlayerController : MonoBehaviour, IDamageable
             return;
         }
 
-        int randomIndex =
-            Random.Range(
-                0,
-                sounds.Length);
+        int randomIndex = Random.Range(0, sounds.Length);
 
-        float randomVolume =
-            Random.Range(
-                0.8f,
-                0.9f);
+        float randomVolume = Random.Range(volumeRange.x, volumeRange.y);
 
-        float randomPitch =
-            Random.Range(
-                0.9f,
-                1.1f);
+        float randomPitch = Random.Range(pitchRange.x, pitchRange.y);
 
-        AudioManager.Play(
-            sounds[randomIndex],
-            randomVolume,
-            randomPitch);
+        AudioManager.Play(sounds[randomIndex], randomVolume, randomPitch);
     }
 
 

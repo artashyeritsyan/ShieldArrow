@@ -283,7 +283,7 @@ public class ArrowScript : MonoBehaviour
         }
 
         int randomIndex = Random.Range(0, sounds.Length);
-        float randomVolume = Random.Range(0.7f, 0.9f);
+        float randomVolume = Random.Range(0.5f, 0.7f);
         float randomPitch = Random.Range(0.9f, 1.1f);
 
         AudioManager.Play(sounds[randomIndex], randomVolume, randomPitch);
