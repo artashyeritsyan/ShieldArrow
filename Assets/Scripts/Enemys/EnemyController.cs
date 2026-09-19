@@ -85,6 +85,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         if (!CanAct())
         {
+            //Debug.LogWarning("Cant ACT");
+
             UpdateAnimationState();
             return;
         }
@@ -217,7 +219,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     private bool CanAct()
     {
-        return !isDead && !isInactive && !isPaused && combatEquipment != null;
+        return !isDead && !isInactive && (GameManager.Instance.CurrentGameState != GameStates.Pause) && combatEquipment != null;
     }
 
     private bool IsTargetWithinAttackRange(float targetSqrDistance)
@@ -249,7 +251,10 @@ public class EnemyController : MonoBehaviour, IDamageable
             PlayerManager.Instance.GetPlayers())
         {
             if (player == null)
+            {
+                Debug.LogWarning("NO CLOSEST PLAYER");
                 continue;
+            }
 
             Vector3 difference = player.transform.position - transform.position;
 
@@ -264,7 +269,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
             closestPlayer = player;
         }
-
+        Debug.Log("CLosest Player is " + closestPlayer.name);
         return closestPlayer;
     }
 

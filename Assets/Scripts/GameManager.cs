@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
         {
             screenCenter.position += Vector3.forward * cameraSpeed * Time.deltaTime;
         }
-        
+        Debug.Log("GameState: " + CurrentGameState);
     }
 
     void InitializePools()
