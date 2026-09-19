@@ -14,8 +14,8 @@ public class ShieldReflector : MonoBehaviour
         if (shieldController == null)
             return false;
 
-        if (shieldController.isEnemyShield)
-            return true;
+        //if (shieldController.isEnemyShield)
+        //    return true;
 
         // THIS LINE FOR REFLECTION 
 

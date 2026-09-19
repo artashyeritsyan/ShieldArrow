@@ -64,7 +64,8 @@ MonoBehaviour:
   combatEquipmentBehaviour: {fileID: 3005310194607448929}
   equipmentSpeedMultiplier: 1
   animator: {fileID: 2637319741189370297}
-  attackSoundEffects: []
+  attackSoundEffects:
+  - {fileID: 8300000, guid: 7f066f2cb31fb8d4cb3bd4ffc12f60b4, type: 3}
   reloadSoundEffects: []
   hitSoundEffects: []
   isDead: 0
@@ -135,6 +136,18 @@ PrefabInstance:
     - target: {fileID: 2785282846553788580, guid: 45be1d300b47a664e8401fecbe7d6c3d, type: 3}
       propertyPath: m_Name
       value: EnemyShield
+      objectReference: {fileID: 0}
+    - target: {fileID: 3109280372266771302, guid: 45be1d300b47a664e8401fecbe7d6c3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3109280372266771302, guid: 45be1d300b47a664e8401fecbe7d6c3d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3109280372266771302, guid: 45be1d300b47a664e8401fecbe7d6c3d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8963965698006526308, guid: 45be1d300b47a664e8401fecbe7d6c3d, type: 3}
       propertyPath: m_LocalPosition.x

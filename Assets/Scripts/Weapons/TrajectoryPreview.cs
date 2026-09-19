@@ -27,7 +27,7 @@ public class TrajectoryPreview : MonoBehaviour
     {
         playerController = GetComponentInParent<PlayerController>();
 
-        Color playerColor = playerController.GetPlayerColor();
+        Color playerColor = playerController.GetColor();
 
         // Prefer a separate material instance for each player.
         dotPrefab.GetComponent<MeshRenderer>().sharedMaterial.color = playerColor;

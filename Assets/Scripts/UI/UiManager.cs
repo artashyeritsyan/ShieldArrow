@@ -55,7 +55,7 @@ public class UiManager : MonoBehaviour
             {
                 case 1:
                     playersHP[0].SetActive(true);
-                    playersHpBar[0].color = PlayerManager.Instance.GetPlayers()[0].GetPlayerColor() * 0.6f;
+                    playersHpBar[0].color = PlayerManager.Instance.GetPlayers()[0].GetColor() * 0.6f;
                     playersHP[1].SetActive(false);
 
                     break;
@@ -63,7 +63,7 @@ public class UiManager : MonoBehaviour
                     //playersHP[0].SetActive(true);
                     //playersHpBar[0].color = PlayerManager.Instance.GetPlayers()[0].GetPlayerColor() * 0.6f;
                     playersHP[1].SetActive(true);
-                    playersHpBar[1].color = PlayerManager.Instance.GetPlayers()[1].GetPlayerColor() * 0.6f;
+                    playersHpBar[1].color = PlayerManager.Instance.GetPlayers()[1].GetColor() * 0.6f;
                     break;
                 default:
                     playersHP[0].SetActive(false);

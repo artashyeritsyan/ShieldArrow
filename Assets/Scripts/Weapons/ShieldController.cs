@@ -4,8 +4,7 @@ using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 
-public class ShieldController :
-    MonoBehaviour, ICombatEquipment
+public class ShieldController : MonoBehaviour, ICombatEquipment
 {
     private const float SECOND = 1f;
 
@@ -15,6 +14,8 @@ public class ShieldController :
     [SerializeField]private Vector3 attackSize = new Vector3(1.5f, 1f, 1.5f);
 
     [SerializeField] private LayerMask attackLayer;
+
+    [SerializeField] private ParticleSystem attackEffect;
 
 
     [Header("Attack")]
@@ -26,7 +27,7 @@ public class ShieldController :
     [Header("Runtime Speed Modifier")]
     [SerializeField] private float actionSpeedMultiplier = 1f;
 
-    [SerializeField] public bool isEnemyShield;
+    //[SerializeField] public bool isEnemyShield;
 
     private GameObject owner;
     private Team ownerTeam;
@@ -74,30 +75,26 @@ public class ShieldController :
         }
 
         if (shieldCollider != null)
-        {   
-            //shieldCollider.enabled = false;
-
-            //if (isEnemyShield)
-            //{
-            //}
+        {
             shieldCollider.enabled = true;
         }
     }
 
     private void Start()
     {
-        // no crit for now
-        //damageData = new DamageData
-        //{
-        //    baseDamage = ownerStats.damage,
-        //    canCrit = false,
-        //    critChance = 0f,
-        //    critMultiplier = 1f
-        //};
+    }
 
-        // LAter add here damage
-        //Initialize(owner, ownerTeam, ownerStats);
+    void InitializeEffect()
+    {
+        if (attackEffect != null)
+        {
+            var main = attackEffect.main;
 
+            main.startLifetime = activeTime;
+            Color ownerColor = ownerTeam == Team.Player ? owner.GetComponent<PlayerController>().GetColor() : owner.GetComponent<EnemyController>().GetColor();
+
+            main.startColor = ownerColor;
+        }
     }
 
     public void Initialize(
@@ -125,6 +122,8 @@ public class ShieldController :
             critChance = 0f,
             critMultiplier = 1f
         };
+
+        InitializeEffect();
     }
 
     public bool Use()
@@ -158,18 +157,17 @@ public class ShieldController :
             attackLayer,
             QueryTriggerInteraction.Ignore
         );
-        Debug.Log(hits);
+
+        //Debug.Log("the hits are " + hits);
         foreach (Collider hit in hits)
         {
             IDamageable target = hit.GetComponentInParent<IDamageable>();
-            Debug.Log("Attacking " + hit.name);
 
             if (target == null)
                 continue;
 
             if (target.Team == ownerTeam)
                 continue;
-            // ????? TODO THIS PART
 
             target.TakeDamage(damageData, ownerStats);
         }
@@ -235,15 +233,19 @@ public class ShieldController :
 
         if (scaledAttackStartDelay > 0f)
         {
-            //Debug.LogWarning("Waiting to Attack");
             yield return new WaitForSeconds(scaledAttackStartDelay);
         }
 
         isAttacking = true;
-        shieldCollider.enabled = true;
 
         OnShieldAttackStarted?.Invoke();
         PerformAttackHit();
+
+        if (attackEffect != null)
+        {
+            attackEffect.GetComponent<ParticleSystem>().Play();
+        }
+
 
         float scaledActiveTime = GetScaledDuration(activeTime);
 
@@ -252,9 +254,6 @@ public class ShieldController :
             yield return new WaitForSeconds(scaledActiveTime);
         }
 
-        //shieldCollider.enabled = false;
-        shieldCollider.enabled = true;
-        //if (isEnemyShield) { shieldCollider.enabled = true; }
         isAttacking = false;
 
         OnShieldAttackFinished?.Invoke();

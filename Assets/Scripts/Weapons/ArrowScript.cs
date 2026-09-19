@@ -134,7 +134,6 @@ public class ArrowScript : MonoBehaviour
 
         if (target != null && target.Team != ownerTeam)
         {
-            Debug.Log("HITTTTT");
             target.TakeDamage(damageData, attackerStats);
 
             DestroyProjectile();
@@ -322,11 +321,11 @@ public class ArrowScript : MonoBehaviour
         outline.enabled = true;
         if (ownerTeam == Team.Player)
         {
-            outline.OutlineColor = owner.GetComponent<PlayerController>().GetPlayerColor();
+            outline.OutlineColor = owner.GetComponent<PlayerController>().GetColor();
         }
         else if (ownerTeam == Team.Enemy)
         {
-            outline.OutlineColor = owner.GetComponent<EnemyController>().GetEnemyColor();
+            outline.OutlineColor = owner.GetComponent<EnemyController>().GetColor();
         }
         else {
             outline.OutlineColor = Color.white;

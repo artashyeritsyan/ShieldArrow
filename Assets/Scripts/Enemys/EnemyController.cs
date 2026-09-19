@@ -143,9 +143,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
                 EnemyCombatType.Crossbower => combatEquipmentBehaviour is CrossbowWeapon,
 
-                EnemyCombatType.Shieldman =>
-                    combatEquipmentBehaviour
-                        is ShieldController,
+                EnemyCombatType.Shieldman => combatEquipmentBehaviour is ShieldController,
 
                 _ => false
             };
@@ -186,7 +184,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         {
             return;
         }
-
+        
         combatEquipment.Initialize(gameObject, Team.Enemy, stats);
 
         combatEquipment.SetActionSpeedMultiplier(equipmentSpeedMultiplier);
@@ -302,8 +300,8 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (animator == null)
             return;
 
-        //animator.SetFloat("AttackSpeed", combatEquipment.EffectiveActionSpeed);
-        animator.SetFloat("AttackSpeed", 1);
+        animator.SetFloat("AttackSpeed", combatEquipment.EffectiveActionSpeed);
+        //animator.SetFloat("AttackSpeed", 1);
 
         animator.SetTrigger("Attack");
     }
@@ -371,7 +369,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         return equipmentSpeedMultiplier;
     }
 
-    public Color GetEnemyColor()
+    public Color GetColor()
     {
         return enemyColor;
     }
@@ -536,6 +534,8 @@ public class EnemyController : MonoBehaviour, IDamageable
             Debug.Log("Enemy" + gameObject.name + "Activates");
         }
     }
+
+
 
 
 }

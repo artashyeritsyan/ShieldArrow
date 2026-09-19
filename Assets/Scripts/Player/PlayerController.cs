@@ -253,14 +253,11 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (combatEquipment == null)
             return;
 
-        combatEquipment.OnAttack +=
-            HandleEquipmentAttack;
+        combatEquipment.OnAttack += HandleEquipmentAttack;
 
-        combatEquipment.OnReloadStarted +=
-            HandleReloadStarted;
+        combatEquipment.OnReloadStarted += HandleReloadStarted;
 
-        combatEquipment.OnReloadFinished +=
-            HandleReloadFinished;
+        combatEquipment.OnReloadFinished += HandleReloadFinished;
     }
 
     private void UnsubscribeFromEquipmentEvents()
@@ -789,7 +786,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         return playerClass;
     }
 
-    public Color GetPlayerColor()
+    public Color GetColor()
     {
         return playerColor;
     }
