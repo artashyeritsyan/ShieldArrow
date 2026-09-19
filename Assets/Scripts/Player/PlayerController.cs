@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum PlayerClass
@@ -39,8 +40,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     [Header("Movement")]
     [SerializeField] private float speedTransitionTime = 10f;
 
-
-
     private Vector3 moveDirection;
     private Vector3 lerpedDirection;
 
@@ -79,7 +78,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] private float animTransitionTime = 5f;
     [SerializeField] private float animLayerTransitionTime = 5f;
 
-    private float blendValue;
+    private float walkingBlendValue;
     protected float layerTargetWeight;
     protected float layerCurrentWeight;
 
@@ -302,7 +301,7 @@ public class PlayerController : MonoBehaviour, IDamageable
                 Time.deltaTime * speedTransitionTime);
 
         rb.AddForce(stats.core.speed * speedMultiplier * Time.deltaTime * lerpedDirection);
-        
+        PlayWalkingSound();
     }
 
     private void HandleAttack()
@@ -374,9 +373,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         float movementAmount = moveDirection.magnitude;
 
-        blendValue =
+        walkingBlendValue =
             Mathf.Lerp(
-                blendValue,
+                walkingBlendValue,
                 movementAmount,
                 Time.deltaTime *
                 animTransitionTime);
@@ -393,7 +392,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             animator.SetLayerWeight(1, layerCurrentWeight);
         }
 
-        animator.SetFloat("Blend", blendValue);
+        animator.SetFloat("Blend", walkingBlendValue);
 
         animator.SetBool("Dead", isDead);
 
@@ -690,17 +689,20 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (stepTimer > 0f)
             return;
 
-        PlayRandomSound(walkingSoundEffects);
+        int randomIndex = Random.Range(0, walkingSoundEffects.Length);
+
+        float randomVolume = Random.Range(0.2f, 0.4f);
+        float randomPitch = Random.Range(0.9f, 1.1f);
+
+        AudioManager.Play(walkingSoundEffects[randomIndex], randomVolume, randomPitch);
 
         float normalizedSpeed = Mathf.Clamp01(currentSpeed / stats.core.speed);
-
         stepTimer = Mathf.Lerp(maxStepInterval, minStepInterval, normalizedSpeed);
     }
 
     protected void PlayRandomSound(AudioClip[] sounds)
     {
-        if (sounds == null ||
-            sounds.Length == 0)
+        if (sounds == null || sounds.Length == 0)
         {
             return;
         }
