@@ -727,12 +727,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public virtual void PlayAttackSound()
     {
-        PlayRandomSound(
-            attackSoundEffects);
+        PlayRandomSound(attackSoundEffects);
     }
 
-    protected void PlayRandomSound(
-        AudioClip[] sounds)
+    protected void PlayRandomSound(AudioClip[] sounds)
     {
         if (sounds == null ||
             sounds.Length == 0)
@@ -747,13 +745,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         float randomVolume =
             Random.Range(
-                0.7f,
+                0.8f,
                 0.9f);
 
         float randomPitch =
             Random.Range(
-                0.8f,
-                1.2f);
+                0.9f,
+                1.1f);
 
         AudioManager.Play(
             sounds[randomIndex],

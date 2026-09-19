@@ -42,6 +42,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     [SerializeField] private AudioClip[] attackSoundEffects;
     [SerializeField] private AudioClip[] reloadSoundEffects;
     [SerializeField] private AudioClip[] hitSoundEffects;
+    [SerializeField] private AudioClip[] deadSoundEffects;
 
 
     [Header("State")]
@@ -400,6 +401,7 @@ public class EnemyController : MonoBehaviour, IDamageable
             $"{stats.currentHP}/" +
             $"{stats.maxHP}");
 
+        // Playing damaged sound
         PlayRandomSound(hitSoundEffects);
 
         if (animator != null)
@@ -435,6 +437,8 @@ public class EnemyController : MonoBehaviour, IDamageable
         }
 
         DisableEnemyColliders();
+
+        PlayRandomSound(deadSoundEffects);
 
         SpawnCoin();
 
@@ -474,34 +478,18 @@ public class EnemyController : MonoBehaviour, IDamageable
         PlayRandomSound(attackSoundEffects);
     }
 
-    private void PlayRandomSound(
-        AudioClip[] sounds)
+    private void PlayRandomSound(AudioClip[] sounds)
     {
-        if (sounds == null ||
-            sounds.Length == 0)
+        if (sounds == null || sounds.Length == 0)
         {
             return;
         }
 
-        int randomIndex =
-            Random.Range(
-                0,
-                sounds.Length);
+        int randomIndex = Random.Range(0, sounds.Length);
+        float randomVolume = Random.Range(0.7f, 0.9f);
+        float randomPitch = Random.Range(0.8f, 1.2f);
 
-        float randomVolume =
-            Random.Range(
-                0.7f,
-                0.9f);
-
-        float randomPitch =
-            Random.Range(
-                0.8f,
-                1.2f);
-
-        AudioManager.Play(
-            sounds[randomIndex],
-            randomVolume,
-            randomPitch);
+        AudioManager.Play(sounds[randomIndex], randomVolume, randomPitch);
     }
 
     public void SetInactive(bool value)

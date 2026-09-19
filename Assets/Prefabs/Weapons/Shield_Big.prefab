@@ -111,7 +111,7 @@ MonoBehaviour:
   attackEffect: {fileID: 1041126496979682348}
   attackSpeed: 1
   attackStartDelay: 0.3
-  activeTime: 0.15
+  activeTime: 0.2
   effectiveRange: 2
   actionSpeedMultiplier: 1
 --- !u!114 &3944048536102008462

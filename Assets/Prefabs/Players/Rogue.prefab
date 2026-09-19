@@ -510,7 +510,7 @@ MonoBehaviour:
   animTransitionTime: 5
   animLayerTransitionTime: 5
   attackSoundEffects:
-  - {fileID: 8300000, guid: 9547efabc8f1e3b43a134e8cc8ce3bd1, type: 3}
+  - {fileID: 8300000, guid: 461f15e29225196469a42be7dcc03163, type: 3}
   isDead: 0
   movementLockTime: 0.1
   animationFinishTime: 0.1

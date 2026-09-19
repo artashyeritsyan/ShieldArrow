@@ -58,10 +58,16 @@ MonoBehaviour:
   attackSoundEffects:
   - {fileID: 8300000, guid: 9547efabc8f1e3b43a134e8cc8ce3bd1, type: 3}
   reloadSoundEffects: []
-  hitSoundEffects: []
+  hitSoundEffects:
+  - {fileID: 8300000, guid: 31c9d01e48ca6644bb906afb6eeb7582, type: 3}
+  - {fileID: 8300000, guid: 3f8c129af5b3c86428b12ec19eb2e590, type: 3}
+  - {fileID: 8300000, guid: 9c51119f5a5fe0d44babca1ae55afd6f, type: 3}
+  - {fileID: 8300000, guid: 01e68f6d1c9a198449463151abe5ca26, type: 3}
+  deadSoundEffects:
+  - {fileID: 8300000, guid: 841b73c61954c47479da57549b9b7dd2, type: 3}
   isDead: 0
   isInactive: 0
-  isPaused: 0
+  isPaused: 1
   coinPrefab: {fileID: 7871636596010262339, guid: 586a190b9e72148478a62dc6b4bcd965, type: 3}
 --- !u!95 &5368197704486974989
 Animator:

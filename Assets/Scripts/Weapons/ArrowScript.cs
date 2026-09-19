@@ -17,6 +17,12 @@ public class ArrowScript : MonoBehaviour
 
     [SerializeField] private LayerMask hitMask;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioClip[] wallHitSoundEffects;
+    [SerializeField] private AudioClip[] shieldHitSoundEffects;
+
+
+
     [Header("Visuals")]
     [SerializeField] private bool showOutline;
     [SerializeField] private Color outlineColor = Color.white;
@@ -143,6 +149,8 @@ public class ArrowScript : MonoBehaviour
         if (hit.collider.CompareTag("Wall"))
         {
             HandleRicochet(hit);
+            PlayRandomSound(wallHitSoundEffects);
+
             return true;
         }
 
@@ -155,10 +163,10 @@ public class ArrowScript : MonoBehaviour
         return false;
     }
 
-    private void HandleShieldHit(
-    RaycastHit hit,
-    ShieldReflector shield)
+    private void HandleShieldHit(RaycastHit hit, ShieldReflector shield)
     {
+        PlayRandomSound(shieldHitSoundEffects);
+
         if (!shield.CanReflect(ownerTeam))
         {
             // Inactive shield: arrow is blocked.
@@ -267,6 +275,19 @@ public class ArrowScript : MonoBehaviour
     //    TryDamageTarget(other);
     //}
 
+    private void PlayRandomSound(AudioClip[] sounds)
+    {
+        if (sounds == null || sounds.Length == 0)
+        {
+            return;
+        }
+
+        int randomIndex = Random.Range(0, sounds.Length);
+        float randomVolume = Random.Range(0.7f, 0.9f);
+        float randomPitch = Random.Range(0.9f, 1.1f);
+
+        AudioManager.Play(sounds[randomIndex], randomVolume, randomPitch);
+    }
     private bool IsOwnerCollider(Collider other)
     {
         if (owner == null)
