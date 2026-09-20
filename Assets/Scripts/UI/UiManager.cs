@@ -1,7 +1,8 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using DG.Tweening;
 
 public class UiManager : MonoBehaviour
 {
@@ -50,52 +51,81 @@ public class UiManager : MonoBehaviour
 
         if (GameManager.Instance.CurrentGameState == GameStates.Playing && GameManager.Instance.CurrentLevelState == LevelStates.Lobby)
         {
-            playersCount = PlayerManager.Instance.GetPlayers().Count;
-            switch (playersCount)
+            var players = PlayerManager.Instance.GetPlayers();
+
+            playersCount = players.Count;
+
+            playersHP[0].SetActive(false);
+            playersHP[1].SetActive(false);
+
+            foreach (PlayerController player in players)
             {
-                case 1:
-                    playersHP[0].SetActive(true);
-                    playersHpBar[0].color = PlayerManager.Instance.GetPlayers()[0].GetColor() * 0.6f;
-                    playersHP[1].SetActive(false);
+                if (player == null)
+                    continue;
 
-                    break;
-                case 2:
-                    //playersHP[0].SetActive(true);
-                    //playersHpBar[0].color = PlayerManager.Instance.GetPlayers()[0].GetPlayerColor() * 0.6f;
-                    playersHP[1].SetActive(true);
-                    playersHpBar[1].color = PlayerManager.Instance.GetPlayers()[1].GetColor() * 0.6f;
-                    break;
-                default:
-                    playersHP[0].SetActive(false);
-                    playersHP[1].SetActive(false);
-                    break;
+                PlayerInput playerInput = player.GetComponent<PlayerInput>();
+
+                if (playerInput == null)
+                    continue;
+
+                int uiIndex = playerInput.playerIndex;
+
+                if (uiIndex < 0 || uiIndex >= playersHP.Length)
+                    continue;
+
+                playersHP[uiIndex].SetActive(true);
+
+                playersHpBar[uiIndex].color =
+                    player.GetColor() * 0.6f;
             }
-
         }
 
-        //if (playersCount > 0)
         UpdatePlayersHP();
 
         coinsText.text = GameManager.Instance.GetCoins().ToString();
-
-
     }
+
+    //void UpdatePlayersHP()
+    //{
+    //    for (int i = 0; i < playersCount; i++)
+    //    {
+    //        float currentHP = PlayerManager.Instance.GetPlayers()[i].GetStats().core.currentHP;
+    //        float maxHP = PlayerManager.Instance.GetPlayers()[i].GetStats().core.maxHP;
+    //        float targetFill = currentHP / maxHP;
+
+    //        playersHpBar[i].fillAmount = Mathf.Lerp(playersHpBar[i].fillAmount, targetFill, hpBarTransitionTime * Time.deltaTime);
+            
+    //        playersHpText[i].text = currentHP + "/" + maxHP;
+    //    }
+    //}
 
     void UpdatePlayersHP()
     {
-        for (int i = 0; i < playersCount; i++)
+        var players = PlayerManager.Instance.GetPlayers();
+
+        foreach (PlayerController player in players)
         {
-            float currentHP = PlayerManager.Instance.GetPlayers()[i].GetStats().core.currentHP;
-            float maxHP = PlayerManager.Instance.GetPlayers()[i].GetStats().core.maxHP;
+            if (player == null)
+                continue;
+
+            PlayerInput playerInput = player.GetComponent<PlayerInput>();
+
+            if (playerInput == null)
+                continue;
+
+            int uiIndex = playerInput.playerIndex;
+            if (uiIndex < 0 || uiIndex >= playersHpBar.Length)
+                continue;
+
+            float currentHP = player.GetStats().core.currentHP;
+            float maxHP = player.GetStats().core.maxHP;
             float targetFill = currentHP / maxHP;
 
-            playersHpBar[i].fillAmount = Mathf.Lerp(playersHpBar[i].fillAmount, targetFill, hpBarTransitionTime * Time.deltaTime);
-            
-            playersHpText[i].text = currentHP + "/" + maxHP;
+            playersHpBar[uiIndex].fillAmount = Mathf.Lerp(playersHpBar[uiIndex].fillAmount, targetFill, hpBarTransitionTime * Time.deltaTime);
+            playersHpText[uiIndex].text = $"{currentHP}/{maxHP}";
         }
-
-        
     }
+
 
     void SwitchPanelTo(GameObject panel)
     {

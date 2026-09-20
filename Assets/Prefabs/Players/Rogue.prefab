@@ -474,7 +474,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CrossbowerController
   playerClass: 2
   playerColor: {r: 0.18452823, g: 0.6150943, b: 0.38970602, a: 1}
-  baseProfile: {fileID: 11400000, guid: 98a9956e26e254e439652c09d8044cbd, type: 2}
+  baseProfile: {fileID: 11400000, guid: 9c7bb4060e285364896ba957587bb08b, type: 2}
   stats:
     core:
       speed: 0

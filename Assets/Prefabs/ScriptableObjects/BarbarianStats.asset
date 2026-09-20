@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58455ef4b78f07e40ab9724732942e80, type: 3}
-  m_Name: ArcherStatsProfile
+  m_Name: BarbarianStats
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatsProfile
   stats:
     core:
-      speed: 2
-      maxHP: 10
-      currentHP: 10
-      damage: 2
+      speed: 2.5
+      maxHP: 20
+      currentHP: 20
+      damage: 1
       attackSpeed: 2
       lifeSteal: 0
       poisonDamage: 0

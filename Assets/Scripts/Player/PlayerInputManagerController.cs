@@ -16,10 +16,10 @@ public class PlayerInputManagerController : MonoBehaviour
     {
         PlayerClass.Archer,
         PlayerClass.Knight,
-        //PlayerClass.Crossbower,
-        //PlayerClass.Barbarian,
-        //PlayerClass.Assasin,
-        //PlayerClass.Mage
+        PlayerClass.Crossbower,
+        PlayerClass.Barbarian,
+        PlayerClass.Assasin,
+        PlayerClass.Mage
     };
 
     private int nextPlayerClassIndex = 0;
@@ -233,7 +233,7 @@ public class PlayerInputManagerController : MonoBehaviour
         if (!isLobbyActive)
             return;
 
-        if (selectedClassIndices.Count >= 2)
+        if (selectedClassIndices.Count > 2)
             return;
 
         if (playersBeingReplaced.Contains(playerInput))
@@ -243,8 +243,7 @@ public class PlayerInputManagerController : MonoBehaviour
     }
 
 
-    private IEnumerator ChangePlayerClassRoutine(
-    PlayerInput oldPlayerInput)
+    private IEnumerator ChangePlayerClassRoutine(PlayerInput oldPlayerInput)
     {
         if (selectableClasses.Count == 0)
         {
@@ -263,18 +262,23 @@ public class PlayerInputManagerController : MonoBehaviour
             currentClassIndex = storedIndex;
         }
 
-        int nextClassIndex = (currentClassIndex + 1) % selectableClasses.Count;
+        int nextClassIndex = GetNextAvailableClassIndex(oldPlayerInput, currentClassIndex);
+
+        if (nextClassIndex == -1)
+        {
+            Debug.LogWarning("No other player class is available.");
+
+            playersBeingReplaced.Remove(oldPlayerInput);
+            yield break;
+        }
 
         PlayerClass nextClass = selectableClasses[nextClassIndex];
 
-        GameObject newPrefab =
-            playersPrefabs.GetPlayerOfClass(nextClass);
+        GameObject newPrefab = playersPrefabs.GetPlayerOfClass(nextClass);
 
         if (newPrefab == null)
         {
-            Debug.LogError(
-                $"No prefab was found for class '{nextClass}'."
-            );
+            Debug.LogError($"No prefab was found for class '{nextClass}'.");
 
             playersBeingReplaced.Remove(oldPlayerInput);
             yield break;
@@ -303,6 +307,9 @@ public class PlayerInputManagerController : MonoBehaviour
 
         oldPlayerInput.DeactivateInput();
         oldPlayerInput.user.UnpairDevices();
+
+        int playerListIndex = PlayerManager.Instance.GetPlayerIndex(oldPlayerInput.GetComponent<PlayerController>());
+
 
         Destroy(oldPlayerInput.gameObject);
 
@@ -335,28 +342,50 @@ public class PlayerInputManagerController : MonoBehaviour
 
         int availableClassIndex = nextClassIndex == 0 ? 1 : 0;
 
-        inputManager.playerPrefab =
-            playersPrefabs.GetPlayerOfClass(
-                selectableClasses[availableClassIndex]
-            );
+        inputManager.playerPrefab = playersPrefabs.GetPlayerOfClass(selectableClasses[availableClassIndex]);
 
         playersBeingReplaced.Remove(oldPlayerInput);
 
         //SwitchActionMap(newPlayerInput, joinActionMap);
+        PlayerController newPlayerController = newPlayerInput.GetComponent<PlayerController>();
+
+        PlayerManager.Instance.RegisterAt(newPlayerController, playerListIndex);
         UpdateJoiningState();
+
 
         Debug.Log($"Player {playerIndex} changed class to {nextClass}.");
     }
 
-    //private void UnregisterInteractAction(PlayerInput playerInput)
-    //{
-    //    if (!interactActions.TryGetValue(playerInput, out InputAction action))
-    //        return;
+    private int GetNextAvailableClassIndex(PlayerInput currentPlayer, int currentClassIndex)
+    {
+        for (int offset = 1; offset <= selectableClasses.Count; offset++)
+        {
+            int candidateIndex = (currentClassIndex + offset) % selectableClasses.Count;
 
-    //    action.performed -= OnInteractPerformed;
+            bool classAlreadyUsed = false;
 
-    //    interactActions.Remove(playerInput);
-    //}
+            foreach (var pair in selectedClassIndices)
+            {
+                PlayerInput otherPlayer = pair.Key;
+                int otherClassIndex = pair.Value;
+
+                if (otherPlayer == currentPlayer)
+                    continue;
+
+                if (otherClassIndex == candidateIndex)
+                {
+                    classAlreadyUsed = true;
+                    break;
+                }
+            }
+
+            if (!classAlreadyUsed)
+                return candidateIndex;
+        }
+
+        return -1;
+    }
+
 
     private static PlayerInput FindPlayerByAction(
     Dictionary<PlayerInput, InputAction> actions,
@@ -466,25 +495,6 @@ public class PlayerInputManagerController : MonoBehaviour
             inputManager.DisableJoining();
         }
     }
-
-    //private void SwitchActionMap(
-    //    PlayerInput playerInput,
-    //    string actionMapName)
-    //{
-    //    if (playerInput.actions.FindActionMap(actionMapName) == null)
-    //    {
-    //        Debug.LogError(
-    //            $"Action map '{actionMapName}' was not found on " +
-    //            $"'{playerInput.gameObject.name}'."
-    //        );
-
-    //        return;
-    //    }
-
-    //    if (playerInput.currentActionMap?.name == actionMapName)
-    //        return;
-
-    //}
 
     private void HandleGameStateChanged(GameStates  state)
     {

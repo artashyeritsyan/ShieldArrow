@@ -604,7 +604,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   playerClass: 3
   playerColor: {r: 0.82641506, g: 0.49877745, b: 0, a: 1}
-  baseProfile: {fileID: 11400000, guid: 5070f89f9989d074e96fa5ce14a6f65d, type: 2}
+  baseProfile: {fileID: 11400000, guid: 00c3d1d01bb313a4e9b97b31abd5d84e, type: 2}
   stats:
     core:
       speed: 0

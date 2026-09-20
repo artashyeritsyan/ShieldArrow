@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58455ef4b78f07e40ab9724732942e80, type: 3}
+  m_Name: ArcherStats
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStatsProfile
+  stats:
+    core:
+      speed: 2
+      maxHP: 10
+      currentHP: 10
+      damage: 2
+      attackSpeed: 2
+      lifeSteal: 0
+      poisonDamage: 0
+      fireDamage: 0
+      iceDamage: 0
+      lightningDamage: 0
+    archer:
+      spread: 1
+      ricochetMultiplier: 1
+    knight:
+      reflectDamageMultiplier: 1
+      shieldSize: 1
+      shieldAttackCooldown: 0

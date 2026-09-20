@@ -338,7 +338,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AssasinController
   playerClass: 4
   playerColor: {r: 0.04705882, g: 1, b: 0, a: 1}
-  baseProfile: {fileID: 11400000, guid: 98a9956e26e254e439652c09d8044cbd, type: 2}
+  baseProfile: {fileID: 11400000, guid: e045213b2ef3a2748b272c788f5f0439, type: 2}
   stats:
     core:
       speed: 0
@@ -502,7 +502,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: 12751d11510b1b94db2f92160521dd63, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9990483
+      value: 0.99965733
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: 12751d11510b1b94db2f92160521dd63, type: 3}
       propertyPath: m_LocalRotation.x
@@ -510,7 +510,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: 12751d11510b1b94db2f92160521dd63, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.043619405
+      value: -0.026176924
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: 12751d11510b1b94db2f92160521dd63, type: 3}
       propertyPath: m_LocalRotation.z
@@ -522,7 +522,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: 12751d11510b1b94db2f92160521dd63, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -5
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: 12751d11510b1b94db2f92160521dd63, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z

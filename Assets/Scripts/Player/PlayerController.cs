@@ -691,11 +691,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         int randomIndex = Random.Range(0, walkingSoundEffects.Length);
 
-        float randomVolume = Random.Range(0.2f, 0.4f);
+        float randomVolume = Random.Range(0.05f, 0.1f);
         float randomPitch = Random.Range(0.9f, 1.1f);
 
         AudioManager.Play(walkingSoundEffects[randomIndex], randomVolume, randomPitch);
-
+        // 0.8f just for normalizing the footsteps sounds
         float normalizedSpeed = Mathf.Clamp01(currentSpeed / stats.core.speed);
         stepTimer = Mathf.Lerp(maxStepInterval, minStepInterval, normalizedSpeed);
     }
