@@ -337,7 +337,7 @@ public class ArrowScript : MonoBehaviour
         {
             Instantiate(particle, position, Quaternion.identity);
             // spawn in any case
-            Instantiate(arrowEffect.constHitEffect, position, Quaternion.identity);
+            //Instantiate(arrowEffect.constHitEffect, position, Quaternion.identity);
 
         }
             

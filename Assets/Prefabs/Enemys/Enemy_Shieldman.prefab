@@ -66,6 +66,8 @@ MonoBehaviour:
   equipmentSpeedMultiplier: 1
   animator: {fileID: 2637319741189370297}
   attackSoundEffects:
+  - {fileID: 8300000, guid: 2864c7064f0ddaf428243172fc69d2aa, type: 3}
+  - {fileID: 8300000, guid: 8e12198a0da77fd428afd8ed89dbfb58, type: 3}
   - {fileID: 8300000, guid: 7f066f2cb31fb8d4cb3bd4ffc12f60b4, type: 3}
   reloadSoundEffects: []
   hitSoundEffects:

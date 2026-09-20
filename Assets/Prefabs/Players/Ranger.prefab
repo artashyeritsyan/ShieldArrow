@@ -659,9 +659,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: dde3b765d3625804c93855cc854e9fc5, type: 3}
   - {fileID: 8300000, guid: a619d81387b199a4caf62c1ba5daef4c, type: 3}
   - {fileID: 8300000, guid: 40f0c9bf95ac4cc4a98679aa1f2e35e0, type: 3}
-  minStepInterval: 0.32
-  maxStepInterval: 0.65
-  minMovementSpeed: 0.1
   isDead: 0
   movementLockTime: 0.1
   animationFinishTime: 0.1

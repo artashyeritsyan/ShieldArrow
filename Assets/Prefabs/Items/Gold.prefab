@@ -69,8 +69,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   rotationPeriod: 2
-  bouncingTime: 0.8
-  bouncingMaxOffset: 0.4
+  scalingTime: 0.4
+  scalingMaxOffset: 1.2
   CollectSoundEffects:
   - {fileID: 8300000, guid: f23bec2e9335e13478d0e7e35df1cc2c, type: 3}
   pickupEffect: {fileID: 4748730675913877244, guid: 573fa29433610a446b5f83b975f857b2, type: 3}

@@ -89,9 +89,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     [SerializeField] protected AudioClip[] walkingSoundEffects;
     // This part for walking sound effect
-    [SerializeField] protected float minStepInterval = 0.25f;
-    [SerializeField] protected float maxStepInterval = 0.55f;
-    [SerializeField] protected float minMovementSpeed = 0.1f;
+    protected float minStepInterval = 0.35f;
+    protected float maxStepInterval = 0.60f;
+    protected float minMovementSpeed = 0.2f;
 
 
     private float stepTimer;
@@ -472,7 +472,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
                     if (door == null) return;
 
-                    Debug.Log("DOOOR");
+                    //Debug.Log("DOOOR");
                     door.Interact();
 
                     break;

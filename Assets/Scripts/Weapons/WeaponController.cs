@@ -53,7 +53,7 @@ public abstract class WeaponController :
     [SerializeField] protected float effectiveRange = 12f;
 
     [Header("Runtime Speed Modifier")]
-    [SerializeField] protected float actionSpeedMultiplier = 1f;
+    protected float actionSpeedMultiplier = 1f;
 
     protected GameObject owner;
     protected Team ownerTeam;

@@ -63,7 +63,7 @@ MonoBehaviour:
   rotationSpeed: 4
   baseStats: {fileID: 11400000, guid: 74d5fc7640bbefa4c9fe89d0a5b311a7, type: 2}
   combatEquipmentBehaviour: {fileID: 5620006895824191268}
-  equipmentSpeedMultiplier: 1
+  equipmentSpeedMultiplier: 1.2
   animator: {fileID: 1067172571039549162}
   attackSoundEffects:
   - {fileID: 8300000, guid: ad97e8e33bdb42947b6f82e876dca578, type: 3}

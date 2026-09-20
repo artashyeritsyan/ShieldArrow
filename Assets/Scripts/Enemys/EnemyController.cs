@@ -352,7 +352,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     public void DamageFlash()
     {
-        StartCoroutine(FlashCoroutine());
+        //StartCoroutine(FlashCoroutine());
     }
 
     private IEnumerator FlashCoroutine()

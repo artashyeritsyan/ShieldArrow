@@ -5,8 +5,8 @@ public class ItemScript : PooledObject
 {
     [Header("DOTween parameters")]
     [SerializeField] float rotationPeriod = 2f;
-    [SerializeField] float bouncingTime = 1f;
-    [SerializeField] float bouncingMaxOffset = 0.4f;
+    [SerializeField] float scalingTime = 0.5f;
+    [SerializeField] float scalingMaxOffset = 1.2f;
 
 
     [Header("Sound Effects")]
@@ -64,12 +64,12 @@ public class ItemScript : PooledObject
 
     private void StartTweening()
     {
-        transform.DOMoveY(transform.position.y + bouncingMaxOffset, bouncingTime).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+        //transform.DOMoveY(transform.position.y + scalingMaxOffset, scalingTime).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
 
         transform.DORotate(new Vector3(0f, 360f, 0f), rotationPeriod, RotateMode.FastBeyond360)
             .SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
 
-        transform.DOScale(transform.localScale * 1.2f, bouncingTime / 2)
+        transform.DOScale(transform.localScale * scalingMaxOffset, scalingTime)
             .SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
     }
 
