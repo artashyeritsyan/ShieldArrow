@@ -151,6 +151,37 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
+--- !u!1 &5314835967768097532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1705425031719313139}
+  m_Layer: 0
+  m_Name: EffectPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1705425031719313139
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5314835967768097532}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.2214}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6119226141328312047}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6008191938968543492
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -233,6 +264,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3cc2d42394cb21b4f9c567d1250a7d20, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3515602353129121765}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3cc2d42394cb21b4f9c567d1250a7d20, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1705425031719313139}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3cc2d42394cb21b4f9c567d1250a7d20, type: 3}
       insertIndex: -1
@@ -288,6 +322,11 @@ MonoBehaviour:
   showOutline: 1
   outlineColor: {r: 0.10946945, g: 0.46060446, b: 0.7735849, a: 1}
   outlineWidth: 1
+  wallImpactEffect: {fileID: 271054424957760564, guid: 1468eeb0963ddad41909c04ad8af0aee, type: 3}
+  shieldImpactEffect: {fileID: 1226031520979461127, guid: 9c692d73cd82e0d409bec909e987a5b8, type: 3}
+  mysthicImpactEffect: {fileID: 4306488877223958017, guid: ecb38e0319a6ad44cbca52d7b5add7a6, type: 3}
+  enemyHitEffect: {fileID: 8782009059513614302, guid: 171dda363e9efd94ca9bc63e38ca9658, type: 3}
+  constHitEffect: {fileID: 1429954232896169633, guid: eb4ee851b125e8d40859630fd2d5df9d, type: 3}
 --- !u!65 &6723025866345557165
 BoxCollider:
   m_ObjectHideFlags: 0

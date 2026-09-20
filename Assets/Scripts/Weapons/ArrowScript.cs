@@ -21,12 +21,19 @@ public class ArrowScript : MonoBehaviour
     [SerializeField] private AudioClip[] wallHitSoundEffects;
     [SerializeField] private AudioClip[] shieldHitSoundEffects;
 
-
-
     [Header("Visuals")]
     [SerializeField] private bool showOutline;
     [SerializeField] private Color outlineColor = Color.white;
     [SerializeField] private float outlineWidth = 1f;
+
+    [Header("VFX")]
+    [SerializeField] GameObject wallImpactEffect;
+    [SerializeField] GameObject shieldImpactEffect;
+    [SerializeField] GameObject mysthicImpactEffect;
+    [SerializeField] GameObject enemyHitEffect;
+    [SerializeField] GameObject constHitEffect;
+
+    
 
     private int ricochetsLeft; // CHANGED: float -> int
     private Vector3 direction;
@@ -141,7 +148,7 @@ public class ArrowScript : MonoBehaviour
         if (target != null && target.Team != ownerTeam)
         {
             target.TakeDamage(damageData, attackerStats);
-
+            PlayVFX(hit.point, enemyHitEffect);
             DestroyProjectile();
             return true;
         }
@@ -151,12 +158,15 @@ public class ArrowScript : MonoBehaviour
             HandleRicochet(hit);
             PlayRandomSound(wallHitSoundEffects);
 
+            PlayVFX(hit.point, wallImpactEffect);
+
             return true;
         }
 
         // somnitelno no okay
         if (hit.collider.CompareTag("UpperBorder"))
         {
+            PlayVFX(hit.point, mysthicImpactEffect);
             DestroyProjectile();
         }
 
@@ -166,6 +176,8 @@ public class ArrowScript : MonoBehaviour
     private void HandleShieldHit(RaycastHit hit, ShieldReflector shield)
     {
         PlayRandomSound(shieldHitSoundEffects);
+
+        PlayVFX(hit.point, shieldImpactEffect);
 
         if (!shield.CanReflect(ownerTeam))
         {
@@ -203,8 +215,6 @@ public class ArrowScript : MonoBehaviour
 
         transform.position += direction * 0.02f;
     }
-
-
 
     private void HandleRicochet(RaycastHit hit)
     {
@@ -319,6 +329,18 @@ public class ArrowScript : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    void PlayVFX(Vector3 position, GameObject particle)
+    {
+        if (particle != null)
+        {
+            Instantiate(particle, position, Quaternion.identity);
+            // spawn in any case
+            Instantiate(constHitEffect, position, Quaternion.identity);
+
+        }
+            
     }
 
     private void SetupOutline()
