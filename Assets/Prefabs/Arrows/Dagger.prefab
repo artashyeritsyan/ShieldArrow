@@ -67,6 +67,7 @@ MonoBehaviour:
   showOutline: 1
   outlineColor: {r: 0.021586215, g: 0.8490566, b: 0, a: 1}
   outlineWidth: 2
+  arrowEffect: {fileID: 11400000, guid: 5ec71da50023f0b42988873f290d94dd, type: 2}
 --- !u!65 &1468777422044821819
 BoxCollider:
   m_ObjectHideFlags: 0

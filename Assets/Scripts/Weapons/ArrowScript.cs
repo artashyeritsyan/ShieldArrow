@@ -27,13 +27,8 @@ public class ArrowScript : MonoBehaviour
     [SerializeField] private float outlineWidth = 1f;
 
     [Header("VFX")]
-    [SerializeField] GameObject wallImpactEffect;
-    [SerializeField] GameObject shieldImpactEffect;
-    [SerializeField] GameObject mysthicImpactEffect;
-    [SerializeField] GameObject enemyHitEffect;
-    [SerializeField] GameObject constHitEffect;
-
-    
+    [SerializeField] ArrowEffects arrowEffect;
+   
 
     private int ricochetsLeft; // CHANGED: float -> int
     private Vector3 direction;
@@ -148,7 +143,7 @@ public class ArrowScript : MonoBehaviour
         if (target != null && target.Team != ownerTeam)
         {
             target.TakeDamage(damageData, attackerStats);
-            PlayVFX(hit.point, enemyHitEffect);
+            PlayVFX(hit.point, arrowEffect.enemyHitEffect);
             DestroyProjectile();
             return true;
         }
@@ -158,7 +153,7 @@ public class ArrowScript : MonoBehaviour
             HandleRicochet(hit);
             PlayRandomSound(wallHitSoundEffects);
 
-            PlayVFX(hit.point, wallImpactEffect);
+            PlayVFX(hit.point, arrowEffect.wallImpactEffect);
 
             return true;
         }
@@ -166,7 +161,7 @@ public class ArrowScript : MonoBehaviour
         // somnitelno no okay
         if (hit.collider.CompareTag("UpperBorder"))
         {
-            PlayVFX(hit.point, mysthicImpactEffect);
+            PlayVFX(hit.point, arrowEffect.mysthicImpactEffect);
             DestroyProjectile();
         }
 
@@ -177,7 +172,7 @@ public class ArrowScript : MonoBehaviour
     {
         PlayRandomSound(shieldHitSoundEffects);
 
-        PlayVFX(hit.point, shieldImpactEffect);
+        PlayVFX(hit.point, arrowEffect.shieldImpactEffect);
 
         if (!shield.CanReflect(ownerTeam))
         {
@@ -333,11 +328,16 @@ public class ArrowScript : MonoBehaviour
 
     void PlayVFX(Vector3 position, GameObject particle)
     {
+        if (arrowEffect == null)
+        {
+            Debug.LogWarning("ArrowEffect scriptable object didnt set to an object");
+            return;
+        }
         if (particle != null)
         {
             Instantiate(particle, position, Quaternion.identity);
             // spawn in any case
-            Instantiate(constHitEffect, position, Quaternion.identity);
+            Instantiate(arrowEffect.constHitEffect, position, Quaternion.identity);
 
         }
             

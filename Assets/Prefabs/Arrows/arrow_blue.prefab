@@ -322,11 +322,7 @@ MonoBehaviour:
   showOutline: 1
   outlineColor: {r: 0.10946945, g: 0.46060446, b: 0.7735849, a: 1}
   outlineWidth: 1
-  wallImpactEffect: {fileID: 271054424957760564, guid: 1468eeb0963ddad41909c04ad8af0aee, type: 3}
-  shieldImpactEffect: {fileID: 1226031520979461127, guid: 9c692d73cd82e0d409bec909e987a5b8, type: 3}
-  mysthicImpactEffect: {fileID: 4306488877223958017, guid: ecb38e0319a6ad44cbca52d7b5add7a6, type: 3}
-  enemyHitEffect: {fileID: 8782009059513614302, guid: 171dda363e9efd94ca9bc63e38ca9658, type: 3}
-  constHitEffect: {fileID: 1429954232896169633, guid: eb4ee851b125e8d40859630fd2d5df9d, type: 3}
+  arrowEffect: {fileID: 11400000, guid: 5ec71da50023f0b42988873f290d94dd, type: 2}
 --- !u!65 &6723025866345557165
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -277,9 +277,12 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 1856
+  wallHitSoundEffects: []
+  shieldHitSoundEffects: []
   showOutline: 1
   outlineColor: {r: 0.5396226, g: 0.5396226, b: 0.5396226, a: 1}
   outlineWidth: 1
+  arrowEffect: {fileID: 11400000, guid: 5ec71da50023f0b42988873f290d94dd, type: 2}
 --- !u!65 &6723025866345557165
 BoxCollider:
   m_ObjectHideFlags: 0
