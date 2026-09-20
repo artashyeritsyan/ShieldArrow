@@ -12,6 +12,10 @@ public class ItemScript : PooledObject
     [Header("Sound Effects")]
     [SerializeField] AudioClip[] CollectSoundEffects;
 
+    [Header("Visual Effects")]
+    public GameObject pickupEffect;
+
+
     void Start()
     {
         if (GameManager.Instance.CurrentGameState != GameStates.Pause)
@@ -43,7 +47,10 @@ public class ItemScript : PooledObject
         //Destroy(gameObject);
         PlaySound();
 
-        
+        if (pickupEffect != null)
+        {
+            Instantiate(pickupEffect, transform.position, transform.rotation);
+        }
     }
 
     protected virtual void PlaySound() {
@@ -60,7 +67,10 @@ public class ItemScript : PooledObject
         transform.DOMoveY(transform.position.y + bouncingMaxOffset, bouncingTime).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
 
         transform.DORotate(new Vector3(0f, 360f, 0f), rotationPeriod, RotateMode.FastBeyond360)
-            .SetEase(Ease.Linear).SetLoops(-1, LoopType.Restart);
+            .SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
+
+        transform.DOScale(transform.localScale * 1.2f, bouncingTime / 2)
+            .SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
     }
 
     private void OnTriggerEnter(Collider other)
