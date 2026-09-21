@@ -138,6 +138,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hexa Select
       objectReference: {fileID: 0}
+    - target: {fileID: 1395173448037697159, guid: 15b618b90b45673438e25c0a909f563e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1982981581238385297, guid: 15b618b90b45673438e25c0a909f563e, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.8

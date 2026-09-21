@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatsProfile
   stats:
     core:
-      speed: 3
+      speed: 2.8
       maxHP: 10
       currentHP: 10
-      damage: 1
+      damage: 2
       attackSpeed: 1
       lifeSteal: 0
       poisonDamage: 0

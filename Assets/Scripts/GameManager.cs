@@ -27,8 +27,8 @@ public class GameManager : MonoBehaviour
     public LevelStates CurrentLevelState { get; private set; }
     public event Action<LevelStates> OnLevelStateChanged;
 
-    [SerializeField] LevelGenerator LevelGenerator;
-    [SerializeField] int currentRoomIndex = 0;
+    [SerializeField] LevelGenerator levelGenerator;
+    //[SerializeField] int currentRoomIndex = 0;
 
 
     [Header("Players Manager")]
@@ -61,7 +61,6 @@ public class GameManager : MonoBehaviour
     {
         Application.targetFrameRate = 120;
 
-
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -82,7 +81,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        LevelGenerator.GenerateLevel();
+        levelGenerator.GenerateLevel();
 
         InitializePools();
     }
@@ -119,34 +118,36 @@ public class GameManager : MonoBehaviour
 
         if (CurrentLevelState == LevelStates.Lobby)
         {
-            currentRoomIndex = 1;
+            levelGenerator.SetCurrentLevelIndex(1);
         }
         else
         {
-            currentRoomIndex += 1;
+            levelGenerator.SetCurrentLevelIndex(levelGenerator.CurrentRoomIndex + 1);
         }
 
         if (newState == LevelStates.Lobby)
-            currentRoomIndex = 0;
+        {
+            levelGenerator.SetCurrentLevelIndex(1);
+        }
 
         CurrentLevelState = newState;
 
         OnLevelStateChanged?.Invoke(CurrentLevelState);
         TransitionToNextLevel();
 
-        if (CurrentLevelState == LevelStates.Aisle)
-            //SpawnEnemies();
+        //if (CurrentLevelState == LevelStates.Aisle)
+        //    //SpawnEnemies();
 
         CheckCameraMoving();
     }
 
-    void SpawnEnemies()
-    {
-        // Have some bugs here. Out of range
-        GameObject aisle = LevelGenerator.GetLevel()[currentRoomIndex - 1];
-        //aisle.
-        Vector3 position = LevelGenerator.GetScreenCenterOf(currentRoomIndex - 1);
-    }
+    //void SpawnEnemies()
+    //{
+    //    // Have some bugs here. Out of range
+    //    GameObject aisle = levelGenerator.GetLevel()[currentRoomIndex - 1];
+    //    //aisle.
+    //    Vector3 position = levelGenerator.GetScreenCenterOf(currentRoomIndex - 1);
+    //}
 
     void CheckCameraMoving()
     {
@@ -211,7 +212,7 @@ public class GameManager : MonoBehaviour
 
     private void TransitionToNextLevel()
     {
-        screenCenter.position = LevelGenerator.GetScreenCenterOf(currentRoomIndex - 1);
+        screenCenter.position = levelGenerator.GetScreenCenterOf(levelGenerator.CurrentRoomIndex - 1);
 
         for (int i = 0; i < playerManager.GetPlayers().Count; i++)
         {

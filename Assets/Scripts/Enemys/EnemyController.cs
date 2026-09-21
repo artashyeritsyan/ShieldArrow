@@ -47,9 +47,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     [Header("State")]
     [SerializeField] private bool isDead;
-
     [SerializeField] private bool isInactive;
-
     [SerializeField] private bool isPaused;
 
     private PlayerController currentTarget;
