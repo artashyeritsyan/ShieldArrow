@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     // This is the camera position
     [SerializeField] Transform screenCenter;
     [SerializeField] float cameraSpeed = 1;
-    private bool cameraMoving = false;
+    [SerializeField] private bool cameraMoving = false;
     public bool CameraMoving => cameraMoving;
 
 
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
     //[SerializeField] private Diamond diamondPrefab;
 
     [Header("Coins")]
-    [SerializeField] int coins;
+    int coins;
 
     private void Awake() 
     {
@@ -158,6 +158,7 @@ public class GameManager : MonoBehaviour
         {
             cameraMoving = false;
         }
+        Debug.Log("Camera moving is " + cameraMoving);
     }
 
     //public void NextLevel()
@@ -190,6 +191,7 @@ public class GameManager : MonoBehaviour
     public void SetCameraMoving(bool moving)
     {
         cameraMoving = moving;
+        Debug.Log("Set Camera moving " + cameraMoving);
     }
 
     public void AddCoins(int amount)
