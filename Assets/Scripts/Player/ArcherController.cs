@@ -67,18 +67,4 @@ public class ArcherController :
     public override void AdditiveAnimation()
     {
     }
-
-    public override void Dead()
-    {
-        if (attackAnimationRoutine != null)
-        {
-            StopCoroutine(
-                attackAnimationRoutine);
-
-            attackAnimationRoutine = null;
-        }
-
-        SetCanMove(false);
-        SetCanAttack(false);
-    }
 }

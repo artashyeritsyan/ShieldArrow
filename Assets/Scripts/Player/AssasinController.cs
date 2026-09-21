@@ -64,16 +64,4 @@ public class AssasinController : PlayerController
     {
         // Add continuous assassin animation logic here if needed.
     }
-
-    public override void Dead()
-    {
-        if (attackAnimationRoutine != null)
-        {
-            StopCoroutine(attackAnimationRoutine);
-            attackAnimationRoutine = null;
-        }
-
-        SetCanMove(false);
-        SetCanAttack(false);
-    }
 }

@@ -118,17 +118,17 @@ public class GameManager : MonoBehaviour
 
         if (CurrentLevelState == LevelStates.Lobby)
         {
-            levelGenerator.SetCurrentLevelIndex(1);
+            levelGenerator.SetCurrentLevelIndex(0);
         }
         else
         {
             levelGenerator.SetCurrentLevelIndex(levelGenerator.CurrentRoomIndex + 1);
         }
 
-        if (newState == LevelStates.Lobby)
-        {
-            levelGenerator.SetCurrentLevelIndex(1);
-        }
+        //if (newState == LevelStates.Lobby)
+        //{
+        //    levelGenerator.SetCurrentLevelIndex(0);
+        //}
 
         CurrentLevelState = newState;
 
@@ -210,9 +210,17 @@ public class GameManager : MonoBehaviour
         coins = value;
     }
 
+    public void ResetGame()
+    {
+        Debug.Log("Resetting Game");
+        CurrentGameState = GameStates.Menu;
+        CurrentLevelState = LevelStates.Lobby;
+        screenCenter.position = cameraStartPosition;
+    }
+
     private void TransitionToNextLevel()
     {
-        screenCenter.position = levelGenerator.GetScreenCenterOf(levelGenerator.CurrentRoomIndex - 1);
+        screenCenter.position = levelGenerator.GetScreenCenterOf(levelGenerator.CurrentRoomIndex);
 
         for (int i = 0; i < playerManager.GetPlayers().Count; i++)
         {

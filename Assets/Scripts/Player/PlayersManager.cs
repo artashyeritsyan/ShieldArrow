@@ -52,4 +52,17 @@ public class PlayerManager : MonoBehaviour
 
         players.Insert(index, player);
     }
+
+    public void PlayerDead(PlayerController player)
+    {
+        foreach (PlayerController playerController in players)
+        {
+            if (!playerController.IsDead)
+                return;
+        }
+
+        // In case of both dead, we are stoping and restarting the game
+        GameManager.Instance.ResetGame();
+
+    }
 }

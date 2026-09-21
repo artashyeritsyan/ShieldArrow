@@ -78,6 +78,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] private float animTransitionTime = 5f;
     [SerializeField] private float animLayerTransitionTime = 5f;
 
+    protected Coroutine attackAnimationRoutine;
+
     private float walkingBlendValue;
     protected float layerTargetWeight;
     protected float layerCurrentWeight;
@@ -98,6 +100,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     [Header("Main Modifiers")]
     [SerializeField] protected bool isDead;
+    public bool IsDead => isDead;
 
     protected bool isPause;
     protected bool canMove;
@@ -529,6 +532,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             return;
 
         isDead = true;
+        Dead();
 
         UnsubscribeFromEquipmentEvents();
 
@@ -867,6 +871,14 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public virtual void Dead()
     {
+        if (attackAnimationRoutine != null)
+        {
+            StopCoroutine(attackAnimationRoutine);
+            attackAnimationRoutine = null;
+        }
+
+        SetCanMove(false);
+        SetCanAttack(false);
     }
 
     public virtual void AdditiveAnimation()

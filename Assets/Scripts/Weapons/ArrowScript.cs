@@ -23,7 +23,7 @@ public class ArrowScript : MonoBehaviour
 
     [Header("Visuals")]
     [SerializeField] private bool showOutline;
-    [SerializeField] private Color outlineColor = Color.white;
+    //[SerializeField] private Color outlineColor = Color.white;
     [SerializeField] private float outlineWidth = 1f;
 
     [Header("VFX")]

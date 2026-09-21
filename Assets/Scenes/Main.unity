@@ -15365,6 +15365,26 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6792539976668481687, guid: 7c8376789908aea409c70db358ab75b9, type: 3}
+      propertyPath: showOutline
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6792539976668481687, guid: 7c8376789908aea409c70db358ab75b9, type: 3}
+      propertyPath: outlineWidth
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6792539976668481687, guid: 7c8376789908aea409c70db358ab75b9, type: 3}
+      propertyPath: outlineColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6792539976668481687, guid: 7c8376789908aea409c70db358ab75b9, type: 3}
+      propertyPath: outlineColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6792539976668481687, guid: 7c8376789908aea409c70db358ab75b9, type: 3}
+      propertyPath: outlineColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6792539976668481687, guid: 7c8376789908aea409c70db358ab75b9, type: 3}
       propertyPath: transitionTime
       value: 0.1
       objectReference: {fileID: 0}
@@ -74776,6 +74796,10 @@ PrefabInstance:
     - target: {fileID: 4466193742791490653, guid: 7c8376789908aea409c70db358ab75b9, type: 3}
       propertyPath: m_Name
       value: Chest
+      objectReference: {fileID: 0}
+    - target: {fileID: 6792539976668481687, guid: 7c8376789908aea409c70db358ab75b9, type: 3}
+      propertyPath: showOutline
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8171862472522051343, guid: 7c8376789908aea409c70db358ab75b9, type: 3}
       propertyPath: m_LocalPosition.x

@@ -218,10 +218,7 @@ public class ShieldController : MonoBehaviour, ICombatEquipment
             Vector3.one
         );
 
-        Gizmos.DrawWireCube(
-            Vector3.zero,
-            attackSize
-        );
+        Gizmos.DrawWireCube(Vector3.zero, attackSize);
     }
     private IEnumerator ShieldAttackRoutine()
     {
@@ -283,16 +280,12 @@ public class ShieldController : MonoBehaviour, ICombatEquipment
 
     public void SetActionSpeedMultiplier(float multiplier)
     {
-        actionSpeedMultiplier =
-            Mathf.Max(
-                multiplier,
-                0.01f);
+        actionSpeedMultiplier = Mathf.Max(multiplier, 0.01f);
     }
 
     public void AddActionSpeedMultiplier(float amount)
     {
-        actionSpeedMultiplier =Mathf.Max(
-                actionSpeedMultiplier + amount,0.01f);
+        actionSpeedMultiplier =Mathf.Max(actionSpeedMultiplier + amount,0.01f);
     }
 
     //public bool CanReflectProjectile(Team projectileTeam)
@@ -303,6 +296,7 @@ public class ShieldController : MonoBehaviour, ICombatEquipment
 
     public void NotifyProjectileReflected()
     {
+        //damageData.baseDamage *= 1.5f;
         OnProjectileReflected?.Invoke();
     }
 
@@ -380,13 +374,9 @@ public class ShieldController : MonoBehaviour, ICombatEquipment
         return activeTime;
     }
 
-    public void SetActiveTime(
-        float newActiveTime)
+    public void SetActiveTime(float newActiveTime)
     {
-        activeTime =
-            Mathf.Max(
-                newActiveTime,
-                0f);
+        activeTime = Mathf.Max(newActiveTime, 0f);
     }
 
     public float GetEffectiveRange()
@@ -394,13 +384,9 @@ public class ShieldController : MonoBehaviour, ICombatEquipment
         return EffectiveRange;
     }
 
-    public void SetEffectiveRange(
-        float newRange)
+    public void SetEffectiveRange(float newRange)
     {
-        effectiveRange =
-            Mathf.Max(
-                newRange,
-                0f);
+        effectiveRange = Mathf.Max(newRange, 0f);
     }
 
     private void OnEnable()

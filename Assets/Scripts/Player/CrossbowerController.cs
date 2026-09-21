@@ -102,17 +102,7 @@ public class CrossbowerController :
 
     public override void Dead()
     {
-        if (attackAnimationRoutine != null)
-        {
-            StopCoroutine(
-                attackAnimationRoutine);
-
-            attackAnimationRoutine = null;
-        }
-
+        base.Dead();
         isReloading = false;
-
-        SetCanMove(false);
-        SetCanAttack(false);
     }
 }

@@ -15,7 +15,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] int aisleNumber = 1;
     [SerializeField] int rowNumber = 0;
 
-    [SerializeField] private AisleDifficulty aisleDifficulty = AisleDifficulty.Normal;
+    [SerializeField] private AisleDifficulty aisleDifficulty = AisleDifficulty.Easy;
 
     private float maxRows = 15;
 
@@ -59,7 +59,7 @@ public class EnemySpawner : MonoBehaviour
 
         UpdateDifficulty();
 
-        if (rowNumber != 0 && Random.value < noSpawnChance)
+        if (rowNumber > 1 && Random.value < noSpawnChance)
         {
             rowNumber++;
             return;
@@ -155,6 +155,9 @@ public class EnemySpawner : MonoBehaviour
             minEnemyInRow = Mathf.RoundToInt(Mathf.Lerp(1f, 2f, difficulty));
             maxEnemyInRow = Mathf.RoundToInt(Mathf.Lerp(4f, 6f, difficulty));
         }
+
+        Debug.Log("Difficulty is " + difficulty);
+
     }
 
 }

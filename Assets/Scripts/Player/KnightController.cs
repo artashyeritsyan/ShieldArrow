@@ -80,17 +80,4 @@ public class KnightController : PlayerController
     public override void AdditiveAnimation()
     {
     }
-
-    public override void Dead()
-    {
-        if (attackAnimationRoutine != null)
-        {
-            StopCoroutine(attackAnimationRoutine);
-
-            attackAnimationRoutine = null;
-        }
-
-        SetCanMove(false);
-        SetCanAttack(false);
-    }
 }

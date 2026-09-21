@@ -139,7 +139,6 @@ public class DoorController : MonoBehaviour
                 if (GameManager.Instance.CurrentLevelState == LevelStates.Lobby)
                 {
                     GameManager.Instance.SetGameState(GameStates.Playing);
-                    Debug.LogWarning("MAKE PLAying");
                 }
 
                 GameManager.Instance.SetLevelState(LevelStates.Aisle);

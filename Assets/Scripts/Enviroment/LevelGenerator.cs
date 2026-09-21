@@ -106,8 +106,8 @@ public class LevelGenerator : MonoBehaviour
 
         //Vector3 position = roomsScreenCenters[currentRoomIndex - 1];
         gameObject.GetComponent<EnemySpawner>().SpawnEnemiesInRange(
-            aisleStartEndPositions[currentRoomIndex-1].start + (aisleScreenCenterOffset * 2) + 1.5f,
-            aisleStartEndPositions[currentRoomIndex-1].end - 2f); // 2 is just to keep distance from room wall
+            aisleStartEndPositions[currentRoomIndex/2].start + (aisleScreenCenterOffset * 2) + 1.5f,
+            aisleStartEndPositions[currentRoomIndex/2].end - 2f); // 2 is just to keep distance from room wall
     }
 
     private void OnEnable()
