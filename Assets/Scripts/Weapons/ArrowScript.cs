@@ -127,8 +127,8 @@ public class ArrowScript : MonoBehaviour
 
     private bool OnHit(RaycastHit hit)
     {
-        if (IsOwnerCollider(hit.collider))
-            return true;
+        //if (IsOwnerCollider(hit.collider))
+        //    return true;
 
         ShieldReflector shield = hit.collider.GetComponentInParent<ShieldReflector>();
 
@@ -174,6 +174,7 @@ public class ArrowScript : MonoBehaviour
 
         PlayVFX(hit.point, arrowEffect.shieldImpactEffect);
 
+        // This part is now useless
         if (!shield.CanReflect(ownerTeam))
         {
             // Inactive shield: arrow is blocked.
@@ -181,10 +182,7 @@ public class ArrowScript : MonoBehaviour
             return;
         }
 
-        ReflectFromShield(
-            hit.normal,
-            shield.GetOwner(),
-            shield.GetOwnerTeam(),
+        ReflectFromShield(hit.normal, shield.GetOwner(), shield.GetOwnerTeam(),
             shield.GetOwnerStats());
 
         shield.NotifyProjectileReflected();
@@ -196,9 +194,7 @@ public class ArrowScript : MonoBehaviour
     Team newOwnerTeam,
     CoreStats newOwnerStats)
     {
-        direction = Vector3
-            .Reflect(direction, surfaceNormal)
-            .normalized;
+        direction = Vector3.Reflect(direction, surfaceNormal).normalized;
 
         transform.forward = direction;
 
@@ -219,9 +215,7 @@ public class ArrowScript : MonoBehaviour
             return;
         }
 
-        direction = Vector3
-            .Reflect(direction, hit.normal)
-            .normalized;
+        direction = Vector3.Reflect(direction, hit.normal).normalized;
 
         transform.forward = direction;
 

@@ -278,14 +278,10 @@ public class ShieldController : MonoBehaviour, ICombatEquipment
 
     private float GetScaledDuration(float baseDuration)
     {
-        return Mathf.Max(
-            baseDuration /
-            ActionSpeedMultiplier,
-            0f);
+        return Mathf.Max(baseDuration / ActionSpeedMultiplier, 0f);
     }
 
-    public void SetActionSpeedMultiplier(
-        float multiplier)
+    public void SetActionSpeedMultiplier(float multiplier)
     {
         actionSpeedMultiplier =
             Mathf.Max(
@@ -293,22 +289,17 @@ public class ShieldController : MonoBehaviour, ICombatEquipment
                 0.01f);
     }
 
-    public void AddActionSpeedMultiplier(
-        float amount)
+    public void AddActionSpeedMultiplier(float amount)
     {
-        actionSpeedMultiplier =
-            Mathf.Max(
-                actionSpeedMultiplier +
-                amount,
-                0.01f);
+        actionSpeedMultiplier =Mathf.Max(
+                actionSpeedMultiplier + amount,0.01f);
     }
 
-    public bool CanReflectProjectile(
-        Team projectileTeam)
-    {
-        return isAttacking && projectileTeam != ownerTeam;
-        //return projectileTeam != ownerTeam;
-    }
+    //public bool CanReflectProjectile(Team projectileTeam)
+    //{
+    //    return isAttacking && projectileTeam != ownerTeam;
+    //    //return projectileTeam != ownerTeam;
+    //}
 
     public void NotifyProjectileReflected()
     {

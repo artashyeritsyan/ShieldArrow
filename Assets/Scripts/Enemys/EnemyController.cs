@@ -247,8 +247,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         PlayerController closestPlayer = null;
 
         foreach (
-            PlayerController player in
-            PlayerManager.Instance.GetPlayers())
+            PlayerController player in PlayerManager.Instance.GetPlayers())
         {
             if (player == null)
             {
@@ -284,16 +283,10 @@ public class EnemyController : MonoBehaviour, IDamageable
             return;
         }
 
-        Quaternion targetRotation =
-            Quaternion.LookRotation(
-                direction.normalized);
+        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
 
-        transform.rotation =
-            Quaternion.Slerp(
-                transform.rotation,
-                targetRotation,
-                rotationSpeed *
-                Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
+                rotationSpeed * Time.deltaTime);
     }
 
     private void HandleAttackEvent()

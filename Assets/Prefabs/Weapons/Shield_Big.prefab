@@ -320,6 +320,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6827760826786693290, guid: 2e8630b07a0cbb54e8fb0d778b4489aa, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827760826786693290, guid: 2e8630b07a0cbb54e8fb0d778b4489aa, type: 3}
+      propertyPath: cameraShake.duration
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827760826786693290, guid: 2e8630b07a0cbb54e8fb0d778b4489aa, type: 3}
+      propertyPath: cameraShake.shakeStrength.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827760826786693290, guid: 2e8630b07a0cbb54e8fb0d778b4489aa, type: 3}
+      propertyPath: cameraShake.shakeStrength.y
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6827760826786693290, guid: 2e8630b07a0cbb54e8fb0d778b4489aa, type: 3}
+      propertyPath: cameraShake.shakeStrength.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
