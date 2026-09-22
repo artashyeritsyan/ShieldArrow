@@ -6,12 +6,14 @@ public interface IObjectPool
 {
     PooledObject Get();
     void Return(PooledObject obj);
+    void Clear();
 }
 
 public class ObjectPool<T> : IObjectPool where T : PooledObject
 {
     private readonly T prefab;
     private readonly Transform parent;
+    //private readonly List<T> allObjects = new();
 
     private readonly Queue<T> availableObjects = new();
 
@@ -63,6 +65,23 @@ public class ObjectPool<T> : IObjectPool where T : PooledObject
         availableObjects.Enqueue(obj);
     }
 
+    public void ClearPool()
+    {
+        availableObjects.Clear();
+
+        foreach (Transform child in parent)
+        {
+            T obj = child.GetComponent<T>();
+
+            if (obj == null)
+                continue;
+
+            obj.gameObject.SetActive(false);
+
+            availableObjects.Enqueue(obj);
+        }
+    }
+
     PooledObject IObjectPool.Get()
     {
         return GetTyped();
@@ -71,5 +90,10 @@ public class ObjectPool<T> : IObjectPool where T : PooledObject
     void IObjectPool.Return(PooledObject obj)
     {
         ReturnTyped((T)obj);
+    }
+
+    void IObjectPool.Clear()
+    {
+        ClearPool();
     }
 }

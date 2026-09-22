@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum AisleDifficulty
@@ -11,17 +13,18 @@ public enum AisleDifficulty
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] GameObject[] enemysPrefabs;
+    private List<GameObject> enemies;
 
     [SerializeField] int aisleNumber = 1;
     [SerializeField] int rowNumber = 0;
 
     [SerializeField] private AisleDifficulty aisleDifficulty = AisleDifficulty.Easy;
 
-    private float maxRows;
 
     [SerializeField] private float minX = -5f;
     [SerializeField] private float maxX = 5f;
 
+    private float maxRows;
     float minOffsetX;
     float maxOffsetX;
 
@@ -37,7 +40,7 @@ public class EnemySpawner : MonoBehaviour
 
     float distanceBetweenRows = 2f;
 
-
+    // For skipping row
     private FloatRange noSpawnChanceRange = new (0.20f, 0.10f);
     private float noSpawnChance;
     private bool isPreviousRowSkipped = false;
@@ -54,8 +57,17 @@ public class EnemySpawner : MonoBehaviour
     float shieldmanChance;
     float crossbowerChance;
 
+    private void Start()
+    {
+        enemies = new List<GameObject>();
+    }
+
     public void SpawnEnemiesInRange(float startZ, float endZ, int aisleNumber)
     {
+        if (enemies.Count != 0) {
+            ClearEnemies();
+        }
+
         maxRows = (endZ - startZ) / distanceBetweenRows;
         if (this.aisleNumber != aisleNumber)
         {
@@ -136,7 +148,9 @@ public class EnemySpawner : MonoBehaviour
             float randomZ = rowZ + Random.Range(-(zNoise), zNoise);
             Vector3 spawnPosition = new(randomX, 1, randomZ);
 
-            Instantiate(enemyPrefab, spawnPosition, Quaternion.Euler(0, 180, 0));
+            GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.Euler(0, 180, 0));
+
+            enemies.Add(enemy);
         }
         isPreviousRowSkipped = false;
         rowNumber++;
@@ -202,6 +216,15 @@ public class EnemySpawner : MonoBehaviour
 
         Debug.Log("Difficulty is " + difficulty);
 
+    }
+
+    public void ClearEnemies()
+    {
+        foreach (var enemy in enemies)
+        {
+            Destroy(enemy);
+        }
+        enemies.Clear();
     }
 
 }

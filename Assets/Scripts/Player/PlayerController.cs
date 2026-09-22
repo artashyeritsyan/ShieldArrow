@@ -547,7 +547,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             animator.SetBool("Dead", true);
         }
 
-        //DisableEnemyColliders();  // TODO: Implemen this part
+        //DisableEnemyColliders();  // TODO: Implement this part
 
         //Destroy(gameObject, 2f);
         //gameObject.SetActive(false);
@@ -562,7 +562,9 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         yield return new WaitForSeconds(playerDeactivateTime);
 
-        transform.position = new Vector3(0, -100, 0); 
+        PlayerManager.Instance.PlayerDead(this);
+
+        transform.position = new Vector3(0, 0, -100); 
     }
 
     void DisableColliders()

@@ -33,34 +33,43 @@ public class LevelGenerator : MonoBehaviour
     [Header("Parameters")]
     [SerializeField] float aisleScreenCenterOffset = 8.5f;
     [SerializeField] float roomScreenCenterOffset = 0.8f;
-    void Start()
+
+    [Header("Enemy Spawner")]
+    private EnemySpawner enemySpawner;
+
+
+    private void Awake()
     {
         // Only mooving in axis Z
         level = new List<GameObject>();
+
+        enemySpawner = gameObject.GetComponent<EnemySpawner>();
     }
 
     public void GenerateLevel()
     {
+        Vector3 levelStartPosition = startPosition;
+
         for (int i = 0; i < levelLength; i++)
         {
-            level.Add(aisleGenerator.GenerateAisle(startPosition));
-            roomsScreenCenters.Add(startPosition + new Vector3(0, 0, aisleScreenCenterOffset));
+            level.Add(aisleGenerator.GenerateAisle(levelStartPosition));
+            roomsScreenCenters.Add(levelStartPosition + new Vector3(0, 0, aisleScreenCenterOffset));
 
             GameObject room = Instantiate(RoomPrefab, transform);
             RoomGenerator roomGenerator = room.GetComponent<RoomGenerator>();
 
             // Adding the Start and End position of the aisle
-            aisleStartEndPositions.Add(new FloatRange(startPosition.z, startPosition.z + aisleGenerator.FinalLength));
+            aisleStartEndPositions.Add(new FloatRange(levelStartPosition.z, levelStartPosition.z + aisleGenerator.FinalLength));
 
-            startPosition += new Vector3(0, 0, aisleGenerator.FinalLength + roomGenerator.Height / 2);
+            levelStartPosition += new Vector3(0, 0, aisleGenerator.FinalLength + roomGenerator.Height / 2);
             
-            roomGenerator.GenerateRoom(startPosition);
-            roomsScreenCenters.Add(startPosition + new Vector3(0, 0, roomScreenCenterOffset));
+            roomGenerator.GenerateRoom(levelStartPosition);
+            roomsScreenCenters.Add(levelStartPosition + new Vector3(0, 0, roomScreenCenterOffset));
             Debug.Log("roomSize " + roomsScreenCenters.Count);
 
             level.Add(room);
 
-            startPosition += new Vector3(0, 0, roomGenerator.Height / 2);
+            levelStartPosition += new Vector3(0, 0, roomGenerator.Height / 2);
         }
     }
 
@@ -96,10 +105,28 @@ public class LevelGenerator : MonoBehaviour
 
     void SpawnEnemies()
     {
-        gameObject.GetComponent<EnemySpawner>().SpawnEnemiesInRange(
+        enemySpawner.SpawnEnemiesInRange(
             aisleStartEndPositions[currentRoomIndex/2].start + (aisleScreenCenterOffset * 2) + 1.5f,
             aisleStartEndPositions[currentRoomIndex/2].end - 2f, // 2 is just to keep distance from room wall
-            currentRoomIndex / 2); // To get the Aisle Number for difficulty calculations
+            currentRoomIndex / 2);  // To get the Aisle Number for difficulty calculations
+    }
+
+    public void ClearLevel()
+    {
+        Debug.LogWarning("level count" + level.Count);
+        foreach (GameObject room in level)
+        {
+            Debug.Log(room.name);
+            Destroy(room);
+        }
+
+        level.Clear();
+
+        roomsScreenCenters.Clear();
+        aisleStartEndPositions.Clear();
+        //currentRoomIndex = 0;
+
+        enemySpawner.ClearEnemies();
     }
 
     private void OnEnable()
@@ -111,5 +138,7 @@ public class LevelGenerator : MonoBehaviour
     {
         GameManager.Instance.OnLevelStateChanged -= HandleLevelStateChange;
     }
+
+
 
 }

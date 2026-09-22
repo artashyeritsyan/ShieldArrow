@@ -81,7 +81,7 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Time: 0.15
+  m_Time: 0.1
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -307,7 +307,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a709c1c748eb4f446b3d269b68b15ef7, type: 3}
   - {fileID: 8300000, guid: b0b8721472b06b642a5ef4d253ed7856, type: 3}
   showOutline: 1
-  outlineColor: {r: 0.6528301, g: 0.07120509, b: 0, a: 1}
   outlineWidth: 3
   arrowEffect: {fileID: 11400000, guid: 5ec71da50023f0b42988873f290d94dd, type: 2}
 --- !u!65 &1468777422044821819

@@ -33246,7 +33246,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &890672344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73099,6 +73099,7 @@ GameObject:
   - component: {fileID: 2089072371}
   - component: {fileID: 2089072370}
   - component: {fileID: 2089072372}
+  - component: {fileID: 2089072373}
   m_Layer: 0
   m_Name: LevelGenerator
   m_TagString: Untagged
@@ -73119,7 +73120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelGenerator
   RoomPrefab: {fileID: 5410357007844242429, guid: dd43d982b3e9c414aaa85b6ae27ee435, type: 3}
-  aisleGenerator: {fileID: 890672344}
+  aisleGenerator: {fileID: 2089072373}
   aisleStartEndPositions: []
   level: []
   roomsScreenCenters: []
@@ -73178,6 +73179,23 @@ MonoBehaviour:
   shieldmanChancesRange:
     start: 0.2
     end: 0.35
+--- !u!114 &2089072373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089072369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12082ccf5db19aa479d078f648e81285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AisleGenerator
+  aislePrefabs:
+  - {fileID: 2530997915587019897, guid: 91be68df34a36ee4a99c74bd049890a6, type: 3}
+  minLength: 52
+  maxLength: 53
+  startPosition: {x: 0, y: 0, z: 1}
 --- !u!1001 &2091029446
 PrefabInstance:
   m_ObjectHideFlags: 0

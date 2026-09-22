@@ -28,8 +28,6 @@ public class GameManager : MonoBehaviour
     public event Action<LevelStates> OnLevelStateChanged;
 
     [SerializeField] LevelGenerator levelGenerator;
-    //[SerializeField] int currentRoomIndex = 0;
-
 
     [Header("Players Manager")]
     [SerializeField] PlayerManager playerManager;
@@ -45,8 +43,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Positions")]
     [SerializeField] Vector3 cameraStartPosition;
-    //[SerializeField] float roomTransitionDelta = 16;
-    //[SerializeField] float aisleTransitionDelta = 20;
 
     [Header("Object Pools")]
     [SerializeField] private Coin coinPrefab;
@@ -99,6 +95,11 @@ public class GameManager : MonoBehaviour
     {
         ObjectPoolManager.Instance.CreatePool(coinPrefab, 10);
         ObjectPoolManager.Instance.CreatePool(coinsPrefab, 10);
+    }
+
+    void ClearPools()
+    {
+        ObjectPoolManager.Instance.ClearPools();
     }
 
     public void SetGameState(GameStates newState)
@@ -213,9 +214,13 @@ public class GameManager : MonoBehaviour
     public void ResetGame()
     {
         Debug.Log("Resetting Game");
+        cameraMoving = false;
         CurrentGameState = GameStates.Menu;
         CurrentLevelState = LevelStates.Lobby;
         screenCenter.position = cameraStartPosition;
+
+        ClearPools();
+        levelGenerator.ClearLevel();
     }
 
     private void TransitionToNextLevel()

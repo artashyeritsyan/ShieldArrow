@@ -25,12 +25,14 @@ public class ObjectPoolManager : MonoBehaviour
 
         if (pools.ContainsKey(key))
         {
-            Debug.LogWarning(
-                $"Pool already exists for prefab: {key.name}"
-            );
+            Debug.LogWarning($"Pool already exists for prefab: {key.name}");
 
             return;
         }
+
+        GameObject poolParent = new GameObject($"{prefab.name}_Pool");
+
+        poolParent.transform.SetParent(transform);
 
         ObjectPool<T> pool =
             new ObjectPool<T>(
@@ -52,9 +54,7 @@ public class ObjectPoolManager : MonoBehaviour
 
         if (!pools.TryGetValue(key, out IObjectPool pool))
         {
-            Debug.LogError(
-                $"No pool exists for prefab: {key.name}"
-            );
+            Debug.LogError($"No pool exists for prefab: {key.name}");
 
             return null;
         }
@@ -84,13 +84,19 @@ public class ObjectPoolManager : MonoBehaviour
 
         if (!pools.TryGetValue(key, out IObjectPool pool))
         {
-            Debug.LogError(
-                $"No pool exists for prefab: {key.name}"
-            );
+            Debug.LogError($"No pool exists for prefab: {key.name}");
 
             return;
         }
 
         pool.Return(obj);
+    }
+
+    public void ClearPools()
+    {
+        foreach (IObjectPool pool in pools.Values)
+        {
+            pool.Clear();
+        }
     }
 }    
