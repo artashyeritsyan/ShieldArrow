@@ -48,7 +48,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     [Header("State")]
     [SerializeField] private bool isDead;
     [SerializeField] private bool isInactive;
-    [SerializeField] private bool isPaused;
+    //[SerializeField] private bool isPaused;
 
     private PlayerController currentTarget;
 
@@ -244,8 +244,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         PlayerController closestPlayer = null;
 
-        foreach (
-            PlayerController player in PlayerManager.Instance.GetPlayers())
+        foreach (PlayerController player in PlayerManager.Instance.GetPlayers())
         {
             if (player == null)
             {
@@ -297,7 +296,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (animator == null)
             return;
 
-        //animator.SetFloat("AttackSpeed", combatEquipment.EffectiveActionSpeed);
+        animator.SetFloat("AttackSpeed", combatEquipment.EffectiveActionSpeed);
         animator.SetFloat("AttackSpeed", 1);
 
         animator.SetTrigger("Attack");
@@ -494,10 +493,6 @@ public class EnemyController : MonoBehaviour, IDamageable
         }
     }
 
-    public void SetPaused(bool value)
-    {
-        isPaused = value;
-    }
 
     private void OnDestroy()
     {

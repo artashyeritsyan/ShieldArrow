@@ -1,9 +1,6 @@
 using System;
 using UnityEngine;
 
-using System;
-using UnityEngine;
-
 public interface ICombatEquipment
 {
     event Action OnAttack;
@@ -70,16 +67,9 @@ public abstract class WeaponController :
 
     public float ActionSpeedMultiplier => Mathf.Max(actionSpeedMultiplier, 0.01f);
 
-    public float EffectiveActionSpeed =>
-        Mathf.Max(
-            BaseActionSpeed *
-            ActionSpeedMultiplier,
-            0.01f);
+    public float EffectiveActionSpeed => Mathf.Max(BaseActionSpeed * ActionSpeedMultiplier, 0.01f);
 
-    public float EffectiveRange =>
-        Mathf.Max(
-            effectiveRange,
-            0f);
+    public float EffectiveRange => Mathf.Max(effectiveRange, 0f);
 
     public virtual void Initialize(
         GameObject weaponOwner,
@@ -115,24 +105,21 @@ public abstract class WeaponController :
 
         if (shootPoint == null)
         {
-            Debug.LogError(
-                $"{name}: Shoot point is missing.");
+            Debug.LogError($"{name}: Shoot point is missing.");
 
             return false;
         }
 
         if (projectilePrefab == null)
         {
-            Debug.LogError(
-                $"{name}: Projectile prefab is missing.");
+            Debug.LogError($"{name}: Projectile prefab is missing.");
 
             return false;
         }
 
         if (ownerStats == null)
         {
-            Debug.LogError(
-                $"{name}: Owner stats are missing.");
+            Debug.LogError($"{name}: Owner stats are missing.");
 
             return false;
         }
@@ -140,14 +127,9 @@ public abstract class WeaponController :
         return true;
     }
 
-    protected void CreateProjectile(
-        Quaternion rotation)
+    protected void CreateProjectile(Quaternion rotation)
     {
-        GameObject projectileObject =
-            Instantiate(
-                projectilePrefab,
-                shootPoint.position,
-                rotation);
+        GameObject projectileObject = Instantiate(projectilePrefab, shootPoint.position, rotation);
 
         ArrowScript arrow = projectileObject.GetComponent<ArrowScript>();
 
@@ -161,8 +143,7 @@ public abstract class WeaponController :
             return;
         }
 
-        DamageData damageData = 
-            new DamageData
+        DamageData damageData = new DamageData
             {
                 baseDamage = ownerStats.damage,
                 canCrit = true,
@@ -199,32 +180,19 @@ public abstract class WeaponController :
      * Multiplier 2:
      * 0.4 seconds becomes 0.2 seconds.
      */
-    protected float GetScaledDuration(
-        float baseDuration)
+    protected float GetScaledDuration(float baseDuration)
     {
-        return Mathf.Max(
-            baseDuration /
-            ActionSpeedMultiplier,
-            0f);
+        return Mathf.Max(baseDuration / ActionSpeedMultiplier, 0f);
     }
 
-    public void SetActionSpeedMultiplier(
-        float multiplier)
+    public void SetActionSpeedMultiplier(float multiplier)
     {
-        actionSpeedMultiplier =
-            Mathf.Max(
-                multiplier,
-                0.01f);
+        actionSpeedMultiplier = Mathf.Max(multiplier, 0.01f);
     }
 
-    public void AddActionSpeedMultiplier(
-        float amount)
+    public void AddActionSpeedMultiplier(float amount)
     {
-        actionSpeedMultiplier =
-            Mathf.Max(
-                actionSpeedMultiplier +
-                amount,
-                0.01f);
+        actionSpeedMultiplier = Mathf.Max(actionSpeedMultiplier + amount, 0.01f);
     }
 
     public float GetShootingSpeed()
@@ -232,13 +200,9 @@ public abstract class WeaponController :
         return shootingSpeed;
     }
 
-    public void SetShootingSpeed(
-        float newShootingSpeed)
+    public void SetShootingSpeed(float newShootingSpeed)
     {
-        shootingSpeed =
-            Mathf.Max(
-                newShootingSpeed,
-                0.01f);
+        shootingSpeed = Mathf.Max(newShootingSpeed, 0.01f);
     }
 
     public float GetEffectiveShootingSpeed()
@@ -258,17 +222,12 @@ public abstract class WeaponController :
 
     public float GetScaledAttackStartDelay()
     {
-        return GetScaledDuration(
-            attackStartDelay);
+        return GetScaledDuration(attackStartDelay);
     }
 
-    public void SetAttackStartDelay(
-        float newDelay)
+    public void SetAttackStartDelay(float newDelay)
     {
-        attackStartDelay =
-            Mathf.Max(
-                newDelay,
-                0f);
+        attackStartDelay = Mathf.Max(newDelay, 0f);
     }
 
     public float GetEffectiveRange()
@@ -276,15 +235,10 @@ public abstract class WeaponController :
         return EffectiveRange;
     }
 
-    public void SetEffectiveRange(
-        float newRange)
+    public void SetEffectiveRange(float newRange)
     {
-        effectiveRange =
-            Mathf.Max(
-                newRange,
-                0f);
+        effectiveRange = Mathf.Max(newRange, 0f);
     }
-
     public bool GetCanShoot()
     {
         return canShoot;

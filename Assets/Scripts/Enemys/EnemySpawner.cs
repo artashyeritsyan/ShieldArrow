@@ -17,56 +17,100 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField] private AisleDifficulty aisleDifficulty = AisleDifficulty.Easy;
 
-    private float maxRows = 15;
-
+    private float maxRows;
 
     [SerializeField] private float minX = -5f;
     [SerializeField] private float maxX = 5f;
 
-    [SerializeField] private float zNoise = 0.1f;
-    [SerializeField] private float xNoise = 0.1f;
+    float minOffsetX;
+    float maxOffsetX;
+
+    [SerializeField] private float zNoise = 0.3f;
+    [SerializeField] private float xNoise = 0.2f;
+
+    // min and max ranges for enemies in row. Its depends on difficulty
+    [SerializeField] private FloatRange minEnemiesInRow = new (1, 2);
+    [SerializeField] private FloatRange maxEnemiesInRow = new (4, 6);
 
     int minEnemyInRow = 1;
     int maxEnemyInRow = 6;
 
-    private float noSpawnChance;
-
     float distanceBetweenRows = 2f;
 
-    // TODO: rewrite it into scriptable object later
-    [SerializeField] float archerChance;
-    [SerializeField] float shieldmanChance;
-    [SerializeField] float crossbowerChance;
 
-    public void SpawnEnemiesInRange(float startZ, float endZ)
+    private FloatRange noSpawnChanceRange = new (0.20f, 0.10f);
+    private float noSpawnChance;
+    private bool isPreviousRowSkipped = false;
+
+
+    // TODO: rewrite it into scriptable object later
+
+    // It changes depends on difficulty
+    [SerializeField] FloatRange archerChancesRange = new (0.80f, 0.50f);
+    [SerializeField] FloatRange shieldmanChancesRange = new (0.20f, 0.35f);
+    //[SerializeField] FloatRange crossbowerChancesRange;
+
+    float archerChance;
+    float shieldmanChance;
+    float crossbowerChance;
+
+    public void SpawnEnemiesInRange(float startZ, float endZ, int aisleNumber)
     {
         maxRows = (endZ - startZ) / distanceBetweenRows;
-        float z = startZ;
-        while (z <= endZ)
-        {
-            SpawnRow(z, 0);
-            z += distanceBetweenRows;
-        }
-    }
-
-    public void SpawnRow(float rowZ, int aisleNumber)
-    {
         if (this.aisleNumber != aisleNumber)
         {
             this.aisleNumber = aisleNumber;
             rowNumber = 0;
         }
 
+        float z = startZ;
+        while (z <= endZ)
+        {
+            SpawnRow(z);
+            z += distanceBetweenRows;
+        }
+    }
+
+    public void SpawnRow(float rowZ)
+    {
         UpdateDifficulty();
 
-        if (rowNumber > 1 && Random.value < noSpawnChance)
+        // Skipping row chance
+        if (rowNumber > 1 && Random.value < noSpawnChance && !isPreviousRowSkipped)
         {
+            Debug.LogWarning("Skipping row " + rowNumber);
             rowNumber++;
+            isPreviousRowSkipped = true;
             return;
         }
 
 
         int enemyCount = Random.Range(minEnemyInRow, maxEnemyInRow + 1);
+
+        minOffsetX = minX;
+        maxOffsetX = maxX;
+
+        if (enemyCount < maxEnemiesInRow.end)
+        {
+            Debug.LogWarning("Adding offset on row " + rowNumber);
+
+            //This part only for creating an offset from 0-2
+            float offsetX = Random.value * 2;
+
+            int random = Random.Range(0, 2);
+
+            if (random == 0)
+            {
+                minOffsetX = minX + offsetX;
+                Debug.LogWarning("Min offset on row " + rowNumber + " minOffsetX = " + minOffsetX);
+            }
+            else
+            {
+                maxOffsetX = maxX - offsetX;
+                Debug.LogWarning("Max offset on row " + rowNumber + " maxOffsetX = " + maxOffsetX);
+            }
+        }
+
 
         for (int i = 0; i < enemyCount; i++)
         {
@@ -81,11 +125,11 @@ public class EnemySpawner : MonoBehaviour
             float x;
             if (enemyCount == 1)
             {
-                x = (minX + maxX) / 2f;
+                x = (minOffsetX + maxOffsetX) / 2f;
             }
             else
             {
-                x = Mathf.Lerp(minX, maxX, i / (enemyCount - 1f) );
+                x = Mathf.Lerp(minOffsetX, maxOffsetX, i / (enemyCount - 1f));
             }
 
             float randomX = x + Random.Range(-(xNoise), xNoise);
@@ -94,7 +138,7 @@ public class EnemySpawner : MonoBehaviour
 
             Instantiate(enemyPrefab, spawnPosition, Quaternion.Euler(0, 180, 0));
         }
-
+        isPreviousRowSkipped = false;
         rowNumber++;
     }
 
@@ -122,13 +166,13 @@ public class EnemySpawner : MonoBehaviour
 
         float aisleBaseDifficulty = (aisleNumber) * 0.10f;
 
-        float difficulty = aisleBaseDifficulty + rowProgress * 0.35f;
+        float difficulty = aisleBaseDifficulty + rowProgress * 0.2f;
 
         float aisleDifficultyModifier = aisleDifficulty switch
         {
-            AisleDifficulty.Easy => -0.08f,
+            AisleDifficulty.Easy => -0.1f,
             AisleDifficulty.Normal => 0f,
-            AisleDifficulty.Hard => 0.08f,
+            AisleDifficulty.Hard => 0.1f,
             _ => 0f
         };
 
@@ -137,11 +181,11 @@ public class EnemySpawner : MonoBehaviour
         difficulty = Mathf.Clamp01(difficulty);
 
         // Enemy chances
-        archerChance = Mathf.Lerp(0.80f, 0.50f, difficulty);
-        shieldmanChance = Mathf.Lerp(0.20f, 0.35f, difficulty);
+        archerChance = Mathf.Lerp(archerChancesRange.start, archerChancesRange.end, difficulty);
+        shieldmanChance = Mathf.Lerp(shieldmanChancesRange.start, shieldmanChancesRange.end, difficulty);
         crossbowerChance = 1f - archerChance - shieldmanChance;
 
-        noSpawnChance = Mathf.Lerp(0.25f, 0.15f, difficulty);
+        noSpawnChance = Mathf.Lerp(noSpawnChanceRange.start, noSpawnChanceRange.end, difficulty);
 
         // Enemy count
         if (rowNumber == 0 || rowNumber == 1)
@@ -152,8 +196,8 @@ public class EnemySpawner : MonoBehaviour
         else
         {
             // Here are the max and min enemies in row depends on difficulty
-            minEnemyInRow = Mathf.RoundToInt(Mathf.Lerp(1f, 2f, difficulty));
-            maxEnemyInRow = Mathf.RoundToInt(Mathf.Lerp(4f, 6f, difficulty));
+            minEnemyInRow = Mathf.RoundToInt(Mathf.Lerp(minEnemiesInRow.start, minEnemiesInRow.end, difficulty));
+            maxEnemyInRow = Mathf.RoundToInt(Mathf.Lerp(maxEnemiesInRow.start, maxEnemiesInRow.end, difficulty));
         }
 
         Debug.Log("Difficulty is " + difficulty);
