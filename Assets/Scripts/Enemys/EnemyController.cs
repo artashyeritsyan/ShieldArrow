@@ -176,7 +176,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         }
         stats = baseStats.GetStats().Clone();
         stats.currentHP = stats.maxHP;
-        Debug.Log(stats.currentHP);
+        //Debug.Log(stats.currentHP);
     }
 
     private void InitializeCombatEquipment()
@@ -265,7 +265,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
             closestPlayer = player;
         }
-        Debug.Log("CLosest Player is " + closestPlayer.name);
+        //Debug.Log("CLosest Player is " + closestPlayer.name);
         return closestPlayer;
     }
 

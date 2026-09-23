@@ -7,7 +7,7 @@ public class PlayerManager : MonoBehaviour
     public event Action OnPlayerClassChanged;
 
     public static PlayerManager Instance;
-    private List<PlayerController> players = new List<PlayerController>();
+    private List<PlayerController> players = new ();
 
     public Vector3 playerSpawnPosition;
 
@@ -63,6 +63,5 @@ public class PlayerManager : MonoBehaviour
 
         // In case of both dead, we are stoping and restarting the game
         GameManager.Instance.ResetGame();
-
     }
 }

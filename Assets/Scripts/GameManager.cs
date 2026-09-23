@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     public LevelStates CurrentLevelState { get; private set; }
     public event Action<LevelStates> OnLevelStateChanged;
 
+    public event Action OnGameReset;
+
     [SerializeField] LevelGenerator levelGenerator;
 
     [Header("Players Manager")]
@@ -214,13 +216,20 @@ public class GameManager : MonoBehaviour
     public void ResetGame()
     {
         Debug.Log("Resetting Game");
+        OnGameReset?.Invoke();
+
         cameraMoving = false;
-        CurrentGameState = GameStates.Menu;
-        CurrentLevelState = LevelStates.Lobby;
+
+        SetGameState(GameStates.Playing);
+        SetLevelState(LevelStates.Lobby);
         screenCenter.position = cameraStartPosition;
 
         ClearPools();
         levelGenerator.ClearLevel();
+        
+
+        Debug.Log("Current Game State " + CurrentGameState);
+        Debug.Log("Current Level State " + CurrentLevelState);
     }
 
     private void TransitionToNextLevel()

@@ -39,7 +39,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
     private readonly Dictionary<PlayerInput, InputAction> leaveActions = new();
 
-    private bool isLobbyActive;
+    //private bool isLobbyActive;
 
     private void Awake()
     {
@@ -87,7 +87,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
     private void OnPlayerJoined(PlayerInput playerInput)
     {
-        if (!isLobbyActive)
+        if (GameManager.Instance.CurrentLevelState != LevelStates.Lobby)
         {
             Destroy(playerInput.gameObject);
             return;
@@ -138,91 +138,6 @@ public class PlayerInputManagerController : MonoBehaviour
         UpdateJoiningState();
     }
 
-    //private void RegisterInteractAction(PlayerInput playerInput)
-    //{
-    //    Debug.Log("INTERACTT");
-
-    //    InputAction interactAction = playerInput.actions.FindAction(
-    //        $"{playerActionMap}/{interactActionName}",
-    //        false
-    //    );
-
-    //    if (interactAction == null)
-    //    {
-    //        Debug.LogError(
-    //            $"Action '{playerActionMap}/{interactActionName}' not found."
-    //        );
-    //        return;
-    //    }
-
-    //    interactAction.performed += OnInteractPerformed;
-    //    interactActions[playerInput] = interactAction;
-    //}
-
-    //private void OnInteractPerformed(InputAction.CallbackContext context)
-    //{
-    //    PlayerInput playerInput =
-    //        FindPlayerByAction(interactActions, context.action);
-
-    //    if (playerInput == null)
-    //        return;
-
-    //    PlayerController playerController =
-    //        playerInput.GetComponent<PlayerController>();
-
-    //    if (playerController == null)
-    //        return;
-
-    //    switch (playerController.CurrentInteraction)
-    //    {
-    //        case InteractionType.Door:
-    //            HandleDoorInteraction(playerController);
-    //            break;
-
-    //        //case InteractionType.Shop:
-    //        //    HandleShopInteraction(playerController);
-    //        //    break;
-
-    //        case InteractionType.ClassChange:
-    //            HandleClassChangeInteraction(playerInput);
-    //            break;
-
-    //        case InteractionType.None:
-    //        default:
-    //            break;
-    //    }
-    //}
-
-    //private void HandleDoorInteraction(PlayerController player)
-    //{
-    //    GameObject interactionObject = player.CurrentInteractionObject;
-
-    //    if (interactionObject == null)
-    //        return;
-
-    //    DoorController door =
-    //        interactionObject.GetComponent<DoorController>();
-
-    //    if (door == null)
-    //        return;
-
-    //    door.Interact(player);
-    //}
-
-    //private void HandleClassChangeInteraction(PlayerInput playerInput)
-    //{
-    //    if (!isLobbyActive)
-    //        return;
-
-    //    if (selectedClassIndices.Count >= 2)
-    //        return;
-
-    //    if (playersBeingReplaced.Contains(playerInput))
-    //        return;
-
-    //    StartCoroutine(ChangePlayerClassRoutine(playerInput));
-    //}
-
     public void TryChangeClass(PlayerController playerController)
     {
         PlayerInput playerInput = playerController.GetComponent<PlayerInput>();
@@ -230,7 +145,7 @@ public class PlayerInputManagerController : MonoBehaviour
         if (playerInput == null)
             return;
 
-        if (!isLobbyActive)
+        if (GameManager.Instance.CurrentLevelState != LevelStates.Lobby)
             return;
 
         if (selectedClassIndices.Count > 2)
@@ -315,7 +230,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
         yield return null;
 
-        if (!isLobbyActive)
+        if (GameManager.Instance.CurrentLevelState != LevelStates.Lobby)
         {
             playersBeingReplaced.Remove(oldPlayerInput);
             UpdateJoiningState();
@@ -451,7 +366,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
     private void OnLeavePerformed(InputAction.CallbackContext context)
     {
-        if (!isLobbyActive)
+        if (GameManager.Instance.CurrentLevelState != LevelStates.Lobby)
             return;
 
         PlayerInput playerInput = FindPlayerByAction(leaveActions, context.action);
@@ -472,8 +387,10 @@ public class PlayerInputManagerController : MonoBehaviour
 
     private void HandleLevelStateChanged(LevelStates state)
     {
-        isLobbyActive = state == LevelStates.Lobby;
-
+        UpdateJoiningState();
+    }
+    private void HandleGameStateChanged(GameStates state)
+    {
         UpdateJoiningState();
     }
 
@@ -483,7 +400,8 @@ public class PlayerInputManagerController : MonoBehaviour
 
         if (GameManager.Instance.CurrentGameState == GameStates.Playing)
         {
-            canJoin = isLobbyActive && PlayerInput.all.Count < playerMaxCount;
+            canJoin = GameManager.Instance.CurrentLevelState == LevelStates.Lobby
+                && PlayerInput.all.Count < playerMaxCount;
         }
 
         if (canJoin)
@@ -494,14 +412,10 @@ public class PlayerInputManagerController : MonoBehaviour
         {
             inputManager.DisableJoining();
         }
+
+        Debug.LogWarning("Can Join" + canJoin);
     }
 
-    private void HandleGameStateChanged(GameStates  state)
-    {
-        //isLobbyActive = state == GameStates.Lobby;
-
-        UpdateJoiningState();
-    }
 
     public void SetPlayerClass(PlayerClass playerClass)
     {
@@ -509,14 +423,29 @@ public class PlayerInputManagerController : MonoBehaviour
 
         if (prefab == null)
         {
-            Debug.LogError(
-                $"No player prefab was found for class '{playerClass}'."
-            );
+            Debug.LogError($"No player prefab was found for class '{playerClass}'.");
 
             return;
         }
 
         inputManager.playerPrefab = prefab;
+    }
+
+    private void HandleGameReset()
+    {
+        var players = new List<PlayerController>(PlayerManager.Instance.GetPlayers());
+
+        foreach (PlayerController player in players)
+        {
+            if (player != null)
+                Destroy(player.gameObject);
+        }
+
+        playersBeingReplaced.Clear();
+
+        nextPlayerClassIndex = 0;
+
+        inputManager.playerPrefab = playersPrefabs.GetPlayerOfClass(selectableClasses[nextPlayerClassIndex]);
     }
 
     private void SubscribeToGameManager()
@@ -529,6 +458,7 @@ public class PlayerInputManagerController : MonoBehaviour
 
         GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         GameManager.Instance.OnLevelStateChanged += HandleLevelStateChanged;
+        GameManager.Instance.OnGameReset += HandleGameReset;
     }
 
     private void UnsubscribeFromGameManager()
@@ -537,6 +467,7 @@ public class PlayerInputManagerController : MonoBehaviour
         {
             GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
             GameManager.Instance.OnLevelStateChanged -= HandleLevelStateChanged;
+            GameManager.Instance.OnGameReset -= HandleGameReset;
         }
     }
 

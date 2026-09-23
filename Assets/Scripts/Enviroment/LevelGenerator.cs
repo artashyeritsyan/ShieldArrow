@@ -113,10 +113,10 @@ public class LevelGenerator : MonoBehaviour
 
     public void ClearLevel()
     {
-        Debug.LogWarning("level count" + level.Count);
+        //Debug.LogWarning("level count" + level.Count);
         foreach (GameObject room in level)
         {
-            Debug.Log(room.name);
+            //Debug.Log(room.name);
             Destroy(room);
         }
 
