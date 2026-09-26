@@ -62,6 +62,6 @@ public class PlayerManager : MonoBehaviour
         }
 
         // In case of both dead, we are stoping and restarting the game
-        GameManager.Instance.ResetGame();
+        GameManager.Instance.AllPlayersDead();
     }
 }

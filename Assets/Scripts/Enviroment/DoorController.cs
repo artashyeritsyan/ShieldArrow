@@ -22,7 +22,8 @@ public class DoorController : MonoBehaviour
 
         doorCanvas.SetActive(false);
 
-    }
+        GameManager.Instance.OnGameReset += HandleGameReset;
+            }
 
     public void SetDoorType(EDoorType doorType)
     {
@@ -89,7 +90,6 @@ public class DoorController : MonoBehaviour
             doorCanvas.transform.position + Camera.main.transform.rotation * Vector3.forward,
             Camera.main.transform.rotation * Vector3.up);
 
-        //CallDoorEvent();
 
         PlayerController player = other.GetComponent<PlayerController>();
 
@@ -98,7 +98,7 @@ public class DoorController : MonoBehaviour
             player.SetInteraction(InteractionType.Door, gameObject);
         }
 
-        Debug.Log("Player entered the door collider " + doorType);
+        Debug.Log("Player Entered the door collider " + doorType);
     }
 
 
@@ -106,14 +106,17 @@ public class DoorController : MonoBehaviour
     {
 
         if (other.CompareTag("Player")) {
-            doorCanvas.SetActive(false);
+            //doorCanvas.SetActive(false);
+            Debug.Log("Player Leaved the door collider " + doorType);
 
             PlayerController player = other.GetComponent<PlayerController>();
 
             if (player != null)
             {
                 player.ClearInteraction(InteractionType.Door);
+                doorCanvas.SetActive(false);
             }
+
         }
 
         if (other.CompareTag("UpperBorder"))
@@ -142,24 +145,45 @@ public class DoorController : MonoBehaviour
                 }
 
                 GameManager.Instance.SetLevelState(LevelStates.Aisle);
+                GameManager.Instance.SetCameraMoving(true);
                 break;
             case EDoorType.EnterTheRoom:
                 GameManager.Instance.SetLevelState(LevelStates.Room);
+                GameManager.Instance.SetCameraMoving(false);
                 break;
             case EDoorType.LeaveTheRoom:
                 GameManager.Instance.SetLevelState(LevelStates.Aisle);
+                GameManager.Instance.SetCameraMoving(true);
                 break;
             case EDoorType.BossRoom:
                 GameManager.Instance.SetLevelState(LevelStates.Boss);
+                GameManager.Instance.SetCameraMoving(false);
                 break;
             default:
                 break;
-
 
         }
 
         GetComponent<Collider>().enabled = false;
     }
+    void HandleGameReset()
+    {
+        Debug.Log("Door COllider Turned ONN");
+        GetComponent<Collider>().enabled = true;
+        doorCanvas.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnGameReset -= HandleGameReset;
+
+
+    }
+        
 
 
 }

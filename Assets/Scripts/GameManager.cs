@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public event Action<LevelStates> OnLevelStateChanged;
 
     public event Action OnGameReset;
+    public event Action OnGameOver;
 
     [SerializeField] LevelGenerator levelGenerator;
 
@@ -96,7 +97,7 @@ public class GameManager : MonoBehaviour
     void InitializePools()
     {
         ObjectPoolManager.Instance.CreatePool(coinPrefab, 10);
-        ObjectPoolManager.Instance.CreatePool(coinsPrefab, 10);
+        //ObjectPoolManager.Instance.CreatePool(coinsPrefab, 10);
     }
 
     void ClearPools()
@@ -213,12 +214,20 @@ public class GameManager : MonoBehaviour
         coins = value;
     }
 
+
+    public void AllPlayersDead()
+    {
+        OnGameOver?.Invoke();
+        cameraMoving = false;
+    }
+
+
     public void ResetGame()
     {
         Debug.Log("Resetting Game");
         OnGameReset?.Invoke();
-
         cameraMoving = false;
+
 
         SetGameState(GameStates.Playing);
         SetLevelState(LevelStates.Lobby);
@@ -230,6 +239,8 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("Current Game State " + CurrentGameState);
         Debug.Log("Current Level State " + CurrentLevelState);
+
+        levelGenerator.GenerateLevel();
     }
 
     private void TransitionToNextLevel()

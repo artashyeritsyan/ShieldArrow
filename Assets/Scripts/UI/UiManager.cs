@@ -10,6 +10,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] GameObject MenuPanel;
     [SerializeField] GameObject PausePanel;
     [SerializeField] GameObject OverlayPanel;
+    [SerializeField] GameObject RestartPanel;
 
     [Header("PlayersHP")]
     [SerializeField] GameObject[] playersHP;
@@ -126,12 +127,12 @@ public class UiManager : MonoBehaviour
         }
     }
 
-
     void SwitchPanelTo(GameObject panel)
     {
         MenuPanel.SetActive(false);
         PausePanel.SetActive(false);
         OverlayPanel.SetActive(false);
+        RestartPanel.SetActive(false);
 
         panel.SetActive(true);
     }
@@ -142,6 +143,21 @@ public class UiManager : MonoBehaviour
 
         GameManager.Instance.SetGameState(GameStates.Playing);
     }
+
+    public void LobbyButton()
+    {
+        SwitchPanelTo(OverlayPanel);
+        GameManager.Instance.ResetGame();
+
+        GameManager.Instance.SetGameState(GameStates.Playing);
+        GameManager.Instance.SetLevelState(LevelStates.Lobby);
+    }
+
+    void HandleGameOver()
+    {
+        SwitchPanelTo(RestartPanel);
+    }
+
 
     void GameStateChanged(GameStates gameState)
     {
@@ -188,6 +204,7 @@ public class UiManager : MonoBehaviour
 
         GameManager.Instance.OnGameStateChanged += GameStateChanged;
         GameManager.Instance.OnLevelStateChanged += LevelStateChanged;
+        GameManager.Instance.OnGameOver += HandleGameOver;
 
     }
 

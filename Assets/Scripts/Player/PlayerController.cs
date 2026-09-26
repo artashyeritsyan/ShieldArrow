@@ -477,6 +477,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
                     //Debug.Log("DOOOR");
                     door.Interact();
+                    ClearInteraction(InteractionType.Door);
 
                     break;
                 case InteractionType.Shop:

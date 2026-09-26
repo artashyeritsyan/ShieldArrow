@@ -431,19 +431,16 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         PlayRandomSound(deadSoundEffects);
 
-        SpawnCoin();
+        LootSpawner.Instance.SpawnCoin(transform.position, combatType);
 
         Destroy(gameObject, 2f);
     }
 
     private void DisableEnemyColliders()
     {
-        Collider[] colliders =
-            GetComponentsInChildren<Collider>();
+        Collider[] colliders = GetComponentsInChildren<Collider>();
 
-        foreach (
-            Collider enemyCollider in
-            colliders)
+        foreach (Collider enemyCollider in colliders)
         {
             enemyCollider.enabled = false;
         }
@@ -459,10 +456,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         animator.SetBool("Inactive", isInactive);
     }
 
-    private void SpawnCoin()
-    {
-        ObjectPoolManager.Instance.Spawn(coinPrefab, transform.position, Quaternion.identity);
-    }
+
 
     private void PlayAttackSound()
     {
@@ -501,12 +495,11 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Enter" +  other.name);
         if (other.CompareTag("UpperBorder"))
         {
             SetInactive(false);
 
-            Debug.Log("Enemy" + gameObject.name + "Activates");
+            //Debug.Log("Enemy" + gameObject.name + "Activates");
         }
     }
 
