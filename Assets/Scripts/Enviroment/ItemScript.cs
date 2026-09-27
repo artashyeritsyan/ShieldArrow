@@ -7,8 +7,9 @@ public class ItemScript : PooledObject
     [SerializeField] float rotationPeriod = 2f;
     [SerializeField] float scalingTime = 0.5f;
     [SerializeField] float scalingMaxOffset = 1.2f;
+    [SerializeField] Transform tweeningObject;
 
-    [SerializeField] bool isInteractable = false;
+    //[SerializeField] bool isInteractable = false;
 
     [Header("Sound Effects")]
     [SerializeField] AudioClip[] CollectSoundEffects;
@@ -17,7 +18,7 @@ public class ItemScript : PooledObject
     public GameObject pickupEffect;
 
 
-    void Start()
+    public virtual void Start()
     {
         if (GameManager.Instance.CurrentGameState != GameStates.Pause)
         {
@@ -67,10 +68,15 @@ public class ItemScript : PooledObject
     {
         //transform.DOMoveY(transform.position.y + scalingMaxOffset, scalingTime).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
 
-        transform.DORotate(new Vector3(0f, 360f, 0f), rotationPeriod, RotateMode.FastBeyond360)
+        if (tweeningObject == null)
+        {
+            tweeningObject = transform;
+        }
+
+        tweeningObject.DORotate(new Vector3(0f, 360f, 0f), rotationPeriod, RotateMode.FastBeyond360)
             .SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
 
-        transform.DOScale(transform.localScale * scalingMaxOffset, scalingTime)
+        tweeningObject.DOScale(tweeningObject.localScale * scalingMaxOffset, scalingTime)
             .SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
     }
 
@@ -78,10 +84,10 @@ public class ItemScript : PooledObject
     {
         if (other.CompareTag("Player"))
         {
-            if (!isInteractable)
-            {
+            //if (!isInteractable)
+            //{
                 Collected(other.GetComponent<PlayerController>());
-            }
+            //}
         }
     }
 

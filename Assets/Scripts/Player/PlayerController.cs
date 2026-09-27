@@ -23,6 +23,7 @@ public enum InteractionType
     None,
     ClassChange,
     Door,
+    Upgrade,
     Shop
 }
 
@@ -478,6 +479,11 @@ public class PlayerController : MonoBehaviour, IDamageable
                     //Debug.Log("DOOOR");
                     door.Interact();
                     ClearInteraction(InteractionType.Door);
+
+                    break;
+                case InteractionType.Upgrade:
+                    CurrentInteractionObject.GetComponent<ItemUpgrade>().Collected(gameObject.GetComponent<PlayerController>());
+                    ClearInteraction(InteractionType.Upgrade);
 
                     break;
                 case InteractionType.Shop:
