@@ -8,6 +8,7 @@ public class ItemScript : PooledObject
     [SerializeField] float scalingTime = 0.5f;
     [SerializeField] float scalingMaxOffset = 1.2f;
 
+    [SerializeField] bool isInteractable = false;
 
     [Header("Sound Effects")]
     [SerializeField] AudioClip[] CollectSoundEffects;
@@ -77,9 +78,11 @@ public class ItemScript : PooledObject
     {
         if (other.CompareTag("Player"))
         {
-            Collected(other.GetComponent<PlayerController>());
+            if (!isInteractable)
+            {
+                Collected(other.GetComponent<PlayerController>());
+            }
         }
-
     }
 
 }

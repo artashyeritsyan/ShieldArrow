@@ -413,7 +413,7 @@ public class PlayerInputManagerController : MonoBehaviour
             inputManager.DisableJoining();
         }
 
-        Debug.LogWarning("Can Join" + canJoin);
+        //Debug.LogWarning("Can Join" + canJoin);
     }
 
 
