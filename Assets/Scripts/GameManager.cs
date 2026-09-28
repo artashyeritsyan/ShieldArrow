@@ -214,6 +214,20 @@ public class GameManager : MonoBehaviour
         coins = value;
     }
 
+    public bool PurchaseFor(int amount)
+    {
+        int baseCoins = coins;
+
+        coins -= amount;
+        if (coins >= 0)
+        {
+            return true;
+        }
+
+        coins = baseCoins;
+        return false;
+    }
+
 
     public void AllPlayersDead()
     {

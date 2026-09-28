@@ -9753,7 +9753,7 @@ GameObject:
   - component: {fileID: 4748730675913877245}
   - component: {fileID: -1192468916811017670}
   m_Layer: 0
-  m_Name: PickingEffect
+  m_Name: CoinPickingEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

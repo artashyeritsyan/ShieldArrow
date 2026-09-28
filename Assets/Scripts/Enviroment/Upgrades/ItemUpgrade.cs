@@ -1,8 +1,6 @@
-using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public enum UpgradeType
 {
@@ -27,12 +25,17 @@ public class ItemUpgrade : ItemScript
     [SerializeField] private float outlineWidth = 3f;
     private Outline outline;
 
+    [Header("Shop")]
+    [SerializeField] bool isFree = false;
+    [SerializeField] int price = 5;
+    
+
     private readonly string[] upgradeTexts =
     {
-        "Increase movement speed",
-        "Increase damage",
-        "Increase attack speed",
-        "Increase maximum HP"
+        "Speed",
+        "Damage",
+        "Attack speed",
+        "Maximum HP"
     };  
 
 
@@ -50,6 +53,14 @@ public class ItemUpgrade : ItemScript
 
     public override void Collected(PlayerController player)
     {
+        if (!isFree && price > 0)
+        {
+            if (!GameManager.Instance.PurchaseFor(price))
+            {
+                return;
+            }
+        }
+
         base.Collected(player);
 
         switch (upgradeType)
@@ -68,6 +79,7 @@ public class ItemUpgrade : ItemScript
                 break;
         }
 
+        player.ClearInteraction(InteractionType.Upgrade);
         Destroy(gameObject);
     }
 
@@ -114,7 +126,14 @@ public class ItemUpgrade : ItemScript
 
         if (canvas != null)
         {
-            interactionText.text = $"{upgradeTexts[(int)upgradeType]}\nPress {binding} to pick up";
+            if (isFree || price == 0)
+            {
+                interactionText.text = $"+{upgradeValue} to {upgradeTexts[(int)upgradeType]}\nPress {binding} to pick up";
+            }
+            else
+            {
+                interactionText.text = $"+{upgradeValue} to {upgradeTexts[(int)upgradeType]}\nPress {binding} to buy for {price} gold";
+            }
 
             canvas.SetActive(true);
         }

@@ -483,7 +483,6 @@ public class PlayerController : MonoBehaviour, IDamageable
                     break;
                 case InteractionType.Upgrade:
                     CurrentInteractionObject.GetComponent<ItemUpgrade>().Collected(gameObject.GetComponent<PlayerController>());
-                    ClearInteraction(InteractionType.Upgrade);
 
                     break;
                 case InteractionType.Shop:
@@ -747,6 +746,21 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         return CurrentInteraction == interaction;
     }
+    
+    
+    public void SpeedupEffect(float duration, float value)
+    {
+        stats.core.speed += value;
+
+        StartCoroutine(ResetSpeedupEffect(duration, value));
+    }
+
+    public IEnumerator ResetSpeedupEffect(float duration, float value)
+    {
+        yield return new WaitForSeconds(duration);
+
+        stats.core.speed -= value;
+    }
 
 
     public PlayerClass GetPlayerClass()
@@ -893,6 +907,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     public virtual void AdditiveAnimation()
     {
     }
+
 
     protected virtual void OnDestroy()
     {
