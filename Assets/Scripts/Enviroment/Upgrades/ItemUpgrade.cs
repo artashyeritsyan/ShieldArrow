@@ -1,19 +1,21 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 
-public enum UpgradeType
+public enum ShopItemType
 {
-    Speed,
-    Damage,
-    AttackSpeed,
-    MaxHp,
+    UpgradeSpeed,
+    UpgradeDamage,
+    UpgradeAttackSpeed,
+    UpgradeMaxHp,
+    HealHp
 }
 
 public class ItemUpgrade : ItemScript
 {
-    [SerializeField] UpgradeType upgradeType;
-    [SerializeField] float upgradeValue = 0.25f;
+    [SerializeField] ShopItemType upgradeType;
+    [SerializeField] float upgradeValue = 2;
 
     [Header("UI text")]
     [SerializeField] GameObject canvas;
@@ -28,6 +30,9 @@ public class ItemUpgrade : ItemScript
     [Header("Shop")]
     [SerializeField] bool isFree = false;
     [SerializeField] int price = 5;
+
+    [SerializeField] int basePrice = 5;
+    public int BasePrice => basePrice;
     
 
     private readonly string[] upgradeTexts =
@@ -35,7 +40,8 @@ public class ItemUpgrade : ItemScript
         "Speed",
         "Damage",
         "Attack speed",
-        "Maximum HP"
+        "Max HP",
+        "HP"
     };  
 
 
@@ -47,8 +53,17 @@ public class ItemUpgrade : ItemScript
         {
             canvas.SetActive(false);
         }
+        price = basePrice;
 
-        SetupOutline();
+        if (upgradeType != ShopItemType.HealHp)
+            SetupOutline();
+    }
+
+    public int GetPrice() { return price; }
+
+    public void SetPrice(int newPrice)
+    {
+        price = newPrice;
     }
 
     public override void Collected(PlayerController player)
@@ -65,17 +80,24 @@ public class ItemUpgrade : ItemScript
 
         switch (upgradeType)
         {
-            case UpgradeType.Speed:
+            case ShopItemType.UpgradeSpeed:
                 player.GetStats().core.speed += upgradeValue;
                 break;
-            case UpgradeType.Damage:
+            case ShopItemType.UpgradeDamage:
                 player.GetStats().core.damage += upgradeValue;
                 break;
-            case UpgradeType.MaxHp:
+            case ShopItemType.UpgradeMaxHp:
                 player.GetStats().core.maxHP += upgradeValue;
                 break;
-            case UpgradeType.AttackSpeed:
+            case ShopItemType.UpgradeAttackSpeed:
                 player.GetStats().core.attackSpeed+= upgradeValue;
+                break;
+            case ShopItemType.HealHp:
+                player.GetStats().core.currentHP += upgradeValue;
+                if (player.GetStats().core.maxHP < player.GetStats().core.currentHP)
+                {
+                    player.GetStats().core.currentHP = player.GetStats().core.maxHP;
+                }
                 break;
         }
 
@@ -138,7 +160,11 @@ public class ItemUpgrade : ItemScript
             canvas.SetActive(true);
         }
 
-        outline.enabled = true;
+        if (outline != null) 
+        { 
+            outline.enabled = true;
+        }
+            
 
         PlayerController player = other.GetComponent<PlayerController>();
         if (player != null)
@@ -158,7 +184,10 @@ public class ItemUpgrade : ItemScript
             }
 
             // TODO: Check this part, cause 2 players can be in trigger at the same time
-            outline.enabled = false;
+            if (outline != null)
+            {
+                outline.enabled = false;
+            }
 
             PlayerController player = other.GetComponent<PlayerController>();
             player.ClearInteraction(InteractionType.Upgrade);

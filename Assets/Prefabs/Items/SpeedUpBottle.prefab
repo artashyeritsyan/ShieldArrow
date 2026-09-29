@@ -74,6 +74,7 @@ MonoBehaviour:
   tweeningObject: {fileID: 0}
   CollectSoundEffects:
   - {fileID: 8300000, guid: 7ef52255361a1fd4cbd1a6220ad1adcb, type: 3}
+  - {fileID: 8300000, guid: 5a8701c2127c35547a7bae6af75f5298, type: 3}
   pickupEffect: {fileID: 4748730675913877244, guid: 7da62b93873705947a44cb3dedf337e8, type: 3}
   value: 1
   potionDuration: 10

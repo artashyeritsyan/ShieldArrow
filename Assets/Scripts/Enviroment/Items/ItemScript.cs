@@ -74,10 +74,12 @@ public class ItemScript : PooledObject
         }
 
         tweeningObject.DORotate(new Vector3(0f, 360f, 0f), rotationPeriod, RotateMode.FastBeyond360)
-            .SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
+            .SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental)
+            .SetLink(tweeningObject.gameObject);
 
         tweeningObject.DOScale(tweeningObject.localScale * scalingMaxOffset, scalingTime)
-            .SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+            .SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo)
+            .SetLink(tweeningObject.gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -89,6 +91,11 @@ public class ItemScript : PooledObject
                 Collected(other.GetComponent<PlayerController>());
             //}
         }
+    }
+
+    private void OnDestroy()
+    {
+        transform.DOKill();
     }
 
 }

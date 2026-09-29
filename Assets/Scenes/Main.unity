@@ -74930,8 +74930,9 @@ GameObject:
   - component: {fileID: 2089072370}
   - component: {fileID: 2089072372}
   - component: {fileID: 2089072373}
+  - component: {fileID: 2089072374}
   m_Layer: 0
-  m_Name: LevelGenerator
+  m_Name: LevelController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75026,6 +75027,23 @@ MonoBehaviour:
   minLength: 52
   maxLength: 53
   startPosition: {x: 0, y: 0, z: 1}
+--- !u!114 &2089072374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089072369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c64d6625c75ce042a2fe516ebb1c2c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopItemsGenerator
+  items:
+  - {fileID: 386290496788119167, guid: 879632f866df3b2419a92f1f97f3ef00, type: 3}
+  - {fileID: 2113057726923069580, guid: 5ed5208b2a4f76f49bc747d21dde29ee, type: 3}
+  - {fileID: 7333330372850844135, guid: 29feeec8dcbad9e40b002d30ef503f05, type: 3}
+  - {fileID: 2113057726923069580, guid: bab17d22afb91f747ae3db189721032f, type: 3}
 --- !u!1001 &2091029446
 PrefabInstance:
   m_ObjectHideFlags: 0

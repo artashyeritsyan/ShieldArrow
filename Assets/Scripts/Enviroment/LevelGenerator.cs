@@ -24,6 +24,8 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] List<GameObject> level;
     [SerializeField] List<Vector3> roomsScreenCenters;
 
+    //[SerializeField] List<Transform[]> roomsShopsTransforms; 
+
     [SerializeField] int currentRoomIndex = 0;
     public int CurrentRoomIndex => currentRoomIndex;
 
@@ -37,6 +39,9 @@ public class LevelGenerator : MonoBehaviour
     [Header("Enemy Spawner")]
     private EnemySpawner enemySpawner;
 
+    [Header("Shop")]
+    private ShopItemsGenerator shopItemsGenerator;
+
 
     private void Awake()
     {
@@ -44,6 +49,7 @@ public class LevelGenerator : MonoBehaviour
         level = new List<GameObject>();
 
         enemySpawner = gameObject.GetComponent<EnemySpawner>();
+        shopItemsGenerator = gameObject.GetComponent<ShopItemsGenerator>();
     }
 
     public void GenerateLevel()
@@ -64,6 +70,14 @@ public class LevelGenerator : MonoBehaviour
             levelStartPosition += new Vector3(0, 0, aisleGenerator.FinalLength + roomGenerator.Height / 2);
             
             roomGenerator.GenerateRoom(levelStartPosition);
+
+            // Remove this after test
+            {
+                Transform[] shopSlots = roomGenerator.GetComponent<RoomGenerator>().GetShopSlots();
+                shopItemsGenerator.SpawnShopItems(shopSlots, 0);
+            }
+
+
             roomsScreenCenters.Add(levelStartPosition + new Vector3(0, 0, roomScreenCenterOffset));
             Debug.Log("roomSize " + roomsScreenCenters.Count);
 
@@ -101,6 +115,10 @@ public class LevelGenerator : MonoBehaviour
         {
             SpawnEnemies();
         }
+        else if (levelState == LevelStates.Room)
+        {
+            //GenerateShopItems();
+        }
     }
 
     void SpawnEnemies()
@@ -109,6 +127,13 @@ public class LevelGenerator : MonoBehaviour
             aisleStartEndPositions[currentRoomIndex/2].start + (aisleScreenCenterOffset * 2) + 1.5f,
             aisleStartEndPositions[currentRoomIndex/2].end - 2f, // 2 is just to keep distance from room wall
             currentRoomIndex / 2);  // To get the Aisle Number for difficulty calculations
+    }
+
+    void GenerateShopItems()
+    {
+        Transform[] shopSlots = level[currentRoomIndex].GetComponent<RoomGenerator>().GetShopSlots();
+        shopItemsGenerator.SpawnShopItems(shopSlots, currentRoomIndex / 2 + 1); // getting the room index
+
     }
 
     public void ClearLevel()

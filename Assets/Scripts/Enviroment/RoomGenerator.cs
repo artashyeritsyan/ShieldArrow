@@ -35,6 +35,10 @@ public class RoomGenerator : MonoBehaviour
     [SerializeField] WallPrefabs wallPrefabs;
     [SerializeField] EnviromentPrefabs groundPrefabs;
 
+
+    [Header("Room Objects")]
+    [SerializeField] Transform[] shopSlots;
+
     private readonly EDirection[] allDirections =
     {
         EDirection.North,
@@ -72,6 +76,11 @@ public class RoomGenerator : MonoBehaviour
         }
 
         transform.position = startPosition;
+    }
+
+    public Transform[] GetShopSlots() 
+    {
+        return shopSlots;
     }
 
     void GenerateCorners()
