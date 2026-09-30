@@ -23,6 +23,8 @@ public class RoomGenerator : MonoBehaviour
     public float Height => height;
     public float Width => width;
 
+    private bool isBossRoom = false;
+
     [Header("Walls")]
     [SerializeField] Transform[] cornerParents;
     [SerializeField] Transform[] NorthWallParents;
@@ -53,7 +55,7 @@ public class RoomGenerator : MonoBehaviour
         //GenerateRoom(startPosition);
     }
 
-    public void GenerateRoom(Vector3 position, EDirection inDir = EDirection.South, EDirection outDir = EDirection.North)
+    public void GenerateRoom(Vector3 position, bool isBossRoom = false, EDirection inDir = EDirection.South, EDirection outDir = EDirection.North)
     {
         startPosition = position;
 
@@ -117,7 +119,15 @@ public class RoomGenerator : MonoBehaviour
         {
             if (i == inWalls.Length / 2)
             {
-                GenerateDoorwayFor(inWalls[i], EDoorType.EnterTheRoom);
+                if (isBossRoom)
+                {
+                    GenerateDoorwayFor(inWalls[i], EDoorType.BossRoom);
+                }
+                else
+                {
+                    GenerateDoorwayFor(inWalls[i], EDoorType.EnterTheRoom);
+                }
+
                 continue;
             }
 
@@ -134,9 +144,7 @@ public class RoomGenerator : MonoBehaviour
         int maxDoorCount = (outWalls.Length + 1) / 2;
         int outDoorsCount = Random.Range(1, maxDoorCount + 1);
 
-        int doorPattern = GetDoorPattern(
-            outWalls.Length,
-            outDoorsCount);
+        int doorPattern = GetDoorPattern(outWalls.Length, outDoorsCount);
 
         for (int i = 0; i < outWalls.Length; i++)
         {
@@ -188,7 +196,6 @@ public class RoomGenerator : MonoBehaviour
         wall.transform.localPosition = Vector3.zero;
         wall.GetComponent<WallDecorator>().GenerateDecorations();
     }
-
 
     private int GetDoorPattern(int wallCount, int doorCount)
     {

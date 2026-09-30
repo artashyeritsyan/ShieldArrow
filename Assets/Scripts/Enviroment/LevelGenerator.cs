@@ -54,6 +54,7 @@ public class LevelGenerator : MonoBehaviour
 
     public void GenerateLevel()
     {
+        bool isBossRoom = false;
         Vector3 levelStartPosition = startPosition;
 
         for (int i = 0; i < levelLength; i++)
@@ -69,13 +70,17 @@ public class LevelGenerator : MonoBehaviour
 
             levelStartPosition += new Vector3(0, 0, aisleGenerator.FinalLength + roomGenerator.Height / 2);
             
-            roomGenerator.GenerateRoom(levelStartPosition);
+            if (i == levelLength - 1)
+            {
+                isBossRoom = true;
+            }
+            roomGenerator.GenerateRoom(levelStartPosition, isBossRoom);
 
             // Remove this after test
-            {
-                Transform[] shopSlots = roomGenerator.GetComponent<RoomGenerator>().GetShopSlots();
-                shopItemsGenerator.SpawnShopItems(shopSlots, 0);
-            }
+            //{
+            //    Transform[] shopSlots = roomGenerator.GetComponent<RoomGenerator>().GetShopSlots();
+            //    shopItemsGenerator.SpawnShopItems(shopSlots, 0);
+            //}
 
 
             roomsScreenCenters.Add(levelStartPosition + new Vector3(0, 0, roomScreenCenterOffset));
@@ -117,7 +122,7 @@ public class LevelGenerator : MonoBehaviour
         }
         else if (levelState == LevelStates.Room)
         {
-            //GenerateShopItems();
+            GenerateShopItems();
         }
     }
 

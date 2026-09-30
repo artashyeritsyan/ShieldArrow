@@ -90,7 +90,7 @@ public class EnemySpawner : MonoBehaviour
         // Skipping row chance
         if (rowNumber > 1 && Random.value < noSpawnChance && !isPreviousRowSkipped)
         {
-            Debug.LogWarning("Skipping row " + rowNumber);
+            //Debug.LogWarning("Skipping row " + rowNumber);
             rowNumber++;
             isPreviousRowSkipped = true;
             return;
@@ -104,7 +104,7 @@ public class EnemySpawner : MonoBehaviour
 
         if (enemyCount < maxEnemiesInRow.end)
         {
-            Debug.LogWarning("Adding offset on row " + rowNumber);
+            //Debug.LogWarning("Adding offset on row " + rowNumber);
 
             //This part only for creating an offset from 0-2
             float offsetX = Random.value * 2;
@@ -114,12 +114,12 @@ public class EnemySpawner : MonoBehaviour
             if (random == 0)
             {
                 minOffsetX = minX + offsetX;
-                Debug.LogWarning("Min offset on row " + rowNumber + " minOffsetX = " + minOffsetX);
+                //Debug.LogWarning("Min offset on row " + rowNumber + " minOffsetX = " + minOffsetX);
             }
             else
             {
                 maxOffsetX = maxX - offsetX;
-                Debug.LogWarning("Max offset on row " + rowNumber + " maxOffsetX = " + maxOffsetX);
+                //Debug.LogWarning("Max offset on row " + rowNumber + " maxOffsetX = " + maxOffsetX);
             }
         }
 

@@ -152,6 +152,12 @@ public class DoorController : MonoBehaviour
                 GameManager.Instance.SetCameraMoving(false);
                 break;
             case EDoorType.LeaveTheRoom:
+                if (GameManager.Instance.CurrentLevelState == LevelStates.Boss)
+                {
+                    // Call GameWin Function. (It should show the win menu, then restarts)
+                    // Maybe opens new character, or new levels (didnt implemented yet
+                }
+
                 GameManager.Instance.SetLevelState(LevelStates.Aisle);
                 GameManager.Instance.SetCameraMoving(true);
                 break;
