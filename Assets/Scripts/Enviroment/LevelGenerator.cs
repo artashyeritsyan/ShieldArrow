@@ -124,6 +124,11 @@ public class LevelGenerator : MonoBehaviour
         {
             GenerateShopItems();
         }
+        // TODO: Remove this after adding Boss fight
+        else if (levelState == LevelStates.Boss)
+        {
+            GenerateShopItems();
+        }
     }
 
     void SpawnEnemies()

@@ -842,7 +842,7 @@ public class PlayerController : MonoBehaviour, IDamageable
                 break;
             case LevelStates.Boss:
                 canAttack = true;
-                canRotate = false;
+                canRotate = true;
                 SetTrajectoryEnable(true);
                 break;
             default:

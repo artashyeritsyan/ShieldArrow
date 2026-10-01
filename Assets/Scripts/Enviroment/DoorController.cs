@@ -7,7 +7,8 @@ public enum EDoorType
     GameStart,
     EnterTheRoom,
     LeaveTheRoom,
-    BossRoom
+    BossRoom,
+    //LevelFinished
 }
 
 public class DoorController : MonoBehaviour
@@ -23,7 +24,7 @@ public class DoorController : MonoBehaviour
         doorCanvas.SetActive(false);
 
         GameManager.Instance.OnGameReset += HandleGameReset;
-            }
+    }
 
     public void SetDoorType(EDoorType doorType)
     {
@@ -82,7 +83,37 @@ public class DoorController : MonoBehaviour
             playerInput.currentControlScheme
         );
 
-        interactionText.text = $"Press {binding} to start";
+        switch (GameManager.Instance.CurrentLevelState)
+        {
+            case LevelStates.Lobby:
+                interactionText.text = $"Press {binding} to start";
+                break;
+            case LevelStates.Aisle:
+                if (doorType == EDoorType.BossRoom)
+                {
+                    interactionText.text = $"Press {binding} to enter Boss room";
+                }
+                interactionText.text = $"Press {binding} to enter room";
+
+                break;
+            case LevelStates.Room:
+                interactionText.text = $"Press {binding} to leave room";
+
+                break;
+            case LevelStates.Boss:
+
+                // TODO: Change it to "Next level" after creating new levels ))
+                interactionText.text = $"Press {binding} to finish level";
+                break;
+            default:
+                break;
+        }
+
+        
+
+        if (GameManager.Instance.CurrentLevelState == LevelStates.Boss)
+        {
+        }
 
         doorCanvas.SetActive(true);
 
@@ -156,14 +187,19 @@ public class DoorController : MonoBehaviour
                 {
                     // Call GameWin Function. (It should show the win menu, then restarts)
                     // Maybe opens new character, or new levels (didnt implemented yet
+                    GameManager.Instance.SetCameraMoving(false);
+                    GameManager.Instance.GameWin();
+                    break;
                 }
 
                 GameManager.Instance.SetLevelState(LevelStates.Aisle);
                 GameManager.Instance.SetCameraMoving(true);
+
                 break;
             case EDoorType.BossRoom:
                 GameManager.Instance.SetLevelState(LevelStates.Boss);
                 GameManager.Instance.SetCameraMoving(false);
+
                 break;
             default:
                 break;
@@ -174,13 +210,14 @@ public class DoorController : MonoBehaviour
     }
     void HandleGameReset()
     {
-        Debug.Log("Door COllider Turned ONN");
+        //Debug.Log("Door COllider Turned ONN");
         GetComponent<Collider>().enabled = true;
         doorCanvas.SetActive(false);
     }
 
     private void OnEnable()
     {
+        //GameManager.Instance.OnGameReset += HandleGameReset;
     }
 
     private void OnDestroy()

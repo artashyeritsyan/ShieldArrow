@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public enum EDirection{
@@ -55,9 +56,10 @@ public class RoomGenerator : MonoBehaviour
         //GenerateRoom(startPosition);
     }
 
-    public void GenerateRoom(Vector3 position, bool isBossRoom = false, EDirection inDir = EDirection.South, EDirection outDir = EDirection.North)
+    public void GenerateRoom(Vector3 position, bool bossRoom = false, EDirection inDir = EDirection.South, EDirection outDir = EDirection.North)
     {
         startPosition = position;
+        isBossRoom = bossRoom;
 
         if (wallPrefabs == null) return;
 
@@ -144,6 +146,7 @@ public class RoomGenerator : MonoBehaviour
         int maxDoorCount = (outWalls.Length + 1) / 2;
         int outDoorsCount = Random.Range(1, maxDoorCount + 1);
 
+
         int doorPattern = GetDoorPattern(outWalls.Length, outDoorsCount);
 
         for (int i = 0; i < outWalls.Length; i++)
@@ -199,8 +202,14 @@ public class RoomGenerator : MonoBehaviour
 
     private int GetDoorPattern(int wallCount, int doorCount)
     {
+
         if (wallCount == 5)
         {
+            if (isBossRoom)
+            {
+                return 0b00100;
+            }
+
             return doorCount switch
             {
                 3 => 0b10101,
@@ -212,6 +221,11 @@ public class RoomGenerator : MonoBehaviour
 
         if (wallCount == 3)
         {
+            if (isBossRoom)
+            {
+                return 0b010;
+            }
+
             return doorCount switch
             {
                 2 => 0b101,

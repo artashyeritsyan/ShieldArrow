@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
 
     public event Action OnGameReset;
     public event Action OnGameOver;
+    public event Action OnGameWin;
 
     [SerializeField] LevelGenerator levelGenerator;
 
@@ -257,9 +258,22 @@ public class GameManager : MonoBehaviour
         levelGenerator.GenerateLevel();
     }
 
+    public void GameWin()
+    {
+        OnGameWin?.Invoke();
+    }
+
     private void TransitionToNextLevel()
     {
-        screenCenter.position = levelGenerator.GetScreenCenterOf(levelGenerator.CurrentRoomIndex);
+        if (CurrentLevelState == LevelStates.Lobby)
+        {
+            screenCenter.position = cameraStartPosition;
+        }
+        else 
+        {
+            screenCenter.position = levelGenerator.GetScreenCenterOf(levelGenerator.CurrentRoomIndex);
+        }
+
 
         for (int i = 0; i < playerManager.GetPlayers().Count; i++)
         {
