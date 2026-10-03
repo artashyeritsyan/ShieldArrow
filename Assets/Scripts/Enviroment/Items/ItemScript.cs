@@ -56,6 +56,12 @@ public class ItemScript : PooledObject
     }
 
     protected virtual void PlaySound() {
+
+        if (CollectSoundEffects.Length ==  0)
+        {
+            return;
+        }
+
         int soundIndex = Random.Range(0, CollectSoundEffects.Length);
 
         float volume = Random.Range(1f, 1.4f);

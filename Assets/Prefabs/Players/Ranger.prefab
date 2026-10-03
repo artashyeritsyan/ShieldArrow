@@ -178,10 +178,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7776142660636546536}
     m_Modifications:
-    - target: {fileID: 764581148211156867, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 3694314964495093740, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -222,25 +218,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5535424873728568885, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 6067447479393992737, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
       propertyPath: m_Name
       value: Bow
-      objectReference: {fileID: 0}
-    - target: {fileID: 6067447479393992737, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6067447479393992737, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8406958776630931287, guid: 8afbdbc28ed4f7049add88054cddde5e, type: 3}
-      propertyPath: shootingSpeed
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -649,7 +629,7 @@ MonoBehaviour:
   aimDistance: 5
   aimSpeed: 3
   combatEquipmentBehaviour: {fileID: 5601839362905783117}
-  attackSpeedMultiplier: 1.6
+  attackSpeedMultiplier: 1
   animator: {fileID: 4812885400586429195}
   animTransitionTime: 5
   animLayerTransitionTime: 5

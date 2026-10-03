@@ -157,13 +157,14 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 78759113d68c4c140b428308bd810f90, type: 3}
   pickupEffect: {fileID: 4748730675913877244, guid: 573fa29433610a446b5f83b975f857b2, type: 3}
   upgradeType: 3
-  upgradeValue: 2
+  upgradeValue: 1
   canvas: {fileID: 1674526570394598131}
   interactionText: {fileID: 3529485451673844333}
   outlineColor: {r: 0.27778566, g: 0.5773585, b: 0.28289166, a: 1}
   outlineWidth: 3
   isFree: 0
   price: 5
+  basePrice: 5
 --- !u!65 &2828888098472420669
 BoxCollider:
   m_ObjectHideFlags: 0

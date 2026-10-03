@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SpeedupBottle : ItemScript
 {
-    [SerializeField] private float value = 1;
+    [SerializeField] private float value = 3;
     [SerializeField] private float potionDuration = 10f;
 
     public override void Collected(PlayerController player)

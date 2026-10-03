@@ -261,6 +261,7 @@ public class GameManager : MonoBehaviour
     public void GameWin()
     {
         OnGameWin?.Invoke();
+        SetGameState(GameStates.Pause);
     }
 
     private void TransitionToNextLevel()

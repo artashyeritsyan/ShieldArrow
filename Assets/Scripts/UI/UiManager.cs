@@ -178,7 +178,8 @@ public class UiManager : MonoBehaviour
                 SwitchPanelTo(OverlayPanel);
                 break;
             case GameStates.Pause:
-                SwitchPanelTo(PausePanel);
+                //SwitchPanelTo(PausePanel);
+                // TODO: Handle this part
                 break;
             default:
                 SwitchPanelTo(MenuPanel);

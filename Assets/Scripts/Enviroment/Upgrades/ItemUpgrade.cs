@@ -90,7 +90,8 @@ public class ItemUpgrade : ItemScript
                 player.GetStats().core.maxHP += upgradeValue;
                 break;
             case ShopItemType.UpgradeAttackSpeed:
-                player.GetStats().core.attackSpeed+= upgradeValue;
+                player.AddAttackSpeedMultiplier(upgradeValue);
+                //player.GetStats().core.attackSpeed += upgradeValue;
                 break;
             case ShopItemType.HealHp:
                 player.GetStats().core.currentHP += upgradeValue;

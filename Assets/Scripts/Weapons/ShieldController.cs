@@ -46,15 +46,9 @@ public class ShieldController : MonoBehaviour, ICombatEquipment
     public event Action OnShieldAttackFinished;
     public event Action OnProjectileReflected;
 
-    public float BaseActionSpeed =>
-        Mathf.Max(
-            attackSpeed,
-            0.01f);
+    public float BaseActionSpeed => Mathf.Max(attackSpeed, 0.01f);
 
-    public float ActionSpeedMultiplier =>
-        Mathf.Max(
-            actionSpeedMultiplier,
-            0.01f);
+    public float ActionSpeedMultiplier => Mathf.Max(actionSpeedMultiplier, 0.01f);
 
     public float EffectiveActionSpeed =>
         Mathf.Max(
@@ -62,10 +56,7 @@ public class ShieldController : MonoBehaviour, ICombatEquipment
             ActionSpeedMultiplier,
             0.01f);
 
-    public float EffectiveRange =>
-        Mathf.Max(
-            effectiveRange,
-            0f);
+    public float EffectiveRange => Mathf.Max(effectiveRange, 0f);
 
     private void Awake()
     {

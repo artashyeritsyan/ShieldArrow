@@ -6,11 +6,9 @@ public class BowWeapon : WeaponController
     private const float SECOND = 1f;
 
     [Header("Bow")]
-    [SerializeField]
-    private int arrowsPerShot = 1;
+    [SerializeField] private int arrowsPerShot = 1;
 
-    [SerializeField]
-    private float spreadAngle = 20f;
+    [SerializeField] private float spreadAngle = 20f;
 
     public override bool Shoot()
     {
@@ -104,14 +102,17 @@ public class BowWeapon : WeaponController
         return arrowsPerShot;
     }
 
-    public void SetArrowsPerShot(
-        int newArrowCount)
+    public void SetArrowsPerShot(int newArrowCount)
     {
-        arrowsPerShot =
-            Mathf.Max(
-                newArrowCount,
-                1);
+        arrowsPerShot = Mathf.Max(newArrowCount, 1);
     }
+
+    public void AddArrowsPerShot(int amount)
+    {
+        arrowsPerShot += amount;
+    }
+
+
 
     public float GetSpreadAngle()
     {

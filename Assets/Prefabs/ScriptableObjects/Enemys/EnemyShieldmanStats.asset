@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
   stats:
     speed: 0
-    maxHP: 6
-    currentHP: 6
-    damage: 2
+    maxHP: 3
+    currentHP: 3
+    damage: 1
     attackSpeed: 0.2
     lifeSteal: 0
     poisonDamage: 0

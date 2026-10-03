@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     protected ICombatEquipment combatEquipment;
 
     [Header("Attack Speed")]
-    [SerializeField] private float attackSpeedMultiplier = 1f;
+    //[SerializeField] private float attackSpeedMultiplier = 1f;
 
 
     [Header("Animation")]
@@ -179,7 +179,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         stats = baseProfile.GetStats().Clone();
         stats.core.currentHP = stats.core.maxHP;
-
     }
 
     private void GetRequiredComponents()
@@ -219,7 +218,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         canAttack = false;
         canRotate = true;
 
-        attackSpeedMultiplier = Mathf.Max(attackSpeedMultiplier, 0.01f);
+        //attackSpeedMultiplier = Mathf.Max(attackSpeedMultiplier, 0.01f);
     }
 
     public float GetRotation()
@@ -260,7 +259,7 @@ public class PlayerController : MonoBehaviour, IDamageable
          * Apply the player's current multiplier
          * to any equipment type.
          */
-        combatEquipment.SetActionSpeedMultiplier(attackSpeedMultiplier);
+        combatEquipment.SetActionSpeedMultiplier(stats.core.attackSpeed);
     }
 
     private void SubscribeToEquipmentEvents()
@@ -634,23 +633,23 @@ public class PlayerController : MonoBehaviour, IDamageable
             combatEquipment != null
                 ? combatEquipment
                     .ActionSpeedMultiplier
-                : attackSpeedMultiplier;
+                : stats.core.attackSpeed;
 
         return Mathf.Max(baseDuration / Mathf.Max(multiplier, 0.01f), 0f);
     }
 
     public void SetAttackSpeedMultiplier(float multiplier)
     {
-        attackSpeedMultiplier = Mathf.Max(multiplier, 0.01f);
+        stats.core.attackSpeed = Mathf.Max(multiplier, 0.01f);
 
-        combatEquipment?.SetActionSpeedMultiplier(attackSpeedMultiplier);
+        combatEquipment?.SetActionSpeedMultiplier(stats.core.attackSpeed);
     }
 
     public void AddAttackSpeedMultiplier(float amount)
     {
-        attackSpeedMultiplier = Mathf.Max(attackSpeedMultiplier + amount, 0.01f);
+        stats.core.attackSpeed = Mathf.Max(stats.core.attackSpeed + amount, 0.01f);
 
-        combatEquipment?.SetActionSpeedMultiplier(attackSpeedMultiplier);
+        combatEquipment?.SetActionSpeedMultiplier(stats.core.attackSpeed);
     }
 
     public void UpgradeAttackSpeed(float amount)
@@ -660,7 +659,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public float GetAttackSpeedMultiplier()
     {
-        return attackSpeedMultiplier;
+        return stats.core.attackSpeed;
     }
 
     public float GetEffectiveAttackSpeed()
@@ -762,6 +761,20 @@ public class PlayerController : MonoBehaviour, IDamageable
         stats.core.speed -= value;
     }
 
+    public void SpreadAttackEffect(float duration, int arrowCounts)
+    {
+        combatEquipmentBehaviour.GetComponent<BowWeapon>().SetArrowsPerShot(arrowCounts);
+
+        StartCoroutine(ResetAttackEffect(duration, arrowCounts));
+    }
+    public IEnumerator ResetAttackEffect(float duration, int value)
+    {
+        yield return new WaitForSeconds(duration);
+
+        // TODO: Add handling of duration accumulation
+        // Just resetting to default value
+        combatEquipmentBehaviour.GetComponent<BowWeapon>().SetArrowsPerShot(1);
+    }
 
     public PlayerClass GetPlayerClass()
     {
